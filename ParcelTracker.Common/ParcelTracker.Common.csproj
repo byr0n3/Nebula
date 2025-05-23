@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="../ParcelTracker.props"/>
+
+	<ItemGroup>
+		<PackageReference Include="Elegance.Enums" Version="$(EleganceVersion)" PrivateAssets="all"/>
+	</ItemGroup>
+
+</Project>

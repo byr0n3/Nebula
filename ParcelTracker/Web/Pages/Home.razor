@@ -1,0 +1,24 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+<p>Welcome to your new app.</p>
+
+<EditForm Model="@(Model)" OnValidSubmit="@(FindShipment)" FormName="@(Home.formName)">
+	<div>
+		<label for="code">Barcode/Tracking code</label>
+		<InputText @bind-Value="@(Model.Code)" id="code" required autofocus/>
+	</div>
+
+	<div>
+		<label for="zip">Zipcode/Postalcode</label>
+		<InputText @bind-Value="@(Model.ZipCode)" id="zip" maxlength="7" required/>
+	</div>
+
+	<button type="submit">
+		Search
+	</button>
+</EditForm>

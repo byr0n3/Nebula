@@ -1,0 +1,86 @@
+@page "/shipment/{code:required}/{zipCode:required}"
+@using ParcelTracker.Common.Models
+
+@if (shipment != default)
+{
+	<p>Tracking code: @(shipment.TrackingCode)</p>
+
+	@switch (shipment.State)
+	{
+		case ShipmentState.Registered:
+		case ShipmentState.Received:
+		case ShipmentState.Sorted:
+			<h1>
+				Expected: @(shipment.EstimatedArrival.Lower.ToString("g")) – @(shipment.EstimatedArrival.Upper.ToString("g"))
+			</h1>
+
+			@switch (shipment.State)
+			{
+				case ShipmentState.Registered:
+					<p>The shipment has been registered, but hasn't arrived at the delivery service yet.</p>
+					break;
+
+				case ShipmentState.Received:
+					<p>The shipment has been registered and received.</p>
+					break;
+
+				case ShipmentState.Sorted:
+					<p>The shipment has been sorted.</p>
+					break;
+			}
+
+			<p>Last update: @(shipment.Updated.ToString("g"))</p>
+
+			@if (shipment.Type == ShipmentType.LetterboxPackage)
+			{
+				<div>This package can be delivered through your letterbox.</div>
+			}
+
+			<h2>Where will you @(shipment.Type == ShipmentType.Letter ? "letter" : "package") be delivered?</h2>
+			<div>
+				@if (shipment.Recipient.Name is not null)
+				{
+					<p>@(shipment.Recipient.Name)</p>
+				}
+
+				<p>@(shipment.Recipient.Street) @(shipment.Recipient.HouseNumber) @(shipment.Recipient.HouseNumberSuffix ?? string.Empty)</p>
+				<p>@(shipment.Recipient.ZipCode) @(shipment.Recipient.Place)</p>
+			</div>
+
+			<h2>@(shipment.Type == ShipmentType.Letter ? "Letter" : "Package") details</h2>
+
+			<h3>Shipping address</h3>
+			<div>
+				@if (shipment.Recipient.Name is not null)
+				{
+					<p>@(shipment.Recipient.Name)</p>
+				}
+
+				<p>@(shipment.Recipient.Street) @(shipment.Recipient.HouseNumber) @(shipment.Recipient.HouseNumberSuffix ?? string.Empty)</p>
+				<p>@(shipment.Recipient.ZipCode) @(shipment.Recipient.Place)</p>
+			</div>
+
+			<h3>Sender</h3>
+			<div>
+				@if (shipment.Sender.Name is not null)
+				{
+					<p>@(shipment.Sender.Name)</p>
+				}
+
+				<p>@(shipment.Sender.Street) @(shipment.Sender.HouseNumber) @(shipment.Sender.HouseNumberSuffix ?? string.Empty)</p>
+				<p>@(shipment.Sender.ZipCode) @(shipment.Sender.Place)</p>
+			</div>
+
+			break;
+
+		default:
+			<p>The Shipment has an unknown state.</p>
+			break;
+	}
+}
+else
+{
+	<h1>404 – not found</h1>
+	<a href="/">Back to home</a>
+}
+
