@@ -102,8 +102,9 @@ namespace ParcelTracker.DHL
 				Created = shipment.Created,
 				Updated = shipment.Updated,
 				Arrived = shipment.DeliveryDate,
-				// @todo Incorrect
+				// @todo
 				EstimatedArrival = default,
+				Delay = default,
 			};
 		}
 

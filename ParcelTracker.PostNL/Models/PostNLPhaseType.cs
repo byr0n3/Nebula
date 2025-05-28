@@ -4,6 +4,7 @@ namespace ParcelTracker.PostNL.Models
 	{
 		Registered = 0,
 		Sorted = 2,
+		OutForDelivery = 3,
 		Delivered = 4,
 	}
 }

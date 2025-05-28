@@ -10,10 +10,11 @@ namespace ParcelTracker.PostNL.Internal.Extensions
 		public static ShipmentState ToShipmentState(this PostNLPhaseType @this) =>
 			(@this) switch
 			{
-				PostNLPhaseType.Registered => ShipmentState.Registered,
-				PostNLPhaseType.Sorted     => ShipmentState.Sorted,
-				PostNLPhaseType.Delivered  => ShipmentState.Delivered,
-				_                          => ShipmentState.Registered,
+				PostNLPhaseType.Registered     => ShipmentState.Registered,
+				PostNLPhaseType.Sorted         => ShipmentState.Sorted,
+				PostNLPhaseType.OutForDelivery => ShipmentState.OutForDelivery,
+				PostNLPhaseType.Delivered      => ShipmentState.Delivered,
+				_                              => ShipmentState.Registered,
 			};
 	}
 }

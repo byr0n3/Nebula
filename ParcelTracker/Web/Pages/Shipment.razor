@@ -5,77 +5,94 @@
 {
 	<p>Tracking code: @(shipment.TrackingCode)</p>
 
+	<h1>
+		Expected: @(shipment.EstimatedArrival.Lower.ToString("g")) – @(shipment.EstimatedArrival.Upper.ToString("g"))
+	</h1>
+
 	@switch (shipment.State)
 	{
 		case ShipmentState.Registered:
+			<p>The shipment has been registered, but hasn't arrived at the delivery service yet.</p>
+			break;
+
 		case ShipmentState.Received:
+			<p>The shipment has been registered and received.</p>
+			break;
+
 		case ShipmentState.Sorted:
-			<h1>
-				Expected: @(shipment.EstimatedArrival.Lower.ToString("g")) – @(shipment.EstimatedArrival.Upper.ToString("g"))
-			</h1>
-
-			@switch (shipment.State)
-			{
-				case ShipmentState.Registered:
-					<p>The shipment has been registered, but hasn't arrived at the delivery service yet.</p>
-					break;
-
-				case ShipmentState.Received:
-					<p>The shipment has been registered and received.</p>
-					break;
-
-				case ShipmentState.Sorted:
-					<p>The shipment has been sorted.</p>
-					break;
-			}
-
-			<p>Last update: @(shipment.Updated.ToString("g"))</p>
-
-			@if (shipment.Type == ShipmentType.LetterboxPackage)
-			{
-				<div>This package can be delivered through your letterbox.</div>
-			}
-
-			<h2>Where will you @(shipment.Type == ShipmentType.Letter ? "letter" : "package") be delivered?</h2>
-			<div>
-				@if (shipment.Recipient.Name is not null)
-				{
-					<p>@(shipment.Recipient.Name)</p>
-				}
-
-				<p>@(shipment.Recipient.Street) @(shipment.Recipient.HouseNumber) @(shipment.Recipient.HouseNumberSuffix ?? string.Empty)</p>
-				<p>@(shipment.Recipient.ZipCode) @(shipment.Recipient.Place)</p>
-			</div>
-
-			<h2>@(shipment.Type == ShipmentType.Letter ? "Letter" : "Package") details</h2>
-
-			<h3>Shipping address</h3>
-			<div>
-				@if (shipment.Recipient.Name is not null)
-				{
-					<p>@(shipment.Recipient.Name)</p>
-				}
-
-				<p>@(shipment.Recipient.Street) @(shipment.Recipient.HouseNumber) @(shipment.Recipient.HouseNumberSuffix ?? string.Empty)</p>
-				<p>@(shipment.Recipient.ZipCode) @(shipment.Recipient.Place)</p>
-			</div>
-
-			<h3>Sender</h3>
-			<div>
-				@if (shipment.Sender.Name is not null)
-				{
-					<p>@(shipment.Sender.Name)</p>
-				}
-
-				<p>@(shipment.Sender.Street) @(shipment.Sender.HouseNumber) @(shipment.Sender.HouseNumberSuffix ?? string.Empty)</p>
-				<p>@(shipment.Sender.ZipCode) @(shipment.Sender.Place)</p>
-			</div>
-
+			<p>The shipment has been sorted.</p>
 			break;
+	}
 
-		default:
-			<p>The Shipment has an unknown state.</p>
-			break;
+	<p>Last update: @(shipment.Updated.ToString("g"))</p>
+
+	@if (shipment.Delay >= System.TimeSpan.FromMinutes(15))
+	{
+		<div>
+			It seems that your shipment hasn't been delivered yet.
+			Check the shipment delivery's track and trace page for details.
+
+			@* @todo Link to track & trace page (based on source). *@
+		</div>
+	}
+
+	@if (shipment.Type == ShipmentType.LetterboxPackage)
+	{
+		<div>This package can be delivered through your letterbox.</div>
+	}
+
+	<h2>Where will you @(shipment.Type == ShipmentType.Letter ? "letter" : "package") be delivered?</h2>
+	<div>
+		@if (shipment.Recipient.Name is not null)
+		{
+			<p>@(shipment.Recipient.Name)</p>
+		}
+
+		<p>@(shipment.Recipient.Street) @(shipment.Recipient.HouseNumber) @(shipment.Recipient.HouseNumberSuffix ?? string.Empty)</p>
+		<p>@(shipment.Recipient.ZipCode) @(shipment.Recipient.Place)</p>
+	</div>
+
+	<h2>@(shipment.Type == ShipmentType.Letter ? "Letter" : "Package") details</h2>
+
+	<h3>Shipping address</h3>
+	<div>
+		@if (shipment.Recipient.Name is not null)
+		{
+			<p>@(shipment.Recipient.Name)</p>
+		}
+
+		<p>@(shipment.Recipient.Street) @(shipment.Recipient.HouseNumber) @(shipment.Recipient.HouseNumberSuffix ?? string.Empty)</p>
+		<p>@(shipment.Recipient.ZipCode) @(shipment.Recipient.Place)</p>
+	</div>
+
+	<h3>Sender</h3>
+	<div>
+		@if (shipment.Sender.Name is not null)
+		{
+			<p>@(shipment.Sender.Name)</p>
+		}
+
+		<p>@(shipment.Sender.Street) @(shipment.Sender.HouseNumber) @(shipment.Sender.HouseNumberSuffix ?? string.Empty)</p>
+		<p>@(shipment.Sender.ZipCode) @(shipment.Sender.Place)</p>
+	</div>
+
+	@if ((shipment.Events is not null) && (shipment.Events.Length != 0))
+	{
+		<div>
+			<h3>Updates</h3>
+
+			@foreach (var @event in shipment.Events)
+			{
+				<div>
+					<h4>@(@event.State.ToString())</h4>
+					<small>@(@event.Timestamp.ToString("g"))</small>
+					@if (@event.Description is not null)
+					{
+						<p>@(@event.Description)</p>
+					}
+				</div>
+			}
+		</div>
 	}
 }
 else

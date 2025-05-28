@@ -47,6 +47,7 @@ namespace ParcelTracker.Common.Models
 		/// <summary>
 		/// Status updates of the delivery.
 		/// </summary>
+		/// <remarks>This should <b>NOT</b> the current state, as this is a log of previous updates.</remarks>
 		public required ShipmentEvent[]? Events { get; init; }
 
 		/// <summary>
@@ -70,6 +71,11 @@ namespace ParcelTracker.Common.Models
 		/// </summary>
 		/// <remarks>If <see cref="State"/> is <see cref="ShipmentState.Delivered"/>, this value should be <see langword="default"/>.</remarks>
 		public required Range<System.DateTime> EstimatedArrival { get; init; }
+
+		/// <summary>
+		/// The amount of time the delivery is delayed.
+		/// </summary>
+		public required System.TimeSpan Delay { get; init; }
 
 		public bool Equals(Shipment other) =>
 			string.Equals(this.Id, other.Id, System.StringComparison.Ordinal);
