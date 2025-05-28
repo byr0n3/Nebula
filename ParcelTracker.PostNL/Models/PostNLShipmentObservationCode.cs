@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Elegance.Enums;
@@ -5,7 +6,7 @@ using Elegance.Enums;
 namespace ParcelTracker.PostNL.Models
 {
 	[Enum]
-	[JsonConverter(typeof(PostNLShipmentObservationCodeJsonConverter))]
+	[JsonConverter(typeof(JsonPostNLShipmentObservationCodeConverter2))]
 	public enum PostNLShipmentObservationCode
 	{
 		Unknown,
@@ -65,20 +66,16 @@ namespace ParcelTracker.PostNL.Models
 		InClearance,
 	}
 
-	internal sealed class PostNLShipmentObservationCodeJsonConverter : JsonConverter<PostNLShipmentObservationCode>
+	internal sealed class JsonPostNLShipmentObservationCodeConverter2 : JsonConverter<PostNLShipmentObservationCode>
 	{
-		public override PostNLShipmentObservationCode Read(ref Utf8JsonReader reader, System.Type _, JsonSerializerOptions __)
-		{
-			System.Span<char> buffer = stackalloc char[32];
+		private static readonly JsonPostNLShipmentObservationCodeConverter converter = new();
 
-			var copied = reader.CopyString(buffer);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public override PostNLShipmentObservationCode Read(ref Utf8JsonReader reader, System.Type type, JsonSerializerOptions options) =>
+			JsonPostNLShipmentObservationCodeConverter2.converter.Read(ref reader, type, options);
 
-			// @todo Update `Elegance.Enums` for Span support (byte and char)
-
-			return PostNLShipmentObservationCodeEnumData.FromValue(new string(buffer.Slice(0, copied)));
-		}
-
-		public override void Write(Utf8JsonWriter writer, PostNLShipmentObservationCode value, JsonSerializerOptions _) =>
-			throw new System.NotSupportedException();
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public override void Write(Utf8JsonWriter writer, PostNLShipmentObservationCode value, JsonSerializerOptions options) =>
+			JsonPostNLShipmentObservationCodeConverter2.converter.Write(writer, value, options);
 	}
 }

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Elegance.Enums;
@@ -5,7 +6,7 @@ using Elegance.Enums;
 namespace ParcelTracker.PostNL.Models
 {
 	[Enum]
-	[JsonConverter(typeof(PostNLShipmentTypeJsonConverter))]
+	[JsonConverter(typeof(JsonPostNLShipmentTypeConverter2))]
 	public enum PostNLShipmentType
 	{
 		Unknown,
@@ -13,20 +14,16 @@ namespace ParcelTracker.PostNL.Models
 		[EnumValue("LetterboxParcel")] LetterboxParcel,
 	}
 
-	internal sealed class PostNLShipmentTypeJsonConverter : JsonConverter<PostNLShipmentType>
+	internal sealed class JsonPostNLShipmentTypeConverter2 : JsonConverter<PostNLShipmentType>
 	{
-		public override PostNLShipmentType Read(ref Utf8JsonReader reader, System.Type _, JsonSerializerOptions __)
-		{
-			System.Span<char> buffer = stackalloc char[32];
+		private static readonly JsonPostNLShipmentTypeConverter converter = new();
 
-			var copied = reader.CopyString(buffer);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public override PostNLShipmentType Read(ref Utf8JsonReader reader, System.Type type, JsonSerializerOptions options) =>
+			JsonPostNLShipmentTypeConverter2.converter.Read(ref reader, type, options);
 
-			// @todo Update `Elegance.Enums` for Span support (byte and char)
-
-			return PostNLShipmentTypeEnumData.FromValue(new string(buffer.Slice(0, copied)));
-		}
-
-		public override void Write(Utf8JsonWriter writer, PostNLShipmentType value, JsonSerializerOptions _) =>
-			throw new System.NotSupportedException();
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public override void Write(Utf8JsonWriter writer, PostNLShipmentType value, JsonSerializerOptions options) =>
+			JsonPostNLShipmentTypeConverter2.converter.Write(writer, value, options);
 	}
 }
