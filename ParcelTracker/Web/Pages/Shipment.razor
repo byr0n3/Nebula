@@ -1,13 +1,29 @@
-@page "/shipment/{code:required}/{zipCode:required}"
+@page "/shipments/{code:required}/{zipCode:required}"
 @using ParcelTracker.Common.Models
+@using Microsoft.AspNetCore.Components.Routing
 
 @if (shipment != default)
 {
-	<p>Tracking code: @(shipment.TrackingCode)</p>
+	<h1>Tracking code: @(shipment.TrackingCode)</h1>
 
-	<h1>
-		Expected: @(shipment.EstimatedArrival.Lower.ToString("g")) – @(shipment.EstimatedArrival.Upper.ToString("g"))
-	</h1>
+	@if (shipment.RelatedTrackingCodes is not null)
+	{
+		<h2>Related:</h2>
+
+		<div>
+			@foreach (var trackingCode in shipment.RelatedTrackingCodes)
+			{
+				<NavLink @key="@(trackingCode)" href="@($"/shipments/{trackingCode}/{ZipCode}")"
+				         style="display: block;">
+					@(trackingCode)
+				</NavLink>
+			}
+		</div>
+	}
+
+	<p>
+		Expected: @(shipment.EstimatedTimeOfArrival.Lower.ToString("g")) – @(shipment.EstimatedTimeOfArrival.Upper.ToString("g"))
+	</p>
 
 	@switch (shipment.State)
 	{
@@ -21,6 +37,14 @@
 
 		case ShipmentState.Sorted:
 			<p>The shipment has been sorted.</p>
+			break;
+
+		case ShipmentState.OutForDelivery:
+			<p>The shipment is out for delivery!</p>
+			break;
+
+		case ShipmentState.Delivered:
+			<p>The delivery service reported that the shipment has been delivered.</p>
 			break;
 	}
 
@@ -83,8 +107,10 @@
 
 			@foreach (var @event in shipment.Events)
 			{
-				<div>
-					<h4>@(@event.State.ToString())</h4>
+				var key = @event.State.ToString();
+
+				<div @key="@(key)">
+					<h4>@(key)</h4>
 					<small>@(@event.Timestamp.ToString("g"))</small>
 					@if (@event.Description is not null)
 					{

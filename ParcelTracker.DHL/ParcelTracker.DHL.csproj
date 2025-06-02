@@ -10,4 +10,8 @@
 		<ProjectReference Include="..\ParcelTracker.Common\ParcelTracker.Common.csproj"/>
 	</ItemGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Elegance.Enums" Version="$(EleganceVersion)" PrivateAssets="all"/>
+	</ItemGroup>
+
 </Project>

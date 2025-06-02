@@ -18,7 +18,7 @@ namespace ParcelTracker.Web.Pages
 		{
 			Debug.Assert(this.Model.IsValid);
 
-			this.Navigation.NavigateTo($"/shipment/{this.Model.Code}/{this.Model.ZipCode}", true);
+			this.Navigation.NavigateTo($"/shipments/{this.Model.Code}/{this.Model.ZipCode}", true);
 		}
 
 		private sealed class FindShipmentModel

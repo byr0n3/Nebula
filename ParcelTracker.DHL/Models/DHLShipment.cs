@@ -1,4 +1,7 @@
+using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
+using ParcelTracker.Common;
+using ParcelTracker.DHL.Internal;
 
 namespace ParcelTracker.DHL.Models
 {
@@ -12,15 +15,13 @@ namespace ParcelTracker.DHL.Models
 		// @todo Enum
 		public required string Type { get; init; }
 
-		public required string[] Barcodes { get; init; }
-
 		public required System.DateTime Date { get; init; }
 
 		public required System.DateTime Created { get; init; }
 
 		[JsonPropertyName("lastUpdated")] public required System.DateTime Updated { get; init; }
 
-		[JsonPropertyName("deliveredAt")] public required System.DateTime DeliveryDate { get; init; }
+		[JsonPropertyName("deliveredAt")] public System.DateTime DeliveryDate { get; init; }
 
 		[JsonPropertyName("receiver")] public required DHLShipmentContact Recipient { get; init; }
 
@@ -42,6 +43,10 @@ namespace ParcelTracker.DHL.Models
 
 		[JsonPropertyName("volumetricWeight")] public float Weight { get; init; }
 
+		[JsonPropertyName("plannedDeliveryTimeframe")]
+		[JsonConverter(typeof(JsonDateTimeRangeStringConverter))]
+		public Range<System.DateTime> EstimatedDeliveryTime { get; init; }
+
 		public bool Equals(DHLShipment other) =>
 			string.Equals(this.Id, other.Id, System.StringComparison.Ordinal);
 
@@ -60,7 +65,7 @@ namespace ParcelTracker.DHL.Models
 
 	public readonly struct DHLShipmentView
 	{
-		[JsonPropertyName("phaseDisplay")] public required DHLShipmentPhase[] Phases { get; init; }
+		[JsonPropertyName("phaseDisplay")] public required DHLShipmentPhaseDisplay[] Phases { get; init; }
 	}
 
 	public readonly struct DHLShipmentContact
@@ -104,10 +109,10 @@ namespace ParcelTracker.DHL.Models
 		[JsonPropertyName("localTimestamp")] public required System.DateTime Timestamp { get; init; }
 	}
 
-	public readonly struct DHLShipmentPhase
+	[StructLayout(LayoutKind.Sequential)]
+	public readonly struct DHLShipmentPhaseDisplay
 	{
-		// @todo Enum
-		public required string Phase { get; init; }
+		public required DHLShipmentPhase Phase { get; init; }
 
 		public required bool Completed { get; init; }
 

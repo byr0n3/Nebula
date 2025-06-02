@@ -1,0 +1,13 @@
+using System.Linq;
+using System.Runtime.CompilerServices;
+using ParcelTracker.Database.Interfaces;
+
+namespace ParcelTracker.Database.Extensions
+{
+	public static class EntityExtensions
+	{
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IQueryable<T> WhereId<T>(this IQueryable<T> @this, int id) where T : IEntity =>
+			@this.Where((e) => e.Id == id);
+	}
+}

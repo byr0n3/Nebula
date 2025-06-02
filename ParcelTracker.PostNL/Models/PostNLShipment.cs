@@ -44,6 +44,8 @@ namespace ParcelTracker.PostNL.Models
 
 		public required PostNLShipmentObservation[] Observations { get; init; }
 
+		[JsonPropertyName("relatedCollos")] public PostNLRelatedShipment[]? Related { get; init; }
+
 		public bool Equals(PostNLShipment other) =>
 			string.Equals(this.Id, other.Id, System.StringComparison.Ordinal);
 
@@ -196,5 +198,15 @@ namespace ParcelTracker.PostNL.Models
 		/// </summary>
 		/// <remarks>This message will be localized in the language given to the URL using the search parameters.</remarks>
 		public required string Description { get; init; }
+	}
+
+	public readonly struct PostNLRelatedShipment
+	{
+		public required ShipmentIdentification Identification { get; init; }
+
+		public readonly struct ShipmentIdentification
+		{
+			[JsonPropertyName("barcode")] public required string TrackingCode { get; init; }
+		}
 	}
 }

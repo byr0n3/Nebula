@@ -25,6 +25,11 @@ namespace ParcelTracker.Services
 		{
 			foreach (var source in this.sources)
 			{
+				if ((request.Source != default) && (request.Source != source.Source))
+				{
+					continue;
+				}
+
 				var valid = await source.ValidateAsync(request, token).ConfigureAwait(false);
 
 				if (!valid)

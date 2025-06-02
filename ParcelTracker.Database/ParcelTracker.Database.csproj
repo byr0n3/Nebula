@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="../ParcelTracker.props"/>
+
+	<ItemGroup>
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0-preview.3"/>
+
+		<PackageReference Include="Elegance.AspNet.Authentication" Version="$(EleganceVersion)"/>
+	</ItemGroup>
+
+</Project>

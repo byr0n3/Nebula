@@ -8,13 +8,6 @@ namespace ParcelTracker.PostNL.Internal.Extensions
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static ShipmentState ToShipmentState(this PostNLPhaseType @this) =>
-			(@this) switch
-			{
-				PostNLPhaseType.Registered     => ShipmentState.Registered,
-				PostNLPhaseType.Sorted         => ShipmentState.Sorted,
-				PostNLPhaseType.OutForDelivery => ShipmentState.OutForDelivery,
-				PostNLPhaseType.Delivered      => ShipmentState.Delivered,
-				_                              => ShipmentState.Registered,
-			};
+			Unsafe.BitCast<PostNLPhaseType, ShipmentState>(@this);
 	}
 }

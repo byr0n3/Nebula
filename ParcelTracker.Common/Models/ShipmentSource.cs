@@ -1,9 +1,12 @@
+using Elegance.Enums;
+
 namespace ParcelTracker.Common.Models
 {
+	[Enum]
 	public enum ShipmentSource
 	{
-		None,
-		PostNL,
-		DHL,
+		[EnumValue("unknown")] Unknown,
+		[EnumValue("postnl")] PostNL,
+		[EnumValue("dhl")] DHL,
 	}
 }

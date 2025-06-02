@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Net.Mime;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using ParcelTracker.Common;
 using ParcelTracker.Common.Models;
+using ParcelTracker.DHL.Internal.Extensions;
 using ParcelTracker.DHL.Models;
 
 namespace ParcelTracker.DHL
@@ -59,6 +61,13 @@ namespace ParcelTracker.DHL
 				shipment = (data is not null) && (data.Length != 0) ? data[0] : default;
 			}
 
+			// @todo Phase `Underway` contains both `Received` and `Sorted` shipment states
+			var state = shipment.View
+								.Phases
+								.Where(static (p) => p.Completed)
+								.Select(static (p) => p.Phase.ToShipmentState())
+								.LastOrDefault();
+
 			return new Shipment
 			{
 				Id = shipment.Id,
@@ -66,8 +75,7 @@ namespace ParcelTracker.DHL
 				Source = this.Source,
 				// @todo
 				Type = ShipmentType.Unknown,
-				// @todo
-				State = ShipmentState.Registered,
+				State = state,
 				Recipient = new ShipmentContact
 				{
 					Name = shipment.Recipient.Name,
@@ -102,8 +110,7 @@ namespace ParcelTracker.DHL
 				Created = shipment.Created,
 				Updated = shipment.Updated,
 				Arrived = shipment.DeliveryDate,
-				// @todo
-				EstimatedArrival = default,
+				EstimatedTimeOfArrival = shipment.EstimatedDeliveryTime,
 				Delay = default,
 			};
 		}

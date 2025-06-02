@@ -12,6 +12,8 @@ namespace ParcelTracker.Common.Models
 
 		public Language Language { get; init; }
 
+		public ShipmentSource Source { get; init; }
+
 		[SetsRequiredMembers]
 		public ShipmentRequest(string code, string zipCode, Country country = default, Language language = default)
 		{

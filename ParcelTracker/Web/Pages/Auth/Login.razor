@@ -1,0 +1,49 @@
+@page "/login"
+@using Microsoft.AspNetCore.Components.Forms
+
+<h1>Login</h1>
+
+<EditForm Model="@(Model)" OnValidSubmit="@(LoginAsync)" FormName="@(Login.formName)">
+	<DataAnnotationsValidator/>
+
+	<a href="/register">
+		Don't have an account yet?
+	</a>
+
+	<div>
+		<label for="user">
+			Username/E-mail
+		</label>
+		<InputText @bind-Value="@(Model.User)"
+		           id="user"
+		           autocomplete="username"
+		           aria-required="true"
+		           required
+		           autofocus/>
+	</div>
+
+	<div>
+		<label for="password">
+			Password
+		</label>
+		<InputText @bind-Value="@(Model.Password)"
+		           type="password"
+		           id="password"
+		           autocomplete="current-password"
+		           aria-required="true"
+		           required/>
+	</div>
+
+	<div>
+		<label for="persist" class="checkbox">
+			<InputCheckbox @bind-Value="@(Model.Persistent)" id="persist"/>
+			Stay logged in?
+		</label>
+	</div>
+
+	<ValidationMessage For="@(() => Model.User)" class="text-danger mb-3"/>
+
+	<button type="submit" class="btn btn-primary">
+		Login
+	</button>
+</EditForm>

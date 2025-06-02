@@ -1,0 +1,79 @@
+@page "/register"
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>Register</PageTitle>
+
+<h1>Register</h1>
+
+<EditForm Model="@(Model)" OnValidSubmit="@(RegisterAsync)" FormName="@(Register.formName)">
+	<DataAnnotationsValidator/>
+
+	<a href="/login">
+		Already have an account?
+	</a>
+
+	@if (Model.Error)
+	{
+		<div role="alert" class="alert alert-danger">
+			Something went wrong.
+		</div>
+	}
+
+	<div>
+		<label for="username">
+			Username
+		</label>
+		<InputText @bind-Value="@(Model.Username)"
+				   id="username"
+				   autocomplete="username"
+				   aria-required="true"
+				   aria-describedby="username-error"
+				   required
+				   autofocus/>
+		<ValidationMessage For="@(() => Model.Username)" id="username-error" class="text-danger"/>
+	</div>
+
+	<div>
+		<label for="email">
+			E-mail
+		</label>
+		<InputText @bind-Value="@(Model.Email)"
+				   id="email"
+				   type="email"
+				   autocomplete="email"
+				   aria-required="true"
+				   aria-describedby="email-error"
+				   required/>
+		<ValidationMessage For="@(() => Model.Email)" id="email-error" class="text-danger"/>
+	</div>
+
+	<div>
+		<label for="password">
+			Password
+		</label>
+		<InputText @bind-Value="@(Model.Password)"
+				   type="password"
+				   id="password"
+				   autocomplete="new-password"
+				   aria-required="true"
+				   aria-describedby="password-error"
+				   required/>
+		<ValidationMessage For="@(() => Model.Password)" id="password-error" class="text-danger"/>
+	</div>
+
+	<div>
+		<label for="password-confirmation">
+			Password confirmation
+		</label>
+		<InputText @bind-Value="@(Model.PasswordConfirmation)"
+				   type="password"
+				   id="password-confirmation"
+				   autocomplete="new-password"
+				   aria-required="true"
+				   required/>
+	</div>
+
+	<button type="submit" class="btn btn-primary">
+		Register
+	</button>
+</EditForm>

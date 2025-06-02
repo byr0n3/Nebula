@@ -70,12 +70,18 @@ namespace ParcelTracker.Common.Models
 		/// The estimated date-time period that the shipment should arrive at.
 		/// </summary>
 		/// <remarks>If <see cref="State"/> is <see cref="ShipmentState.Delivered"/>, this value should be <see langword="default"/>.</remarks>
-		public required Range<System.DateTime> EstimatedArrival { get; init; }
+		public required Range<System.DateTime> EstimatedTimeOfArrival { get; init; }
 
 		/// <summary>
 		/// The amount of time the delivery is delayed.
 		/// </summary>
 		public required System.TimeSpan Delay { get; init; }
+
+		/// <summary>
+		/// Tracking codes that point to related shipments.
+		/// </summary>
+		/// <remarks>These tracking codes should be from the same delivery service, to the same address.</remarks>
+		public string[]? RelatedTrackingCodes { get; init; }
 
 		public bool Equals(Shipment other) =>
 			string.Equals(this.Id, other.Id, System.StringComparison.Ordinal);

@@ -30,3 +30,12 @@ The server requires the following headers for the request to be accepted:
 ‘X-XSRF-TOKEN’ - Needs to have a value, can be any value
 
 [//]: # (@todo UPS)
+
+## Development
+
+### Database
+
+```shell
+createuser --pwprompt parcel_tracker # Make the pwd 'parcel_tracker'
+createdb --owner parcel_tracker parcel_tracker
+```

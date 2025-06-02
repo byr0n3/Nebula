@@ -1,0 +1,7 @@
+@using Microsoft.AspNetCore.Components.Forms
+
+<EditForm EditContext="@(context)" OnValidSubmit="@(LogoutAsync)" FormName="@(LogoutForm.formName)">
+	<button type="submit">
+		Logout
+	</button>
+</EditForm>
