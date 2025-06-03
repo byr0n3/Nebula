@@ -7,13 +7,15 @@ namespace ParcelTracker.DHL.Internal.Extensions
 	internal static class DHLShipmentPhaseExtensions
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static ShipmentState ToShipmentState(this DHLShipmentPhase @this) =>
+		public static ShipmentEventType ToShipmentEventType(this DHLShipmentPhase @this) =>
 			(@this) switch
 			{
-				DHLShipmentPhase.Underway   => ShipmentState.Received,
-				DHLShipmentPhase.InDelivery => ShipmentState.OutForDelivery,
-				DHLShipmentPhase.Delivered  => ShipmentState.Delivered,
-				_                           => ShipmentState.Registered,
+				DHLShipmentPhase.DataReceived => ShipmentEventType.Registered,
+				DHLShipmentPhase.Underway     => ShipmentEventType.Received,
+				DHLShipmentPhase.InDelivery   => ShipmentEventType.OutForDelivery,
+				DHLShipmentPhase.Delivered    => ShipmentEventType.Delivered,
+				DHLShipmentPhase.Intervention => ShipmentEventType.InformationUpdate,
+				_                             => ShipmentEventType.Registered,
 			};
 	}
 }

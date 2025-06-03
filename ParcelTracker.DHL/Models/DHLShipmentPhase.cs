@@ -14,6 +14,15 @@ namespace ParcelTracker.DHL.Models
 		[EnumValue("UNDERWAY")] Underway,
 		[EnumValue("IN_DELIVERY")] InDelivery,
 		[EnumValue("DELIVERED")] Delivered,
+
+		// Phase categories
+
+		/// <summary>
+		/// <p>Indicates an update/change coming from the receiver.</p>
+		/// <p>For example, the receiver changes the requested delivery location/time.</p>
+		/// </summary>
+		[EnumValue("INTERVENTION")]
+		Intervention,
 	}
 
 	internal sealed class JsonDHLShipmentPhaseConverter2 : JsonConverter<DHLShipmentPhase>

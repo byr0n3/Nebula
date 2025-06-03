@@ -21,9 +21,12 @@
 		</div>
 	}
 
-	<p>
-		Expected: @(shipment.EstimatedTimeOfArrival.Lower.ToString("g")) – @(shipment.EstimatedTimeOfArrival.Upper.ToString("g"))
-	</p>
+	@if (shipment.EstimatedTimeOfArrival != default)
+	{
+		<p>
+			Expected: @(shipment.EstimatedTimeOfArrival.Lower.ToString("g")) – @(shipment.EstimatedTimeOfArrival.Upper.ToString("g"))
+		</p>
+	}
 
 	@switch (shipment.State)
 	{

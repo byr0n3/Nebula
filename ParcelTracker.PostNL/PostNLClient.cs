@@ -83,9 +83,8 @@ namespace ParcelTracker.PostNL
 				},
 				Events = shipment.Observations.Select(static (o) => new ShipmentEvent
 				{
-					State = o.Code.ToShipmentState(),
+					State = o.Code.ToShipmentEventType(),
 					Timestamp = o.Date,
-					Completed = true,
 					Description = o.Description,
 				}).ToArray(),
 				Created = shipment.Created,

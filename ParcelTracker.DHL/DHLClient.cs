@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using ParcelTracker.Common;
+using ParcelTracker.Common.Extensions;
 using ParcelTracker.Common.Models;
 using ParcelTracker.DHL.Internal.Extensions;
 using ParcelTracker.DHL.Models;
@@ -61,12 +62,10 @@ namespace ParcelTracker.DHL
 				shipment = (data is not null) && (data.Length != 0) ? data[0] : default;
 			}
 
-			// @todo Phase `Underway` contains both `Received` and `Sorted` shipment states
-			var state = shipment.View
-								.Phases
-								.Where(static (p) => p.Completed)
-								.Select(static (p) => p.Phase.ToShipmentState())
-								.LastOrDefault();
+			var events = shipment.Events.Select(ToShipmentEvent).ToArray();
+			var state = events.Where(static (e) => e.State != ShipmentEventType.InformationUpdate)
+							  .Select(static (e) => e.State.ToShipmentState())
+							  .Last();
 
 			return new Shipment
 			{
@@ -105,14 +104,34 @@ namespace ParcelTracker.DHL
 					// `Weight` is given in KG, convert to G.
 					Weight = shipment.Weight * 1000,
 				},
-				// @todo
-				Events = null,
+				// @todo Fix duplicate interventions (same type and remarks yet different timestamp)
+				// Don't check uniqueness on remarks, that makes no sense.
+				Events = events,
 				Created = shipment.Created,
 				Updated = shipment.Updated,
 				Arrived = shipment.DeliveryDate,
 				EstimatedTimeOfArrival = shipment.EstimatedDeliveryTime,
+				// @todo Is this a thing?
 				Delay = default,
 			};
+
+			static ShipmentEvent ToShipmentEvent(DHLShipmentEvent @event)
+			{
+				var state = (@event.Status) switch
+				{
+					DHLShipmentEventStatus.Registered => ShipmentEventType.Registered,
+					DHLShipmentEventStatus.Received   => ShipmentEventType.Received,
+					DHLShipmentEventStatus.Sorted     => ShipmentEventType.Sorted,
+					_                                 => @event.Category.ToShipmentEventType(),
+				};
+
+				return new ShipmentEvent
+				{
+					State = state,
+					Timestamp = @event.Timestamp,
+					Description = @event.Remarks,
+				};
+			}
 		}
 
 		[MustDisposeResource]

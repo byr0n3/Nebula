@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using ParcelTracker.Common;
 using ParcelTracker.DHL.Internal;
@@ -31,8 +30,6 @@ namespace ParcelTracker.DHL.Models
 
 		[JsonPropertyName("events")] public required DHLShipmentEvent[] Events { get; init; }
 
-		public required DHLShipmentView View { get; init; }
-
 		public float DeclaredWeight { get; init; }
 
 		public float Height { get; init; }
@@ -61,11 +58,6 @@ namespace ParcelTracker.DHL.Models
 
 		public static bool operator !=(in DHLShipment left, in DHLShipment right) =>
 			!left.Equals(right);
-	}
-
-	public readonly struct DHLShipmentView
-	{
-		[JsonPropertyName("phaseDisplay")] public required DHLShipmentPhaseDisplay[] Phases { get; init; }
 	}
 
 	public readonly struct DHLShipmentContact
@@ -97,25 +89,12 @@ namespace ParcelTracker.DHL.Models
 
 	public readonly struct DHLShipmentEvent
 	{
-		// @todo Enum
-		public required string Category { get; init; }
+		public required DHLShipmentPhase Category { get; init; }
 
-		// @todo Enum
-		public required string Type { get; init; }
+		public required DHLShipmentEventStatus Status { get; init; }
 
-		// @todo Enum
-		public required string Status { get; init; }
+		public required System.DateTime Timestamp { get; init; }
 
-		[JsonPropertyName("localTimestamp")] public required System.DateTime Timestamp { get; init; }
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public readonly struct DHLShipmentPhaseDisplay
-	{
-		public required DHLShipmentPhase Phase { get; init; }
-
-		public required bool Completed { get; init; }
-
-		public required bool Exception { get; init; }
+		public string? Remarks { get; init; }
 	}
 }

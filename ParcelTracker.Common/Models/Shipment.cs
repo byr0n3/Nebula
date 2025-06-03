@@ -192,29 +192,37 @@ namespace ParcelTracker.Common.Models
 	/// <summary>
 	/// Defines a previous state update of the shipment.
 	/// </summary>
-	public readonly struct ShipmentEvent
+	public readonly struct ShipmentEvent : System.IEquatable<ShipmentEvent>
 	{
 		/// <summary>
 		/// The new state of the shipment.
 		/// </summary>
-		public required ShipmentState State { get; init; }
+		public required ShipmentEventType State { get; init; }
 
 		/// <summary>
 		/// The date and time when this event/update happened.
 		/// </summary>
 		public required System.DateTime Timestamp { get; init; }
 
-		// @todo DHL 'phaseDisplay' has this property, but does this mean anything?
-		/// <summary>
-		/// If this event has been completed or not.
-		/// </summary>
-		/// <remarks>If this value is <see langword="false"/>, the event is scheduled to happen in the future.</remarks>
-		public required bool Completed { get; init; }
-
 		/// <summary>
 		/// A delivery service provided-message about the update.
 		/// </summary>
 		/// <remarks>This message is (normally) localized in the language given to the request.</remarks>
 		public string? Description { get; init; }
+
+		public bool Equals(ShipmentEvent other) =>
+			(this.State == other.State) && this.Timestamp.Equals(other.Timestamp);
+
+		public override bool Equals(object? @object) =>
+			(@object is ShipmentEvent other) && this.Equals(other);
+
+		public override int GetHashCode() =>
+			System.HashCode.Combine(this.State, this.Timestamp);
+
+		public static bool operator ==(ShipmentEvent left, ShipmentEvent right) =>
+			left.Equals(right);
+
+		public static bool operator !=(ShipmentEvent left, ShipmentEvent right) =>
+			!left.Equals(right);
 	}
 }
