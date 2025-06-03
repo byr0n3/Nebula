@@ -3,6 +3,10 @@
 	<Import Project="../ParcelTracker.props"/>
 
 	<ItemGroup>
+		<AdditionalFiles Include="icons/*.svg"/>
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="../ParcelTracker.PostNL/ParcelTracker.PostNL.csproj"/>
 		<ProjectReference Include="../ParcelTracker.DHL/ParcelTracker.DHL.csproj"/>
 		<ProjectReference Include="../ParcelTracker.Database/ParcelTracker.Database.csproj"/>
@@ -12,6 +16,7 @@
 		<PackageReference Include="Elegance.AspNet.Authentication" Version="$(EleganceVersion)"/>
 		<PackageReference Include="Elegance.Enums" Version="$(EleganceVersion)"/>
 		<PackageReference Include="Elegance.Extensions" Version="$(EleganceVersion)"/>
+		<PackageReference Include="Elegance.Icons" Version="$(EleganceVersion)" PrivateAssets="all"/>
 	</ItemGroup>
 
 </Project>

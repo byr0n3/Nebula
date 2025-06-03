@@ -16,7 +16,7 @@ namespace ParcelTracker.Web.Pages.Auth
 
 		[CascadingParameter] public required HttpContext HttpContext { get; init; }
 
-		[Inject] public required IDbContextFactory<ParcelDbContext> DbFactory { get; init; }
+		[Inject] public required IDbContextFactory<ShipmentDbContext> DbFactory { get; init; }
 
 		[Inject] public required AuthenticationService<User> Authentication { get; init; }
 

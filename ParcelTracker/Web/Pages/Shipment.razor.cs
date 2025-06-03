@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
 using ParcelTracker.Common.Models;
 using ParcelTracker.Services;
 using ShipmentModel = ParcelTracker.Common.Models.Shipment;
@@ -8,6 +9,8 @@ namespace ParcelTracker.Web.Pages
 {
 	public sealed partial class Shipment : ComponentBase
 	{
+		[CascadingParameter] public required HttpContext HttpContext { get; init; }
+
 		[Inject] public required ShipmentsService Shipments { get; init; }
 
 		[Parameter] public required string Code { get; init; }
@@ -27,6 +30,6 @@ namespace ParcelTracker.Web.Pages
 				// @todo From client
 				Country = Country.Netherlands,
 				Language = Language.Dutch,
-			});
+			}, this.HttpContext.RequestAborted);
 	}
 }

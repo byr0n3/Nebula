@@ -110,7 +110,7 @@ namespace ParcelTracker.DHL
 				Created = shipment.Created,
 				Updated = shipment.Updated,
 				Arrived = shipment.DeliveryDate,
-				EstimatedTimeOfArrival = shipment.EstimatedDeliveryTime,
+				Eta = shipment.EstimatedDeliveryTime,
 				// @todo Is this a thing?
 				Delay = default,
 			};

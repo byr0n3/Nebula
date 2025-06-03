@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Elegance.AspNet.Authentication;
@@ -24,6 +25,9 @@ namespace ParcelTracker.Database.Models
 		[Column("created")]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public System.DateTime Created { get; init; }
+
+		public ICollection<Shipment> Shipments { get; init; } = null!;
+		public ICollection<UserShipment> UserShipments { get; init; } = null!;
 	}
 
 	[System.Flags]

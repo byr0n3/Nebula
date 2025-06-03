@@ -1,10 +1,15 @@
 @page "/shipments/{code:required}/{zipCode:required}"
 @using ParcelTracker.Common.Models
 @using Microsoft.AspNetCore.Components.Routing
+@using ParcelTracker.Web.Components
 
 @if (shipment != default)
 {
-	<h1>Tracking code: @(shipment.TrackingCode)</h1>
+	<div>
+		<h1>Tracking code: @(shipment.TrackingCode)</h1>
+
+		<ShipmentSubscriptionForm Shipment="@(shipment)"/>
+	</div>
 
 	@if (shipment.RelatedTrackingCodes is not null)
 	{
@@ -21,10 +26,10 @@
 		</div>
 	}
 
-	@if (shipment.EstimatedTimeOfArrival != default)
+	@if (shipment.Eta != default)
 	{
 		<p>
-			Expected: @(shipment.EstimatedTimeOfArrival.Lower.ToString("g")) – @(shipment.EstimatedTimeOfArrival.Upper.ToString("g"))
+			Expected: @(shipment.Eta.Lower.ToString("g")) – @(shipment.Eta.Upper.ToString("g"))
 		</p>
 	}
 

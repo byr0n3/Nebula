@@ -29,7 +29,7 @@ namespace ParcelTracker.Models.Requests
 		{
 			Debug.Assert(this.IsValid);
 
-			var dbFactory = context.GetRequiredService<IDbContextFactory<ParcelDbContext>>();
+			var dbFactory = context.GetRequiredService<IDbContextFactory<ShipmentDbContext>>();
 			var db = dbFactory.CreateDbContext();
 
 			using (db)
@@ -46,7 +46,7 @@ namespace ParcelTracker.Models.Requests
 			}
 		}
 
-		public IQueryable<User> GetQuery(ParcelDbContext db) =>
+		public IQueryable<User> GetQuery(ShipmentDbContext db) =>
 			db.Users
 			  .Where((u) =>
 						 ((u.Username == this.User) || (u.Email == this.User)) &&

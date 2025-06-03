@@ -70,7 +70,7 @@ namespace ParcelTracker.Common.Models
 		/// The estimated date-time period that the shipment should arrive at.
 		/// </summary>
 		/// <remarks>If <see cref="State"/> is <see cref="ShipmentState.Delivered"/>, this value should be <see langword="default"/>.</remarks>
-		public required Range<System.DateTime> EstimatedTimeOfArrival { get; init; }
+		public required Range<System.DateTime> Eta { get; init; }
 
 		/// <summary>
 		/// The amount of time the delivery is delayed.

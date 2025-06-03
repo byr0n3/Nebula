@@ -54,7 +54,7 @@ namespace ParcelTracker.Models.Requests
 				);
 			}
 
-			var dbFactory = context.GetRequiredService<IDbContextFactory<ParcelDbContext>>();
+			var dbFactory = context.GetRequiredService<IDbContextFactory<ShipmentDbContext>>();
 			var db = dbFactory.CreateDbContext();
 
 			using (db)

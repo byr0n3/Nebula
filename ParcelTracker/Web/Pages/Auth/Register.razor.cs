@@ -14,7 +14,7 @@ namespace ParcelTracker.Web.Pages.Auth
 	{
 		private const string formName = "register";
 
-		[Inject] public required IDbContextFactory<ParcelDbContext> DbFactory { get; init; }
+		[Inject] public required IDbContextFactory<ShipmentDbContext> DbFactory { get; init; }
 
 		[Inject] public required NavigationManager Navigation { get; init; }
 

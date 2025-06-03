@@ -1,6 +1,4 @@
 using System.Diagnostics;
-using System.Globalization;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ParcelTracker.Common;
@@ -23,23 +21,13 @@ namespace ParcelTracker.DHL.Internal
 
 			Debug.Assert(separatorIdx != -1, "Invalid range value");
 
-			var lower = JsonDateTimeRangeStringConverter.ParseDateTime(buffer.Slice(0, separatorIdx));
-			var upper = JsonDateTimeRangeStringConverter.ParseDateTime(buffer.Slice(separatorIdx + 1));
+			var lower = JsonDateTimeUtcConverter.Parse(buffer.Slice(0, separatorIdx));
+			var upper = JsonDateTimeUtcConverter.Parse(buffer.Slice(separatorIdx + 1));
 
 			return new Range<System.DateTime>(lower, upper);
 		}
 
 		public override void Write(Utf8JsonWriter writer, Range<System.DateTime> value, JsonSerializerOptions options) =>
 			throw new System.NotSupportedException();
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static System.DateTime ParseDateTime(scoped System.ReadOnlySpan<char> value) =>
-			System.DateTime.TryParseExact(value,
-										  "yyyy-MM-ddTHH:mm:sszzz",
-										  DateTimeFormatInfo.InvariantInfo,
-										  DateTimeStyles.RoundtripKind,
-										  out var result)
-				? result
-				: throw new System.ArgumentException($"Value '{value}' is not in the correct format", nameof(value));
 	}
 }

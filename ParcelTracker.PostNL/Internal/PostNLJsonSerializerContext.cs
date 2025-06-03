@@ -5,7 +5,11 @@ namespace ParcelTracker.PostNL.Internal
 {
 	[JsonSourceGenerationOptions(GenerationMode = JsonSourceGenerationMode.Metadata,
 								 PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
-								 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault)]
+								 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+								 Converters =
+								 [
+									 typeof(JsonDateTimeUtcConverter),
+								 ])]
 	[JsonSerializable(typeof(PostNLShipmentResponse))]
 	internal sealed partial class PostNLJsonSerializerContext : JsonSerializerContext;
 }

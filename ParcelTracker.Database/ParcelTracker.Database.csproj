@@ -8,4 +8,8 @@
 		<PackageReference Include="Elegance.AspNet.Authentication" Version="$(EleganceVersion)"/>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\ParcelTracker.Common\ParcelTracker.Common.csproj" />
+	</ItemGroup>
+
 </Project>

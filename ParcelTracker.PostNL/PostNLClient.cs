@@ -90,7 +90,7 @@ namespace ParcelTracker.PostNL
 				Created = shipment.Created,
 				Updated = shipment.Updated,
 				Arrived = shipment.DeliveryDate ?? default,
-				EstimatedTimeOfArrival = new Range<System.DateTime>(shipment.EstimatedTimeOfArrival.Start, shipment.EstimatedTimeOfArrival.End),
+				Eta = new Range<System.DateTime>(shipment.EstimatedTimeOfArrival.Start, shipment.EstimatedTimeOfArrival.End),
 				// `minutesOverdue` will be `null`/`0` if the shipment isn't overdue yet.
 				// The value of `Delay` will be `default` in that case.
 				Delay = System.TimeSpan.FromMinutes(shipment.EstimatedTimeOfArrival.MinutesOverdue.GetValueOrDefault()),
