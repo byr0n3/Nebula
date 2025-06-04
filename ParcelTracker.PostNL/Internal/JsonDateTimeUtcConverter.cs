@@ -14,10 +14,8 @@ namespace ParcelTracker.PostNL.Internal
 
 			buffer = buffer.Slice(0, read);
 
-			return System.DateTime.ParseExact(buffer,
-											  "yyyy-MM-ddTHH:mm:ssZ",
-											  DateTimeFormatInfo.InvariantInfo,
-											  DateTimeStyles.AdjustToUniversal);
+			// @todo Use `TryParseExact` (theres at least 2 different formats)
+			return System.DateTime.Parse(buffer, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AdjustToUniversal);
 		}
 
 		public override void Write(Utf8JsonWriter writer, System.DateTime value, JsonSerializerOptions options) =>

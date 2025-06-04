@@ -1,0 +1,4 @@
+<a href="/shipments/@(Shipment.Code)/@(Shipment.ZipCode)" style="display: block">
+	<p>@(Shipment.Sender ?? "Unknown")</p>
+	<p>@(Shipment.State.ToString())</p>
+</a>

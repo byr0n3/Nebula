@@ -1,0 +1,8 @@
+@using Microsoft.AspNetCore.Components.QuickGrid
+@typeparam TGridItem
+
+<QuickGrid ItemsProvider="@((GridItemsProvider<TGridItem>)LoadAsync)" Pagination="@(pagination)">
+	@(ChildContent)
+</QuickGrid>
+
+<Paginator State="@(pagination)"/>

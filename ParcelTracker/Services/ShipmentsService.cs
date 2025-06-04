@@ -8,7 +8,7 @@ using ParcelTracker.Common;
 using ParcelTracker.Common.Models;
 using ParcelTracker.Database;
 using ParcelTracker.Database.Models;
-using ParcelTracker.Models;
+using ParcelTracker.Models.Dto;
 using Shipment = ParcelTracker.Common.Models.Shipment;
 
 namespace ParcelTracker.Services
@@ -32,13 +32,15 @@ namespace ParcelTracker.Services
 
 		public async ValueTask<Shipment> GetShipmentAsync(ShipmentRequest request, CancellationToken token = default)
 		{
+			if (request.Source != default)
+			{
+				var source = this.sources.First((source) => source.Source == request.Source);
+
+				return await source.GetShipmentAsync(request, token).ConfigureAwait(false);
+			}
+
 			foreach (var source in this.sources)
 			{
-				if ((request.Source != default) && (request.Source != source.Source))
-				{
-					continue;
-				}
-
 				var valid = await source.ValidateAsync(request, token).ConfigureAwait(false);
 
 				if (!valid)

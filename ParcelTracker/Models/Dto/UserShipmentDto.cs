@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace ParcelTracker.Models
+namespace ParcelTracker.Models.Dto
 {
 	[StructLayout(LayoutKind.Sequential)]
 	public readonly struct UserShipmentDto : System.IEquatable<UserShipmentDto>

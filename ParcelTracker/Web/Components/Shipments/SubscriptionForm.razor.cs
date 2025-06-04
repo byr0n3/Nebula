@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Http;
 using ParcelTracker.Common.Models;
 using ParcelTracker.Extensions;
 using ParcelTracker.Models;
+using ParcelTracker.Models.Dto;
 using ParcelTracker.Services;
 
-namespace ParcelTracker.Web.Components
+namespace ParcelTracker.Web.Components.Shipments
 {
-	public sealed partial class ShipmentSubscriptionForm : ComponentBase
+	public sealed partial class SubscriptionForm : ComponentBase
 	{
 		private const string formName = "shipment-subscription";
 

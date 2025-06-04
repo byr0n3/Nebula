@@ -17,6 +17,8 @@ namespace ParcelTracker.Database.Models
 
 		[Column("source")] public required ShipmentSource Source { get; init; }
 
+		[StringLength(8)] [Column("zip_code")] public required string ZipCode { get; init; }
+
 		[Column("state")] public required ShipmentState State { get; init; }
 
 		[Column("eta")] public NpgsqlRange<System.DateTime>? Eta { get; init; }
@@ -42,6 +44,7 @@ namespace ParcelTracker.Database.Models
 			{
 				Code = shipment.TrackingCode,
 				Source = shipment.Source,
+				ZipCode = shipment.Recipient.ZipCode.Replace(' ', '\0'),
 				State = shipment.State,
 				Eta = shipment.Eta != default ? new NpgsqlRange<System.DateTime>(shipment.Eta.Lower, true, shipment.Eta.Upper, true) : null,
 				Arrived = shipment.Arrived != default ? shipment.Arrived : null,

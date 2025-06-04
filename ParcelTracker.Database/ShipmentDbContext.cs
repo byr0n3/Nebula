@@ -1,3 +1,5 @@
+using System.Linq;
+using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 using ParcelTracker.Database.Models;
 
@@ -24,5 +26,16 @@ namespace ParcelTracker.Database
 					   .UsingEntity<UserShipment>();
 			});
 		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public IQueryable<Shipment> GetUserShipments(int userId) =>
+			this.UsersShipments
+				.Where((us) => us.UserId == userId)
+				.Join(
+					 this.Shipments,
+					 static (us) => us.ShipmentId,
+					 static (s) => s.Id,
+					 static (_, s) => s
+				 );
 	}
 }

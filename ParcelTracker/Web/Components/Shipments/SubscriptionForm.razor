@@ -3,7 +3,7 @@
 
 <EditForm EditContext="@(context)"
           OnValidSubmit="@(ToggleSubscriptionAsync)"
-          FormName="@(ShipmentSubscriptionForm.formName)">
+          FormName="@(SubscriptionForm.formName)">
 	<button type="submit" title="@(userShipment.Subscribed ? "Unsubscribe from shipment" : "Subscribe to shipment")">
 		@if (userShipment.Subscribed)
 		{

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ParcelTracker.Common.Models;
+using ParcelTracker.Database.Internal.Translators;
 
 namespace ParcelTracker.Database.Extensions
 {
@@ -17,8 +18,8 @@ namespace ParcelTracker.Database.Extensions
 							connectionString,
 							static (options) =>
 							{
-								options.MapEnum<ShipmentSource>();
-								options.MapEnum<ShipmentState>();
+								options.MapEnum<ShipmentSource>(nameTranslator: ShipmentSourceNameTranslator.Instance);
+								options.MapEnum<ShipmentState>(nameTranslator: ShipmentStateNameTranslator.Instance);
 							}
 						);
 			}, poolSize);

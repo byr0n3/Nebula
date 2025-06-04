@@ -9,7 +9,7 @@ $$
         end if;
 
         if not exists (select * from pg_type where typname = 'shipment_state') then
-            create type shipment_state as enum ('registered', 'received', 'sorted', 'outfordelivery', 'delivered');
+            create type shipment_state as enum ('registered', 'received', 'sorted', 'out_for_delivery', 'delivered');
         end if;
 
     end
@@ -37,6 +37,7 @@ create table if not exists shipments
     id        serial          not null primary key,
     code      varchar(128)    not null,
     source    shipment_source not null,
+    zip_code  varchar(8)      not null,
 
     state     shipment_state  not null,
     eta       tstzrange,

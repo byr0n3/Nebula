@@ -1,14 +1,14 @@
 @page "/shipments/{code:required}/{zipCode:required}"
 @using ParcelTracker.Common.Models
 @using Microsoft.AspNetCore.Components.Routing
-@using ParcelTracker.Web.Components
+@using ParcelTracker.Web.Components.Shipments
 
 @if (shipment != default)
 {
 	<div>
 		<h1>Tracking code: @(shipment.TrackingCode)</h1>
 
-		<ShipmentSubscriptionForm Shipment="@(shipment)"/>
+		<SubscriptionForm Shipment="@(shipment)"/>
 	</div>
 
 	@if (shipment.RelatedTrackingCodes is not null)

@@ -1,0 +1,35 @@
+@using Elegance.Extensions
+@using Elegance.Icons
+@typeparam TGridItem
+
+@if ((items is null) || (items.Count == 0))
+{
+	@if (EmptyTemplate is not null)
+	{
+		@(EmptyTemplate)
+	}
+	else
+	{
+		<p>No items found.</p>
+	}
+}
+else
+{
+	<div>
+		@foreach (var item in items)
+		{
+			@(ItemTemplate(item))
+		}
+	</div>
+
+	<div>
+		<span>@(count.Str()) items</span>
+
+		<div>
+			<a href="@(GetPageLink(1))">@(Icons.ChevronsLeft)</a>
+			<a href="@(GetPageLink(Page - 1))">@(Icons.ChevronLeft)</a>
+			<a href="@(GetPageLink(Page + 1))">@(Icons.ChevronRight)</a>
+			<a href="@(GetPageLink(LastPage))">@(Icons.ChevronsRight)</a>
+		</div>
+	</div>
+}

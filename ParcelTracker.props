@@ -17,7 +17,7 @@
 
 		<IsPublishable>false</IsPublishable>
 
-		<EleganceVersion>0.3.0</EleganceVersion>
+		<EleganceVersion>0.3.1</EleganceVersion>
 	</PropertyGroup>
 
 	<ItemGroup Condition=" '$(Configuration)' != 'Release' ">
