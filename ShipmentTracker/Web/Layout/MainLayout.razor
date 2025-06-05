@@ -1,0 +1,56 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Authorization
+@using ShipmentTracker.Web.Components
+@inherits LayoutComponentBase
+
+@{ System.Diagnostics.Debug.Assert(Body is not null); }
+
+<header>
+	<span>ShipmentTracker</span>
+
+	<nav>
+		<ul>
+			<li>
+				<NavLink href="/" Match="@(NavLinkMatch.All)">
+					Find
+				</NavLink>
+			</li>
+		</ul>
+
+		<ul>
+			<AuthorizeView>
+				<Authorized>
+					<li>
+						<NavLink href="/shipments">
+							Shipments
+						</NavLink>
+					</li>
+					<li>
+						<NavLink href="/account">
+							Account
+						</NavLink>
+					</li>
+
+					<li>
+						<LogoutForm/>
+					</li>
+				</Authorized>
+
+				<NotAuthorized>
+					<li>
+						<NavLink href="/login">
+							Login
+						</NavLink>
+					</li>
+					<li>
+						<NavLink href="/register">
+							Register
+						</NavLink>
+					</li>
+				</NotAuthorized>
+			</AuthorizeView>
+		</ul>
+	</nav>
+</header>
+
+@(Body)

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="../ShipmentTracker.props"/>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ShipmentTracker.Common\ShipmentTracker.Common.csproj">
+		  <Project>{002c9b71-191d-45a8-84ce-dfd8ac526b99}</Project>
+		  <Name>ShipmentTracker.Common</Name>
+		</ProjectReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Elegance.Enums" Version="$(EleganceVersion)" PrivateAssets="all"/>
+	</ItemGroup>
+
+</Project>

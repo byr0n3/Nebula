@@ -1,6 +1,6 @@
-# Parcel Tracker
+# Shipment Tracker
 
-To-be-named parcel tracking app, able to track parcels from multiple delivery companies.
+To-be-named shipment/parcel tracking app, able to track parcels and packages from multiple delivery companies.
 
 ## Integration
 
@@ -36,6 +36,6 @@ The server requires the following headers for the request to be accepted:
 ### Database
 
 ```shell
-createuser --pwprompt parcel_tracker # Make the pwd 'parcel_tracker'
-createdb --owner parcel_tracker parcel_tracker
+createuser --pwprompt shipment_tracker # Make the pwd 'shipment_tracker'
+createdb --owner shipment_tracker shipment_tracker
 ```

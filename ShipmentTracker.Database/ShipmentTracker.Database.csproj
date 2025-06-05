@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="../ShipmentTracker.props"/>
+
+	<ItemGroup>
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0-preview.3"/>
+
+		<PackageReference Include="Elegance.AspNet.Authentication" Version="$(EleganceVersion)"/>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ShipmentTracker.Common\ShipmentTracker.Common.csproj">
+	    <Project>{002c9b71-191d-45a8-84ce-dfd8ac526b99}</Project>
+	    <Name>ShipmentTracker.Common</Name>
+	  </ProjectReference>
+	</ItemGroup>
+
+</Project>

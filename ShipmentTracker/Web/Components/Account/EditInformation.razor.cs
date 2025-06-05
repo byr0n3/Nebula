@@ -1,0 +1,79 @@
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Elegance.AspNet.Authentication;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using ShipmentTracker.Database;
+using ShipmentTracker.Database.Extensions;
+using ShipmentTracker.Database.Models;
+using ShipmentTracker.Extensions;
+using ShipmentTracker.Models;
+using ShipmentTracker.Models.Requests;
+
+namespace ShipmentTracker.Web.Components.Account
+{
+	public sealed partial class EditInformation : ComponentBase
+	{
+		private const string formName = nameof(EditInformation);
+
+		[CascadingParameter] public required HttpContext HttpContext { get; init; }
+
+		[Inject] public required IDbContextFactory<ShipmentDbContext> DbContext { get; init; }
+
+		[Inject] public required AuthenticationService<User> Authentication { get; init; }
+
+		[SupplyParameterFromForm(FormName = EditInformation.formName)]
+		private EditAccountModel Model { get; set; } = new();
+
+		protected override void OnInitialized()
+		{
+			if (!this.Model.IsValid)
+			{
+				this.Model = new EditAccountModel
+				{
+					Username = this.HttpContext.User.GetClaimValue(UserClaim.Username),
+					Email = this.HttpContext.User.GetClaimValue(UserClaim.Email),
+				};
+			}
+		}
+
+		private async Task UpdateAsync()
+		{
+			Debug.Assert(this.Model.IsValid);
+
+			var password = this.Model.HasPassword ? Hashing.Hash(this.Model.Password) : null;
+
+			this.Model.Password = null;
+			this.Model.PasswordConfirmation = null;
+
+			var userId = this.HttpContext.User.GetClaimValue<int>(UserClaim.Id);
+
+			var db = await this.DbContext.CreateDbContextAsync();
+
+			await using (db)
+			{
+				var updated = await db.Users
+									  .WhereId(userId)
+									  .ExecuteUpdateAsync((calls) =>
+									   {
+										   calls.SetProperty(static (u) => u.Username, this.Model.Username)
+												.SetProperty(static (u) => u.Email, this.Model.Email)
+												.SetProperty(static (u) => u.Password, (u) => password ?? u.Password);
+									   });
+
+				Debug.Assert(updated == 1);
+			}
+
+			await this.Authentication.LoginAsync(this.HttpContext, new User
+			{
+				Id = userId,
+				Username = this.Model.Username,
+				Email = this.Model.Email,
+				Password = [],
+				Flags = this.HttpContext.User.GetClaimEnum<UserFlags>(UserClaim.Flags),
+				Created = this.HttpContext.User.GetClaimValue<System.DateTime>(UserClaim.Created),
+			}, true);
+		}
+	}
+}

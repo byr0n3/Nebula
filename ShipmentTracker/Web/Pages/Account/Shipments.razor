@@ -1,0 +1,11 @@
+@page "/shipments"
+@using ShipmentTracker.Web.Components
+@using ShipmentTracker.Web.Components.Account
+
+<h1>Shipments</h1>
+
+<Grid GetQuery="@(GetQuery)">
+	<ItemTemplate Context="shipment">
+		<GridItem Shipment="@(shipment)"/>
+	</ItemTemplate>
+</Grid>
