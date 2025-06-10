@@ -7,10 +7,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\ShipmentTracker.Common\ShipmentTracker.Common.csproj">
-		  <Project>{002c9b71-191d-45a8-84ce-dfd8ac526b99}</Project>
-		  <Name>ShipmentTracker.Common</Name>
-		</ProjectReference>
+		<ProjectReference Include="../ShipmentTracker.Common/ShipmentTracker.Common.csproj"/>
 	</ItemGroup>
 
 	<ItemGroup>

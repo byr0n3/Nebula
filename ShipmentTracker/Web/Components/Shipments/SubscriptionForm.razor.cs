@@ -7,6 +7,9 @@ using ShipmentTracker.Extensions;
 using ShipmentTracker.Models;
 using ShipmentTracker.Models.Dto;
 using ShipmentTracker.Services;
+using ShipmentTracker.Temporal;
+using ShipmentTracker.Temporal.Extensions;
+using Temporalio.Client;
 
 namespace ShipmentTracker.Web.Components.Shipments
 {
@@ -17,6 +20,8 @@ namespace ShipmentTracker.Web.Components.Shipments
 		[CascadingParameter] public required HttpContext HttpContext { get; init; }
 
 		[Inject] public required ShipmentsService Shipments { get; init; }
+
+		[Inject] public required ITemporalClient Temporal { get; init; }
 
 		[Parameter] [EditorRequired] public required Shipment Shipment { get; set; }
 
@@ -50,6 +55,16 @@ namespace ShipmentTracker.Web.Components.Shipments
 			else
 			{
 				await this.Shipments.SubscribeUserAsync(this.userShipment.ShipmentId, userId, this.HttpContext.RequestAborted);
+
+				await this.Temporal.StartShipmentWorkflowAsync(new TrackShipmentArguments
+				{
+					Source = this.Shipment.Source,
+					Code = this.Shipment.TrackingCode,
+					ZipCode = this.Shipment.Recipient.ZipCode,
+					ShipmentId = this.userShipment.ShipmentId,
+					// @todo Based on account
+					Delay = System.TimeSpan.FromMinutes(1),
+				});
 			}
 
 			this.userShipment = this.userShipment with

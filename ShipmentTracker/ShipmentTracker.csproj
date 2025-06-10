@@ -7,9 +7,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="../ShipmentTracker.PostNL/ShipmentTracker.PostNL.csproj"/>
-		<ProjectReference Include="../ShipmentTracker.DHL/ShipmentTracker.DHL.csproj"/>
 		<ProjectReference Include="../ShipmentTracker.Database/ShipmentTracker.Database.csproj"/>
+		<ProjectReference Include="../ShipmentTracker.DHL/ShipmentTracker.DHL.csproj"/>
+		<ProjectReference Include="../ShipmentTracker.PostNL/ShipmentTracker.PostNL.csproj"/>
+		<ProjectReference Include="../ShipmentTracker.Temporal/ShipmentTracker.Temporal.csproj"/>
 	</ItemGroup>
 
 	<ItemGroup>

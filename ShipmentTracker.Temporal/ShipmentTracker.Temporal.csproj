@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="../ShipmentTracker.props"/>
+
+	<ItemGroup>
+		<ProjectReference Include="../ShipmentTracker.Common/ShipmentTracker.Common.csproj"/>
+		<ProjectReference Include="../ShipmentTracker.Database/ShipmentTracker.Database.csproj"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Elegance.Extensions" Version="$(EleganceVersion)"/>
+
+		<PackageReference Include="Temporalio" Version="1.7.0"/>
+		<PackageReference Include="Temporalio.Extensions.Hosting" Version="1.7.0"/>
+	</ItemGroup>
+
+</Project>

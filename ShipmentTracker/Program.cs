@@ -8,6 +8,8 @@ using ShipmentTracker.Database.Models;
 using ShipmentTracker.DHL.Extensions;
 using ShipmentTracker.PostNL.Extensions;
 using ShipmentTracker.Services;
+using ShipmentTracker.Temporal;
+using ShipmentTracker.Temporal.Extensions;
 using ShipmentTracker.Web;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +38,17 @@ services.AddAuth<User, UserClaimsProvider>(static (options) =>
 services.AddSingleton<ShipmentsService>()
 		.AddPostNLClient()
 		.AddDHLClient();
+
+var temporalOptions = builder.Configuration.GetSection("Temporal").Get<ShipmentTemporalOptions>();
+
+if (temporalOptions is not null)
+{
+	services.AddWorkflow(temporalOptions);
+}
+else if (!builder.Environment.IsDevelopment())
+{
+	throw new System.Exception("Temporal settings haven't been configured.");
+}
 
 services.AddHttpContextAccessor();
 
