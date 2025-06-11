@@ -15,7 +15,7 @@ using Temporalio.Exceptions;
 
 namespace ShipmentTracker.Web.Components.Shipments
 {
-	public sealed partial class SubscriptionForm : ComponentBase
+	public sealed partial class Automation : ComponentBase
 	{
 		[Inject] public required AuthenticationService Authentication { get; init; }
 
@@ -27,6 +27,7 @@ namespace ShipmentTracker.Web.Components.Shipments
 
 		private UserShipmentDto userShipment;
 		private System.DateTime nextUpdate;
+		private bool workflowRunning;
 
 		protected override Task OnInitializedAsync() =>
 			this.LoadAsync();
@@ -50,13 +51,16 @@ namespace ShipmentTracker.Web.Components.Shipments
 
 				var description = await handle.DescribeAsync();
 
-				if (description.Status <= WorkflowExecutionStatus.Running && description.ExecutionTime is not null)
+				this.workflowRunning = description.Status == WorkflowExecutionStatus.Running;
+
+				if (this.workflowRunning && description.ExecutionTime is not null)
 				{
 					this.nextUpdate = description.ExecutionTime.GetValueOrDefault();
 				}
 			}
 			catch (RpcException ex) when (ex.Code == RpcException.StatusCode.NotFound)
 			{
+				this.workflowRunning = false;
 			}
 		}
 
@@ -74,15 +78,10 @@ namespace ShipmentTracker.Web.Components.Shipments
 			{
 				await this.Shipments.SubscribeUserAsync(this.userShipment.ShipmentId, userId);
 
-				await this.Temporal.StartShipmentWorkflowAsync(new TrackShipmentArguments
+				if (this.Shipment.State != ShipmentState.Delivered)
 				{
-					Source = this.Shipment.Source,
-					Code = this.Shipment.TrackingCode,
-					ZipCode = this.Shipment.Recipient.ZipCode,
-					ShipmentId = this.userShipment.ShipmentId,
-					// @todo Based on account
-					Delay = System.TimeSpan.FromMinutes(1),
-				});
+					await this.StartWorkflowAsync();
+				}
 			}
 
 			this.userShipment = this.userShipment with
@@ -90,5 +89,17 @@ namespace ShipmentTracker.Web.Components.Shipments
 				Subscribed = !this.userShipment.Subscribed,
 			};
 		}
+
+		// @todo Show toast/notification/feedback that workflow started
+		private Task StartWorkflowAsync() =>
+			this.Temporal.StartShipmentWorkflowAsync(new TrackShipmentArguments
+			{
+				Source = this.Shipment.Source,
+				Code = this.Shipment.TrackingCode,
+				ZipCode = this.Shipment.Recipient.ZipCode,
+				ShipmentId = this.userShipment.ShipmentId,
+				// @todo Based on account
+				Delay = System.TimeSpan.FromMinutes(1),
+			});
 	}
 }

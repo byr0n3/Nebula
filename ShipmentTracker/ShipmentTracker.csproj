@@ -18,8 +18,6 @@
 		<PackageReference Include="Elegance.Enums" Version="$(EleganceVersion)"/>
 		<PackageReference Include="Elegance.Extensions" Version="$(EleganceVersion)"/>
 		<PackageReference Include="Elegance.Icons" Version="$(EleganceVersion)" PrivateAssets="all"/>
-
-		<PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="10.0.0-preview.4.25258.110"/>
 	</ItemGroup>
 
 </Project>

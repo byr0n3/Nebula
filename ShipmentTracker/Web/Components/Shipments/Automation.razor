@@ -1,0 +1,25 @@
+@using Elegance.Icons
+@using ShipmentTracker.Common.Models
+
+<button type="button"
+        title="@(userShipment.Subscribed ? "Unsubscribe from shipment" : "Subscribe to shipment")"
+        @onclick="@(ToggleSubscriptionAsync)">
+	@(userShipment.Subscribed ? Icons.UserCheck : Icons.UserPlus)
+</button>
+
+@if (!workflowRunning && (Shipment.State != ShipmentState.Delivered))
+{
+	<button type="button"
+	        title="Start background process"
+	        @onclick="@(StartWorkflowAsync)">
+		@(Icons.Automation)
+	</button>
+}
+
+@if (nextUpdate != default)
+{
+	<div>
+		<p>Next update: @(nextUpdate.ToString("g"))</p>
+	</div>
+}
+
