@@ -1,12 +1,12 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Elegance.AspNet.Authentication;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ShipmentTracker.Database;
 using ShipmentTracker.Database.Models;
 using ShipmentTracker.Models.Requests;
+using ShipmentTracker.Services;
 
 namespace ShipmentTracker.Web.Pages.Auth
 {
@@ -14,11 +14,9 @@ namespace ShipmentTracker.Web.Pages.Auth
 	{
 		private const string formName = "login";
 
-		[CascadingParameter] public required HttpContext HttpContext { get; init; }
-
 		[Inject] public required IDbContextFactory<ShipmentDbContext> DbFactory { get; init; }
 
-		[Inject] public required AuthenticationService<User> Authentication { get; init; }
+		[Inject] public required AuthenticationService Authentication { get; init; }
 
 		[Inject] public required NavigationManager Navigation { get; init; }
 
@@ -33,19 +31,17 @@ namespace ShipmentTracker.Web.Pages.Auth
 
 			User? user;
 
-			var db = await this.DbFactory.CreateDbContextAsync(this.HttpContext.RequestAborted);
+			var db = await this.DbFactory.CreateDbContextAsync();
 
 			await using (db)
 			{
-				user = await this.Model
-								 .GetQuery(db)
-								 .FirstOrDefaultAsync(this.HttpContext.RequestAborted);
+				user = await this.Model.GetQuery(db).FirstOrDefaultAsync();
 			}
 
 			// User- and password validation happens in `LoginModel`.
 			Debug.Assert(user is not null);
 
-			await this.Authentication.LoginAsync(this.HttpContext, user, this.Model.Persistent);
+			await this.Authentication.AuthenticateAsync(user, this.Model.Persistent);
 
 			var path = new PathString(this.ReturnUrl);
 

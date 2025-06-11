@@ -1,9 +1,7 @@
 using System.Threading.Tasks;
-using Elegance.AspNet.Authentication;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Http;
-using ShipmentTracker.Database.Models;
+using ShipmentTracker.Services;
 
 namespace ShipmentTracker.Web.Components
 {
@@ -11,9 +9,7 @@ namespace ShipmentTracker.Web.Components
 	{
 		private const string formName = "logout";
 
-		[CascadingParameter] public required HttpContext HttpContext { get; init; }
-
-		[Inject] public required AuthenticationService<User> Authentication { get; init; }
+		[Inject] public required AuthenticationService Authentication { get; init; }
 
 		[Inject] public required NavigationManager Navigation { get; init; }
 
@@ -21,9 +17,9 @@ namespace ShipmentTracker.Web.Components
 
 		private async Task LogoutAsync()
 		{
-			await this.Authentication.LogoutAsync(this.HttpContext);
+			await this.Authentication.DeauthenticateAsync();
 
-			this.Navigation.NavigateTo("/", true);
+			this.Navigation.NavigateTo("/login", true);
 		}
 	}
 }

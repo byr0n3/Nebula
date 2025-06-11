@@ -1,7 +1,7 @@
+using System.Diagnostics;
 using System.Threading.Tasks;
+using Elegance.Extensions;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Http;
 using ShipmentTracker.Common.Models;
 using ShipmentTracker.Extensions;
 using ShipmentTracker.Models;
@@ -9,15 +9,15 @@ using ShipmentTracker.Models.Dto;
 using ShipmentTracker.Services;
 using ShipmentTracker.Temporal;
 using ShipmentTracker.Temporal.Extensions;
+using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
+using Temporalio.Exceptions;
 
 namespace ShipmentTracker.Web.Components.Shipments
 {
 	public sealed partial class SubscriptionForm : ComponentBase
 	{
-		private const string formName = "shipment-subscription";
-
-		[CascadingParameter] public required HttpContext HttpContext { get; init; }
+		[Inject] public required AuthenticationService Authentication { get; init; }
 
 		[Inject] public required ShipmentsService Shipments { get; init; }
 
@@ -25,36 +25,54 @@ namespace ShipmentTracker.Web.Components.Shipments
 
 		[Parameter] [EditorRequired] public required Shipment Shipment { get; set; }
 
-		private readonly EditContext context = new(0);
 		private UserShipmentDto userShipment;
+		private System.DateTime nextUpdate;
 
 		protected override Task OnInitializedAsync() =>
 			this.LoadAsync();
 
 		private async Task LoadAsync()
 		{
-			var userId = this.HttpContext.User.GetClaimValue<int>(UserClaim.Id);
+			Debug.Assert(this.Authentication.User is not null);
 
-			this.userShipment =
-				await this.Shipments.GetOrCreateUserShipmentDtoAsync(this.Shipment, userId, this.HttpContext.RequestAborted);
-		}
+			var userId = this.Authentication.User.GetClaimValue<int>(UserClaim.Id);
 
-		private async Task ToggleSubscriptionAsync()
-		{
-			if (this.HttpContext.User.Identity?.IsAuthenticated != true)
+			this.userShipment = await this.Shipments.GetOrCreateUserShipmentDtoAsync(this.Shipment, userId);
+
+			if (this.userShipment.ShipmentId == default)
 			{
 				return;
 			}
 
-			var userId = this.HttpContext.User.GetClaimValue<int>(UserClaim.Id);
+			try
+			{
+				var handle = this.Temporal.GetWorkflowHandle($"shipment-{this.userShipment.ShipmentId.Str()}");
+
+				var description = await handle.DescribeAsync();
+
+				if (description.Status <= WorkflowExecutionStatus.Running && description.ExecutionTime is not null)
+				{
+					this.nextUpdate = description.ExecutionTime.GetValueOrDefault();
+				}
+			}
+			catch (RpcException ex) when (ex.Code == RpcException.StatusCode.NotFound)
+			{
+			}
+		}
+
+		private async Task ToggleSubscriptionAsync()
+		{
+			Debug.Assert(this.Authentication.User is not null);
+
+			var userId = this.Authentication.User.GetClaimValue<int>(UserClaim.Id);
 
 			if (this.userShipment.Subscribed)
 			{
-				await this.Shipments.UnsubscribeUserAsync(this.userShipment.ShipmentId, userId, this.HttpContext.RequestAborted);
+				await this.Shipments.UnsubscribeUserAsync(this.userShipment.ShipmentId, userId);
 			}
 			else
 			{
-				await this.Shipments.SubscribeUserAsync(this.userShipment.ShipmentId, userId, this.HttpContext.RequestAborted);
+				await this.Shipments.SubscribeUserAsync(this.userShipment.ShipmentId, userId);
 
 				await this.Temporal.StartShipmentWorkflowAsync(new TrackShipmentArguments
 				{

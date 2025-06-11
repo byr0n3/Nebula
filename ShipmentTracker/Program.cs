@@ -24,6 +24,8 @@ services.AddDatabase(
 	builder.Environment.IsDevelopment()
 );
 
+services.AddScoped<AuthenticationService>();
+services.AddScoped<Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider, AuthenticationStateProvider>();
 services.AddAuth<User, UserClaimsProvider>(static (options) =>
 {
 	options.Cookie.Name = "Shipment.Cookies";

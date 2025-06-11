@@ -27,10 +27,17 @@ namespace ShipmentTracker.Temporal
 			this.sources = services.GetServices<IShipmentSource>().ToArray();
 		}
 
+		/// <inheritdoc cref="TemporalClientExtensions.StartShipmentWorkflowAsync"/>
 		[Activity]
 		public Task StartWorkflowAsync(TrackShipmentArguments arguments) =>
 			this.client.StartShipmentWorkflowAsync(arguments);
 
+		/// <summary>
+		/// Get a shipment from the delivery service, based on the given <paramref name="arguments"/>.
+		/// </summary>
+		/// <param name="arguments">The arguments to use to find the shipment.</param>
+		/// <returns>The found shipment/</returns>
+		/// <exception cref="ApplicationFailureException">If there was no suitable source found, or the shipment wasn't found at the source.</exception>
 		[Activity]
 		public async Task<Shipment> GetShipmentAsync(TrackShipmentArguments arguments)
 		{
@@ -57,6 +64,12 @@ namespace ShipmentTracker.Temporal
 			return shipment;
 		}
 
+		/// <summary>
+		/// Update a given shipment in the database.
+		/// </summary>
+		/// <param name="shipmentId">The ID of the database shipment to update.</param>
+		/// <param name="shipment">The actual shipment from the delivery service.</param>
+		/// <returns><see langword="true"/> if the shipment had its data updated, <see langword="false"/> otherwise.</returns>
 		[Activity]
 		public async Task<bool> UpdateShipmentAsync(int shipmentId, Shipment shipment)
 		{
@@ -68,13 +81,23 @@ namespace ShipmentTracker.Temporal
 					? new NpgsqlRange<System.DateTime>(shipment.Eta.Lower, true, shipment.Eta.Upper, true)
 					: null;
 
-				var updated = await db.Shipments
-									  .WhereId(shipmentId)
-									  .ExecuteUpdateAsync((calls) =>
-															  calls.SetProperty(static (s) => s.State, shipment.State)
-																   .SetProperty(static (s) => s.Eta, eta)
-																   .SetProperty(static (s) => s.Arrived, shipment.Arrived))
-									  .ConfigureAwait(false);
+				// We use EF Core's change tracker to detect if the shipment's data actually updated.
+				var entity = await db.Shipments
+									 .WhereId(shipmentId)
+									 .AsTracking()
+									 .FirstOrDefaultAsync()
+									 .ConfigureAwait(false);
+
+				if (entity is null)
+				{
+					return false;
+				}
+
+				entity.State = shipment.State;
+				entity.Eta = eta;
+				entity.Arrived = shipment.Arrived;
+
+				var updated = await db.SaveChangesAsync().ConfigureAwait(false);
 
 				return updated == 1;
 			}

@@ -1,17 +1,22 @@
 @using Elegance.Icons
-@using Microsoft.AspNetCore.Components.Forms
 
-<EditForm EditContext="@(context)"
-          OnValidSubmit="@(ToggleSubscriptionAsync)"
-          FormName="@(SubscriptionForm.formName)">
-	<button type="submit" title="@(userShipment.Subscribed ? "Unsubscribe from shipment" : "Subscribe to shipment")">
-		@if (userShipment.Subscribed)
-		{
-			@(Icons.UserCheck)
-		}
-		else
-		{
-			@(Icons.UserPlus)
-		}
-	</button>
-</EditForm>
+<button type="button"
+        title="@(userShipment.Subscribed ? "Unsubscribe from shipment" : "Subscribe to shipment")"
+        @onclick="@(ToggleSubscriptionAsync)">
+	@if (userShipment.Subscribed)
+	{
+		@(Icons.UserCheck)
+	}
+	else
+	{
+		@(Icons.UserPlus)
+	}
+</button>
+
+@if (nextUpdate != default)
+{
+	<div>
+		<p>Next update: @(nextUpdate.ToString("g"))</p>
+	</div>
+}
+

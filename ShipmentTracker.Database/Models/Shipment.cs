@@ -19,11 +19,11 @@ namespace ShipmentTracker.Database.Models
 
 		[StringLength(8)] [Column("zip_code")] public required string ZipCode { get; init; }
 
-		[Column("state")] public required ShipmentState State { get; init; }
+		[Column("state")] public required ShipmentState State { get; set; }
 
-		[Column("eta")] public NpgsqlRange<System.DateTime>? Eta { get; init; }
+		[Column("eta")] public NpgsqlRange<System.DateTime>? Eta { get; set; }
 
-		[Column("arrived")] public System.DateTime? Arrived { get; init; }
+		[Column("arrived")] public System.DateTime? Arrived { get; set; }
 
 		[StringLength(128)]
 		[Column("recipient")]

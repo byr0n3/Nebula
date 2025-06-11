@@ -1,16 +1,14 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
 using ShipmentTracker.Common.Models;
 using ShipmentTracker.Services;
 using ShipmentModel = ShipmentTracker.Common.Models.Shipment;
 
 namespace ShipmentTracker.Web.Pages
 {
+	// @todo Optional `ShipmentSource` from query parameters.
 	public sealed partial class Shipment : ComponentBase
 	{
-		[CascadingParameter] public required HttpContext HttpContext { get; init; }
-
 		[Inject] public required ShipmentsService Shipments { get; init; }
 
 		[Parameter] public required string Code { get; init; }
@@ -18,11 +16,15 @@ namespace ShipmentTracker.Web.Pages
 		[Parameter] public required string ZipCode { get; init; }
 
 		private ShipmentModel shipment;
+		private bool loading = true;
 
 		protected override Task OnInitializedAsync() =>
 			this.LoadAsync();
 
-		private async Task LoadAsync() =>
+		private async Task LoadAsync()
+		{
+			this.loading = true;
+
 			this.shipment = await this.Shipments.GetShipmentAsync(new ShipmentRequest
 			{
 				Code = this.Code,
@@ -30,6 +32,9 @@ namespace ShipmentTracker.Web.Pages
 				// @todo From client
 				Country = Country.Netherlands,
 				Language = Language.Dutch,
-			}, this.HttpContext.RequestAborted);
+			});
+
+			this.loading = false;
+		}
 	}
 }
