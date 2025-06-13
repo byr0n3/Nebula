@@ -2,7 +2,13 @@
 
 	<Import Project="../ShipmentTracker.props"/>
 
+	<PropertyGroup>
+		<ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+	</PropertyGroup>
+
 	<ItemGroup>
+		<ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js"/>
+
 		<AdditionalFiles Include="icons/*.svg"/>
 	</ItemGroup>
 
@@ -11,6 +17,7 @@
 		<ProjectReference Include="../ShipmentTracker.DHL/ShipmentTracker.DHL.csproj"/>
 		<ProjectReference Include="../ShipmentTracker.PostNL/ShipmentTracker.PostNL.csproj"/>
 		<ProjectReference Include="../ShipmentTracker.Temporal/ShipmentTracker.Temporal.csproj"/>
+		<ProjectReference Include="..\ShipmentTracker.WebPush\ShipmentTracker.WebPush.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

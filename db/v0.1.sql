@@ -60,5 +60,17 @@ create table if not exists users_shipments
     unique (user_id, shipment_id)
 );
 
+create table if not exists users_push_subscriptions
+(
+    id       serial      not null primary key,
+    user_id  int4        not null references users,
+
+    endpoint text        not null,
+    expires  timestamptz,
+    p256dh   text        not null,
+    auth     text        not null,
+
+    created  timestamptz not null
+);
 
 -- endregion

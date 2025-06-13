@@ -9,5 +9,9 @@ namespace ShipmentTracker.Database.Extensions
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IQueryable<T> WhereId<T>(this IQueryable<T> @this, int id) where T : IEntity =>
 			@this.Where((e) => e.Id == id);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IQueryable<T> WhereUserId<T>(this IQueryable<T> @this, int userId) where T : IEntityWithUser =>
+			@this.Where((e) => e.UserId == userId);
 	}
 }

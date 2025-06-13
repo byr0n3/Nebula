@@ -13,6 +13,8 @@ namespace ShipmentTracker.Database
 
 		public required DbSet<UserShipment> UsersShipments { get; init; }
 
+		public required DbSet<UserPushSubscription> UsersPushSubscriptions { get; init; }
+
 		public ShipmentDbContext(DbContextOptions<ShipmentDbContext> options) : base(options)
 		{
 		}
@@ -24,6 +26,9 @@ namespace ShipmentTracker.Database
 				builder.HasMany(static (u) => u.Shipments)
 					   .WithMany(static (s) => s.Users)
 					   .UsingEntity<UserShipment>();
+
+				builder.HasMany(static (u) => u.PushSubscriptions)
+					   .WithOne(static (ps) => ps.User);
 			});
 		}
 

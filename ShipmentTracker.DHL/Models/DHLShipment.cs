@@ -4,7 +4,6 @@ using ShipmentTracker.DHL.Internal;
 
 namespace ShipmentTracker.DHL.Models
 {
-	// @todo Has `view` property that might contain all the data we'd actually want, investigate.
 	public readonly struct DHLShipment : System.IEquatable<DHLShipment>
 	{
 		public required string Id { get; init; }
@@ -13,8 +12,6 @@ namespace ShipmentTracker.DHL.Models
 
 		// @todo Enum
 		public required string Type { get; init; }
-
-		public required System.DateTime Date { get; init; }
 
 		public required System.DateTime Created { get; init; }
 

@@ -28,6 +28,7 @@ namespace ShipmentTracker.Database.Models
 
 		public ICollection<Shipment> Shipments { get; init; } = null!;
 		public ICollection<UserShipment> UserShipments { get; init; } = null!;
+		public ICollection<UserPushSubscription> PushSubscriptions { get; init; } = null!;
 	}
 
 	[System.Flags]
