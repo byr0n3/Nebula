@@ -14,6 +14,10 @@ self.addEventListener('push', function (event) {
 });
 
 async function showNotification(event) {
+	if (!event.data) {
+		throw new Error('Received push event without any data.');
+	}
+
 	const data = await event.data.json();
 	/** @type {PushNotification} */
 	const notification = data.notification;

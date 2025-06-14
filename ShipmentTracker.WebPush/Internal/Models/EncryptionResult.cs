@@ -1,11 +1,24 @@
+using System.Runtime.InteropServices;
+using Elegance.Utilities;
+using JetBrains.Annotations;
+
 namespace ShipmentTracker.WebPush.Internal.Models
 {
-	public readonly struct EncryptionResult
+	[MustDisposeResource]
+	[StructLayout(LayoutKind.Sequential)]
+	public readonly struct EncryptionResult : System.IDisposable
 	{
-		public required byte[] Salt { get; init; }
+		public required RentedArray<byte> Salt { get; init; }
 
-		public required byte[] Payload { get; init; }
+		public required RentedArray<byte> Payload { get; init; }
 
-		public required byte[] PublicKey { get; init; }
+		public required RentedArray<byte> PublicKey { get; init; }
+
+		public void Dispose()
+		{
+			this.Salt.Dispose();
+			this.Payload.Dispose();
+			this.PublicKey.Dispose();
+		}
 	}
 }

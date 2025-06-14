@@ -4,11 +4,16 @@
 
 	<ItemGroup>
 		<PackageReference Include="Elegance.Extensions" Version="$(EleganceVersion)"/>
+		<PackageReference Include="Elegance.Utilities" Version="$(EleganceVersion)"/>
 
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0-preview.5.25277.114"/>
 		<PackageReference Include="Microsoft.Extensions.Options" Version="10.0.0-preview.5.25277.114"/>
+	</ItemGroup>
 
-		<PackageReference Include="Portable.BouncyCastle" Version="1.8.1.3"/>
+	<ItemGroup>
+		<Compile Update="Internal\Encryption.Hkdf.cs">
+			<DependentUpon>Encryption.cs</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 </Project>

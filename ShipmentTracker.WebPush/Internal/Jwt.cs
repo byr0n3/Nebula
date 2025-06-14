@@ -15,6 +15,7 @@ namespace ShipmentTracker.WebPush.Internal
 				Algorithm = "ES256",
 			};
 
+			// @todo Skip parsing to Uri
 			var uri = new System.Uri(endpoint, System.UriKind.Absolute);
 			var audience = string.Create(null, stackalloc char[uri.Scheme.Length + 3 + uri.Host.Length], $"{uri.Scheme}://{uri.Host}");
 

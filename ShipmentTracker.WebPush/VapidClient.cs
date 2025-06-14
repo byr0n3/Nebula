@@ -37,7 +37,7 @@ namespace ShipmentTracker.WebPush
 
 			var payload = Encryption.Encrypt(subscription, declarativeNotification, this.options);
 
-			var content = new ByteArrayContent(payload.Payload);
+			var content = new ByteArrayContent(payload.Payload, 0, payload.Payload.Length);
 			{
 				content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
 				content.Headers.ContentLength = payload.Payload.Length;
@@ -56,6 +56,7 @@ namespace ShipmentTracker.WebPush
 					"Crypto-Key", $"dh={UrlSafeBase64.Encode(payload.PublicKey)};p256ecdsa={this.options.PublicKey}");
 			}
 
+			using (payload)
 			using (request)
 			using (var response = await this.client.SendAsync(request, token).ConfigureAwait(false))
 			{
