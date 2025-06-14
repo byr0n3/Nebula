@@ -19,12 +19,17 @@ namespace ShipmentTracker.WebPush.Internal
 
 			System.Random.Shared.NextBytes(salt);
 
-			// @todo stackalloc
 			var payload = JsonSerializer.SerializeToUtf8Bytes(notification,
 															  WebPushJsonSerializerContext.Default.DeclarativePushNotification!);
 
-			var userPublicKey = UrlSafeBase64.Decode(subscription.P256dh);
-			var userPrivateKey = UrlSafeBase64.Decode(subscription.Auth);
+			System.Span<byte> userPublicKey = stackalloc byte[65];
+			System.Span<byte> userPrivateKey = stackalloc byte[65];
+
+			var written = UrlSafeBase64.Decode(subscription.P256dh, userPublicKey);
+			userPublicKey = userPublicKey.Slice(0, written);
+
+			written = UrlSafeBase64.Decode(subscription.Auth, userPrivateKey);
+			userPrivateKey = userPrivateKey.Slice(0, written);
 
 			RentedArray<byte> serverPublicKey;
 			byte[] key;
@@ -106,41 +111,6 @@ namespace ShipmentTracker.WebPush.Internal
 		{
 			var copied = src.TryCopyTo(dst.Slice(2));
 			Debug.Assert(copied);
-		}
-
-		public static ECParameters GetEncryptionParameters(string publicKey, string privateKey)
-		{
-			var decodedPublicKey = UrlSafeBase64.Decode(publicKey);
-			var decodedPrivateKey = UrlSafeBase64.Decode(privateKey);
-
-			return Encryption.GetEncryptionParameters(decodedPublicKey, decodedPrivateKey);
-		}
-
-		private static ECParameters GetEncryptionParameters(scoped System.ReadOnlySpan<byte> decodedPublicKey, byte[] decodedPrivateKey)
-		{
-			return new ECParameters
-			{
-				Curve = ECCurve.NamedCurves.nistP256,
-				D = decodedPrivateKey,
-				Q = new ECPoint
-				{
-					X = decodedPublicKey.Slice(1, 32).ToArray(),
-					Y = decodedPublicKey.Slice(33, 32).ToArray(),
-				},
-			};
-		}
-
-		private static ECParameters GetEncryptionParameters(scoped System.ReadOnlySpan<byte> decodedPublicKey)
-		{
-			return new ECParameters
-			{
-				Curve = ECCurve.NamedCurves.nistP256,
-				Q = new ECPoint
-				{
-					X = decodedPublicKey.Slice(1, 32).ToArray(),
-					Y = decodedPublicKey.Slice(33, 32).ToArray(),
-				},
-			};
 		}
 	}
 }

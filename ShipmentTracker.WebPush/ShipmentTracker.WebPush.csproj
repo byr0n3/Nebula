@@ -14,6 +14,9 @@
 		<Compile Update="Internal\Encryption.Hkdf.cs">
 			<DependentUpon>Encryption.cs</DependentUpon>
 		</Compile>
+		<Compile Update="Internal\Encryption.Parameters.cs">
+			<DependentUpon>Encryption.cs</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 </Project>

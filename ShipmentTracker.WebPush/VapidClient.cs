@@ -1,8 +1,11 @@
+using System.Buffers.Text;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Elegance.Extensions;
+using Elegance.Utilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ShipmentTracker.WebPush.Internal;
@@ -12,6 +15,8 @@ namespace ShipmentTracker.WebPush
 {
 	public sealed class VapidClient
 	{
+		private static readonly MediaTypeHeaderValue contentType = new("application/octet-stream");
+
 		private readonly HttpClient client;
 		private readonly VapidOptions options;
 		private readonly ILogger<VapidClient> logger;
@@ -27,6 +32,8 @@ namespace ShipmentTracker.WebPush
 		{
 			const int defaultTtl = 2419200;
 
+			Debug.Assert(this.options.IsValid);
+
 			var jwtToken = Jwt.GetSignedToken(subscription.Endpoint, this.options);
 
 			var declarativeNotification = new DeclarativePushNotification
@@ -39,7 +46,7 @@ namespace ShipmentTracker.WebPush
 
 			var content = new ByteArrayContent(payload.Payload, 0, payload.Payload.Length);
 			{
-				content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+				content.Headers.ContentType = VapidClient.contentType;
 				content.Headers.ContentLength = payload.Payload.Length;
 				content.Headers.ContentEncoding.Add("aesgcm");
 			}
@@ -50,24 +57,61 @@ namespace ShipmentTracker.WebPush
 				request.Headers.TryAddWithoutValidation("TTL", defaultTtl.Str());
 
 				request.Content = content;
-				request.Headers.TryAddWithoutValidation("Encryption", $"salt={UrlSafeBase64.Encode(payload.Salt)}");
+				request.Headers.TryAddWithoutValidation("Encryption", VapidClient.GetEncryptionHeaderValue(payload.Salt));
 				request.Headers.TryAddWithoutValidation("Authorization", $"WebPush {jwtToken}");
-				request.Headers.TryAddWithoutValidation(
-					"Crypto-Key", $"dh={UrlSafeBase64.Encode(payload.PublicKey)};p256ecdsa={this.options.PublicKey}");
+				request.Headers.TryAddWithoutValidation("Crypto-Key", VapidClient.GetCryptoKey(payload.PublicKey, this.options.PublicKey));
 			}
+
+			var response = await this.client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, token).ConfigureAwait(false);
 
 			using (payload)
 			using (request)
-			using (var response = await this.client.SendAsync(request, token).ConfigureAwait(false))
+			using (response)
 			{
 				if (!response.IsSuccessStatusCode)
 				{
 					var msg = await response.Content.ReadAsStringAsync(token).ConfigureAwait(false);
+
 					this.logger.LogError("Error sending push notification: {Msg}", msg);
 				}
 
 				return response.IsSuccessStatusCode;
 			}
+		}
+
+		private static string GetEncryptionHeaderValue(RentedArray<byte> salt)
+		{
+			const string prefix = "salt=";
+
+			System.Span<char> saltBase64 = stackalloc char[Base64.GetMaxEncodedToUtf8Length(salt.Length)];
+
+			var written = UrlSafeBase64.Encode(salt, saltBase64);
+
+			saltBase64 = saltBase64.Slice(0, written);
+
+			return string.Create(
+				null,
+				stackalloc char[prefix.Length + saltBase64.Length],
+				$"{prefix}{saltBase64}"
+			);
+		}
+
+		private static string GetCryptoKey(RentedArray<byte> payloadPublicKey, string serverPublicKey)
+		{
+			const string payloadPrefix = "dh=";
+			const string serverPrefix = "p256ecdsa=";
+
+			System.Span<char> payloadBase64 = stackalloc char[Base64.GetMaxEncodedToUtf8Length(payloadPublicKey.Length)];
+
+			var written = UrlSafeBase64.Encode(payloadPublicKey, payloadBase64);
+
+			payloadBase64 = payloadBase64.Slice(0, written);
+
+			return string.Create(
+				null,
+				stackalloc char[payloadPrefix.Length + payloadBase64.Length + 1 + serverPrefix.Length + serverPublicKey.Length],
+				$"{payloadPrefix}{payloadBase64};{serverPrefix}{serverPublicKey}"
+			);
 		}
 	}
 }

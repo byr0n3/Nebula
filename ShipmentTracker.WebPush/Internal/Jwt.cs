@@ -1,10 +1,19 @@
 using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
+using Elegance.Utilities;
 using ShipmentTracker.WebPush.Internal.Models;
 
 namespace ShipmentTracker.WebPush.Internal
 {
 	internal static class Jwt
 	{
+		private static System.ReadOnlySpan<byte> Separator =>
+			"."u8;
+
+		// @todo No string
 		public static string GetSignedToken(string endpoint, VapidOptions vapid)
 		{
 			Debug.Assert(vapid.IsValid);
@@ -26,7 +35,66 @@ namespace ShipmentTracker.WebPush.Internal
 				Subject = vapid.Subject,
 			};
 
-			return JwtSigner.Sign(vapid.PublicKey, vapid.PrivateKey, info, data);
+			return Jwt.GetSignedToken(vapid.PublicKey, vapid.PrivateKey, info, data);
+		}
+
+		private static string GetSignedToken(string publicKey, string privateKey, JwtInfo info, JwtData data)
+		{
+			// @todo bigger buffer?
+			var buffer = new RentedArray<byte>(256);
+			var builder = new ByteBuilder(buffer);
+
+			using (buffer)
+			{
+				// Append unsigned token
+				{
+					Jwt.AppendBase64(ref builder, info, WebPushJsonSerializerContext.Default.JwtInfo!);
+					builder.Append(Jwt.Separator);
+					Jwt.AppendBase64(ref builder, data, WebPushJsonSerializerContext.Default.JwtData!);
+				}
+
+				var unsignedToken = builder.Result;
+
+				// Append token signature
+				{
+					builder.Append(Jwt.Separator);
+					Jwt.AppendSignature(ref builder, unsignedToken, publicKey, privateKey);
+				}
+
+				return Encoding.UTF8.GetString(builder.Result);
+			}
+		}
+
+		private static void AppendBase64<T>(ref ByteBuilder builder, T value, JsonTypeInfo<T> typeInfo)
+		{
+			var infoBytes = JsonSerializer.SerializeToUtf8Bytes(value, typeInfo);
+
+			builder.AppendUrlSafeBase64(infoBytes);
+		}
+
+		private static void AppendSignature(ref ByteBuilder builder,
+											scoped System.ReadOnlySpan<byte> unsignedToken,
+											string publicKey,
+											string privateKey)
+		{
+			System.Span<byte> hash = stackalloc byte[SHA256.HashSizeInBytes];
+
+			var hashed = SHA256.TryHashData(unsignedToken, hash, out _);
+
+			Debug.Assert(hashed);
+
+			using (var ecdsa = ECDsa.Create(Encryption.GetEncryptionParameters(publicKey, privateKey)))
+			{
+				System.Span<byte> signature = stackalloc byte[ecdsa.GetMaxSignatureSize(default)];
+
+				var signed = ecdsa.TrySignHash(hash, signature, default, out var written);
+
+				Debug.Assert(signed);
+
+				signature.Slice(0, written);
+
+				builder.AppendUrlSafeBase64(signature);
+			}
 		}
 	}
 }

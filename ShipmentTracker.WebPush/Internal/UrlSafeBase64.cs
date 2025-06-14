@@ -1,31 +1,65 @@
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Text;
 using Elegance.Utilities;
 
 namespace ShipmentTracker.WebPush.Internal
 {
 	internal static class UrlSafeBase64
 	{
-		// @todo
-		[System.Obsolete("Optimize")]
-		public static byte[] Decode(string base64)
+		public static byte[] Decode(scoped System.ReadOnlySpan<char> src)
 		{
-			base64 = base64.Replace('-', '+').Replace('_', '/');
+			System.Span<byte> dst = stackalloc byte[128];
 
-			while (base64.Length % 4 != 0)
-			{
-				base64 += "=";
-			}
+			var written = UrlSafeBase64.Decode(src, dst);
 
-			return System.Convert.FromBase64String(base64);
+			return dst.Slice(0, written).ToArray();
 		}
 
-		// @todo
-		[System.Obsolete("Optimize")]
-		public static string Encode(scoped System.ReadOnlySpan<byte> data)
+		public static int Decode(scoped System.ReadOnlySpan<char> src, scoped System.Span<byte> dst)
 		{
-			return System.Convert.ToBase64String(data).Replace('+', '-').Replace('/', '_').TrimEnd('=');
+			var suffix = "="u8;
+
+			var length = UrlSafeBase64.GetDecodedLength(src.Length);
+
+			System.Span<byte> temp = stackalloc byte[Encoding.UTF8.GetMaxByteCount(length)];
+
+			var copied = Encoding.UTF8.TryGetBytes(src, temp, out var written);
+
+			Debug.Assert(copied);
+
+			UrlSafeBase64.Replace(temp, "-"u8, "+"u8);
+			UrlSafeBase64.Replace(temp, "_"u8, "/"u8);
+
+			for (var i = 0; i < (length - src.Length); i++)
+			{
+				copied = suffix.TryCopyTo(temp.Slice(src.Length + i));
+
+				Debug.Assert(copied);
+
+				written += suffix.Length;
+			}
+
+			temp = temp.Slice(0, written);
+
+			var status = Base64.DecodeFromUtf8(temp, dst, out _, out written);
+
+			Debug.Assert(status == OperationStatus.Done);
+
+			return written;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static int GetDecodedLength(int length)
+		{
+			while (length % 4 != 0)
+			{
+				length++;
+			}
+
+			return length;
 		}
 
 		// @todo
@@ -46,11 +80,24 @@ namespace ShipmentTracker.WebPush.Internal
 			UrlSafeBase64.Replace(dst, "+"u8, "-"u8);
 			UrlSafeBase64.Replace(dst, "/"u8, "_"u8);
 
-			// @todo Replace('+', '-').Replace('/', '_')
-
 			dst = System.MemoryExtensions.TrimEnd(dst, "="u8);
 
 			return dst.Length;
+		}
+
+		public static int Encode(scoped System.ReadOnlySpan<byte> src, scoped System.Span<char> dst)
+		{
+			System.Span<byte> temp = stackalloc byte[Base64.GetMaxEncodedToUtf8Length(src.Length)];
+
+			var written = UrlSafeBase64.Encode(src, temp);
+
+			temp = temp.Slice(0, written);
+
+			var copied = Encoding.UTF8.TryGetChars(temp, dst, out written);
+
+			Debug.Assert(copied);
+
+			return written;
 		}
 
 		private static void Replace(scoped System.Span<byte> dst,

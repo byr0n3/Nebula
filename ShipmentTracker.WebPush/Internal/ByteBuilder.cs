@@ -1,3 +1,4 @@
+using System.Buffers.Text;
 using System.Diagnostics;
 using System.Globalization;
 using System.Numerics;
@@ -93,6 +94,17 @@ namespace ShipmentTracker.WebPush.Internal
 			{
 				this.Move(written);
 			}
+		}
+
+		public void AppendUrlSafeBase64(scoped System.ReadOnlySpan<byte> value)
+		{
+			var maxLength = Base64.GetMaxEncodedToUtf8Length(value.Length);
+
+			this.AssertAvailable(maxLength);
+
+			var written = UrlSafeBase64.Encode(value, this.Take(maxLength));
+
+			this.Move(written);
 		}
 	}
 }
