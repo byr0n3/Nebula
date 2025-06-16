@@ -91,7 +91,8 @@ app.MapPost("/api/notifications/test",
 				var notification = new PushNotification
 				{
 					Title = "Hello from the server!",
-					Content = "Please work",
+					Body = "Please work",
+					Navigate = "https://localhost:5001/account",
 				};
 
 				var result = await client.SendAsync(pushSubscription, notification, context.RequestAborted).ConfigureAwait(false);

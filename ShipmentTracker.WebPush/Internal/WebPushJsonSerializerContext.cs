@@ -4,7 +4,8 @@ using ShipmentTracker.WebPush.Internal.Models;
 namespace ShipmentTracker.WebPush.Internal
 {
 	[JsonSourceGenerationOptions(GenerationMode = JsonSourceGenerationMode.Metadata,
-								 PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower)]
+								 PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower,
+								 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault)]
 	[JsonSerializable(typeof(PushNotification))]
 	[JsonSerializable(typeof(JwtInfo))]
 	[JsonSerializable(typeof(JwtData))]

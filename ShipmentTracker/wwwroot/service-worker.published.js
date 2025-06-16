@@ -22,6 +22,8 @@ async function onInstall(event) {
 		.map((asset) => new Request(asset.url, {integrity: asset.hash, cache: 'no-cache'}));
 
 	await caches.open(cacheName).then((cache) => cache.addAll(assetsRequests));
+
+	await self.skipWaiting();
 }
 
 // Delete unused caches.
@@ -33,6 +35,8 @@ async function onActivate(event) {
 			.filter((key) => key.startsWith(cacheNamePrefix) && key !== cacheName)
 			.map((key) => caches.delete(key))
 	);
+
+	await self.clients.claim();
 }
 
 // Serve cashed assets when available.

@@ -38,6 +38,7 @@ namespace ShipmentTracker.WebPush
 
 			var declarativeNotification = new DeclarativePushNotification
 			{
+				// Ref: https://datatracker.ietf.org/doc/html/rfc8030
 				WebPush = 8030,
 				Notification = notification,
 			};
@@ -51,14 +52,23 @@ namespace ShipmentTracker.WebPush
 				content.Headers.ContentEncoding.Add("aesgcm");
 			}
 
+			var ttl = notification.Ttl != default ? ((int)notification.Ttl.TotalSeconds) : defaultTtl;
+
 			var request = new HttpRequestMessage(HttpMethod.Post, subscription.Endpoint);
 			{
+				request.Headers.TryAddWithoutValidation("Authorization", $"WebPush {jwtToken}");
+
 				// @todo Configurable
-				request.Headers.TryAddWithoutValidation("TTL", defaultTtl.Str());
+				request.Headers.TryAddWithoutValidation("TTL", ttl.Str());
+				request.Headers.TryAddWithoutValidation("Urgency", PushNotificationUrgencyEnumData.GetValue(notification.Urgency));
+
+				if (!string.IsNullOrEmpty(notification.Topic))
+				{
+					request.Headers.TryAddWithoutValidation("Topic", notification.Topic);
+				}
 
 				request.Content = content;
 				request.Headers.TryAddWithoutValidation("Encryption", VapidClient.GetEncryptionHeaderValue(payload.Salt));
-				request.Headers.TryAddWithoutValidation("Authorization", $"WebPush {jwtToken}");
 				request.Headers.TryAddWithoutValidation("Crypto-Key", VapidClient.GetCryptoKey(payload.PublicKey, this.options.PublicKey));
 			}
 

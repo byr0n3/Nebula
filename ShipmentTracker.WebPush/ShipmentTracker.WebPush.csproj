@@ -3,6 +3,7 @@
 	<Import Project="../ShipmentTracker.props"/>
 
 	<ItemGroup>
+		<PackageReference Include="Elegance.Enums" Version="$(EleganceVersion)"/>
 		<PackageReference Include="Elegance.Extensions" Version="$(EleganceVersion)"/>
 		<PackageReference Include="Elegance.Utilities" Version="$(EleganceVersion)"/>
 
