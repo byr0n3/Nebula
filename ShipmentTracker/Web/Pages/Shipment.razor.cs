@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using ShipmentTracker.Common.Models;
+using ShipmentTracker.Models.Common;
 using ShipmentTracker.Services;
-using ShipmentModel = ShipmentTracker.Common.Models.Shipment;
+using ShipmentModel = ShipmentTracker.Models.Common.Shipment;
 
 namespace ShipmentTracker.Web.Pages
 {

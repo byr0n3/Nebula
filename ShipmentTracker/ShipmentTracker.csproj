@@ -13,11 +13,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="../ShipmentTracker.Database/ShipmentTracker.Database.csproj"/>
-		<ProjectReference Include="../ShipmentTracker.DHL/ShipmentTracker.DHL.csproj"/>
-		<ProjectReference Include="../ShipmentTracker.PostNL/ShipmentTracker.PostNL.csproj"/>
-		<ProjectReference Include="../ShipmentTracker.Temporal/ShipmentTracker.Temporal.csproj"/>
-		<ProjectReference Include="..\ShipmentTracker.WebPush\ShipmentTracker.WebPush.csproj" />
+		<ProjectReference Include="..\ShipmentTracker.WebPush\ShipmentTracker.WebPush.csproj"/>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -25,6 +21,11 @@
 		<PackageReference Include="Elegance.Enums" Version="$(EleganceVersion)"/>
 		<PackageReference Include="Elegance.Extensions" Version="$(EleganceVersion)"/>
 		<PackageReference Include="Elegance.Icons" Version="$(EleganceVersion)" PrivateAssets="all"/>
+
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0-preview.5"/>
+
+		<PackageReference Include="Temporalio" Version="1.7.0"/>
+		<PackageReference Include="Temporalio.Extensions.Hosting" Version="1.7.0"/>
 	</ItemGroup>
 
 </Project>

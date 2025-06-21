@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
-using ShipmentTracker.Database;
+using ShipmentTracker.Services;
 
 namespace ShipmentTracker.Web.Components
 {

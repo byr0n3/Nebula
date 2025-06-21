@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Elegance.Extensions;
 using Microsoft.AspNetCore.Components;
-using ShipmentTracker.Common.Models;
+using ShipmentTracker.Models.Common;
 using ShipmentTracker.Extensions;
 using ShipmentTracker.Models;
 using ShipmentTracker.Models.Dto;

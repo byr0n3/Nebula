@@ -4,12 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ShipmentTracker.Common;
-using ShipmentTracker.Common.Models;
-using ShipmentTracker.Database;
-using ShipmentTracker.Database.Models;
+using ShipmentTracker.Models.Common;
+using ShipmentTracker.Models.Database;
 using ShipmentTracker.Models.Dto;
-using Shipment = ShipmentTracker.Common.Models.Shipment;
+using ShipmentTracker.Sources;
+using Shipment = ShipmentTracker.Models.Common.Shipment;
 
 namespace ShipmentTracker.Services
 {

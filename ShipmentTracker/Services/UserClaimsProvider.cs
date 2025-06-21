@@ -6,8 +6,8 @@ using System.Security.Claims;
 using System.Threading;
 using Elegance.AspNet.Authentication;
 using Elegance.Extensions;
-using ShipmentTracker.Database.Models;
 using ShipmentTracker.Models;
+using ShipmentTracker.Models.Database;
 
 namespace ShipmentTracker.Services
 {

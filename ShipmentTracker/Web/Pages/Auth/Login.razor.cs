@@ -3,8 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ShipmentTracker.Database;
-using ShipmentTracker.Database.Models;
+using ShipmentTracker.Models.Database;
 using ShipmentTracker.Models.Requests;
 using ShipmentTracker.Services;
 

@@ -4,12 +4,11 @@ using Elegance.AspNet.Authentication;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ShipmentTracker.Database;
-using ShipmentTracker.Database.Extensions;
-using ShipmentTracker.Database.Models;
 using ShipmentTracker.Extensions;
 using ShipmentTracker.Models;
+using ShipmentTracker.Models.Database;
 using ShipmentTracker.Models.Requests;
+using ShipmentTracker.Services;
 
 namespace ShipmentTracker.Web.Components.Account
 {

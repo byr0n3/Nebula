@@ -4,9 +4,8 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using ShipmentTracker.Database;
-using ShipmentTracker.Database.Extensions;
-using ShipmentTracker.Database.Models;
+using ShipmentTracker.Extensions;
+using ShipmentTracker.Models.Database;
 using ShipmentTracker.Models.Requests;
 using ShipmentTracker.WebPush;
 

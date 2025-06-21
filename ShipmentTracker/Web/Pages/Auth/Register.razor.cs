@@ -4,9 +4,9 @@ using Elegance.AspNet.Authentication;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using ShipmentTracker.Database;
-using ShipmentTracker.Database.Models;
+using ShipmentTracker.Models.Database;
 using ShipmentTracker.Models.Requests;
+using ShipmentTracker.Services;
 
 namespace ShipmentTracker.Web.Pages.Auth
 {

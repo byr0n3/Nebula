@@ -1,5 +1,5 @@
 using NpgsqlTypes;
-using ShipmentTracker.Common.Models;
+using ShipmentTracker.Models.Common;
 
 namespace ShipmentTracker.Models.Dto
 {

@@ -6,8 +6,8 @@ using System.Linq;
 using Elegance.AspNet.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using ShipmentTracker.Database;
-using ShipmentTracker.Database.Models;
+using ShipmentTracker.Models.Database;
+using ShipmentTracker.Services;
 
 namespace ShipmentTracker.Models.Requests
 {

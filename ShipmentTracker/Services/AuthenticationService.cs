@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Elegance.AspNet.Authentication;
 using Microsoft.AspNetCore.Http;
-using ShipmentTracker.Database.Models;
+using ShipmentTracker.Models.Database;
 
 namespace ShipmentTracker.Services
 {
