@@ -1,4 +1,6 @@
 ﻿@using ShipmentTracker.Web.Components
+@using Microsoft.AspNetCore.Components.Routing
+@using ShipmentTracker.Web.Layout
 
 <!DOCTYPE html>
 <html lang="en">
@@ -17,11 +19,21 @@
 </head>
 
 <body>
-<Routes/>
+
+<Router AppAssembly="@(typeof(Program).Assembly)">
+	<Found Context="routeData">
+		<RouteView RouteData="@(routeData)" DefaultLayout="@(typeof(MainLayout))"/>
+	</Found>
+
+	<NotFound>
+		<h1>404 – not found</h1>
+		<a href="/">Back to home</a>
+	</NotFound>
+</Router>
+
 <ReconnectModal/>
 <script src="@(Assets["_framework/blazor.web.js"])"></script>
 <script>navigator.serviceWorker.register('service-worker.js');</script>
-<script src="@(Assets["js/push.js"])"></script>
 </body>
 
 </html>

@@ -6,7 +6,7 @@ namespace ShipmentTracker.Models.Requests
 	{
 		public required string Endpoint { get; init; }
 
-		[JsonPropertyName("expirationTime")] public required System.DateTime? Expiration { get; init; }
+		[JsonPropertyName("expirationTime")] public System.DateTime? Expiration { get; init; }
 
 		public required PushSubscriptionKeys Keys { get; init; }
 

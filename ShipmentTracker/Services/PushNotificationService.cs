@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using ShipmentTracker.Extensions;
 using ShipmentTracker.Models.Database;
 using ShipmentTracker.Models.Requests;
-using ShipmentTracker.WebPush;
+using Vapid.NET;
 
 namespace ShipmentTracker.Services
 {
@@ -59,9 +59,16 @@ namespace ShipmentTracker.Services
 
 				await foreach (var subscription in enumerable.WithCancellation(token).ConfigureAwait(false))
 				{
+					if (subscription.Expires <= System.DateTime.UtcNow)
+					{
+						db.UsersPushSubscriptions.Remove(subscription);
+					}
+
 					yield return subscription;
 				}
 			}
+
+			await db.SaveChangesAsync(token).ConfigureAwait(false);
 		}
 	}
 }

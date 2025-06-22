@@ -1,18 +1,15 @@
 using Elegance.AspNet.Authentication.Extensions;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ShipmentTracker.Extensions;
 using ShipmentTracker.Models.Database;
-using ShipmentTracker.Models.Requests;
 using ShipmentTracker.Services;
 using ShipmentTracker.Temporal;
 using ShipmentTracker.Temporal.Extensions;
 using ShipmentTracker.Web;
-using ShipmentTracker.WebPush;
+using Vapid.NET;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +41,7 @@ services.AddSingleton<ShipmentsService>()
 		.AddDHLClient();
 
 services.Configure<VapidOptions>((options) => builder.Configuration.Bind("Vapid", options));
-services.AddHttpClient<VapidClient>("Web Push");
+services.AddHttpClient<VapidClient>("Vapid");
 
 var temporalOptions = builder.Configuration.GetSection("Temporal").Get<ShipmentTemporalOptions>();
 
@@ -75,26 +72,5 @@ app.UseAntiforgery();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
    .AddInteractiveServerRenderMode();
-
-app.MapPost("/api/notifications/test",
-			static async (HttpContext context, [FromBody] StorePushSubscriptionModel model, VapidClient client) =>
-			{
-				var pushSubscription = new PushSubscription
-				{
-					Endpoint = model.Endpoint,
-					P256dh = model.Keys.P256dh,
-					Auth = model.Keys.Auth,
-				};
-
-				var notification = new PushNotification
-				{
-					Title = "Hello from the server!",
-					Body = "Please work",
-					Navigate = "https://localhost:5001/account",
-				};
-
-				var result = await client.SendAsync(pushSubscription, notification, context.RequestAborted).ConfigureAwait(false);
-				context.Response.StatusCode = result ? StatusCodes.Status201Created : StatusCodes.Status500InternalServerError;
-			});
 
 await app.RunAsync().ConfigureAwait(false);
