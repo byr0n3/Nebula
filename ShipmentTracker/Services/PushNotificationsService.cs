@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -8,17 +8,18 @@ using ShipmentTracker.Extensions;
 using ShipmentTracker.Models.Database;
 using ShipmentTracker.Models.Requests;
 using Vapid.NET;
+using Vapid.NET.Models;
 
 namespace ShipmentTracker.Services
 {
-	public sealed class PushNotificationService
+	public sealed class PushNotificationsService
 	{
-		private readonly VapidOptions vapid;
+		private readonly VapidClient client;
 		private readonly IDbContextFactory<ShipmentDbContext> dbFactory;
 
-		public PushNotificationService(VapidOptions vapid, IDbContextFactory<ShipmentDbContext> dbFactory)
+		public PushNotificationsService(VapidClient client, IDbContextFactory<ShipmentDbContext> dbFactory)
 		{
-			this.vapid = vapid;
+			this.client = client;
 			this.dbFactory = dbFactory;
 		}
 
@@ -47,28 +48,34 @@ namespace ShipmentTracker.Services
 			}
 		}
 
-		public async IAsyncEnumerable<UserPushSubscription> GetSubscriptionsAsync(int userId,
-																				  [EnumeratorCancellation] CancellationToken token =
-																					  default)
+		public async Task SendNotificationsAsync(int shipmentId, PushNotification notification, CancellationToken token = default)
 		{
 			var db = await this.dbFactory.CreateDbContextAsync(token).ConfigureAwait(false);
 
 			await using (db.ConfigureAwait(false))
 			{
-				var enumerable = db.UsersPushSubscriptions.WhereUserId(userId).AsAsyncEnumerable();
+				var subscriptions = db.UsersPushSubscriptions
+									  .Where((ups) => db.UsersShipments
+														.Any((us) => (us.ShipmentId == shipmentId) && (us.UserId == ups.UserId)))
+									  .AsAsyncEnumerable();
 
-				await foreach (var subscription in enumerable.WithCancellation(token).ConfigureAwait(false))
+				var tasks = new List<Task>();
+
+				await foreach (var subscription in subscriptions.WithCancellation(token).ConfigureAwait(false))
 				{
 					if (subscription.Expires <= System.DateTime.UtcNow)
 					{
 						db.UsersPushSubscriptions.Remove(subscription);
+						continue;
 					}
 
-					yield return subscription;
+					tasks.Add(this.client.SendAsync(subscription, notification, token));
 				}
-			}
 
-			await db.SaveChangesAsync(token).ConfigureAwait(false);
+				await db.SaveChangesAsync(token).ConfigureAwait(false);
+
+				await Task.WhenAll(tasks).ConfigureAwait(false);
+			}
 		}
 	}
 }

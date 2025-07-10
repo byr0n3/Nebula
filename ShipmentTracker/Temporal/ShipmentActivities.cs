@@ -1,5 +1,7 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Elegance.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NpgsqlTypes;
@@ -11,19 +13,28 @@ using ShipmentTracker.Temporal.Extensions;
 using Temporalio.Activities;
 using Temporalio.Client;
 using Temporalio.Exceptions;
+using Vapid.NET.Models;
 
 namespace ShipmentTracker.Temporal
 {
 	internal sealed class ShipmentActivities
 	{
+		private static CancellationToken CancelToken =>
+			ActivityExecutionContext.Current.CancellationToken;
+
 		private readonly ITemporalClient client;
 		private readonly IShipmentSource[] sources;
+		private readonly PushNotificationsService pushNotifications;
 		private readonly IDbContextFactory<ShipmentDbContext> dbFactory;
 
-		public ShipmentActivities(ITemporalClient client, System.IServiceProvider services, IDbContextFactory<ShipmentDbContext> dbFactory)
+		public ShipmentActivities(ITemporalClient client,
+								  System.IServiceProvider services,
+								  PushNotificationsService pushNotifications,
+								  IDbContextFactory<ShipmentDbContext> dbFactory)
 		{
 			this.client = client;
 			this.dbFactory = dbFactory;
+			this.pushNotifications = pushNotifications;
 			this.sources = services.GetServices<IShipmentSource>().ToArray();
 		}
 
@@ -54,7 +65,7 @@ namespace ShipmentTracker.Temporal
 				ZipCode = arguments.ZipCode,
 			};
 
-			var shipment = await source.GetShipmentAsync(request).ConfigureAwait(false);
+			var shipment = await source.GetShipmentAsync(request, ShipmentActivities.CancelToken).ConfigureAwait(false);
 
 			if (shipment == default)
 			{
@@ -73,7 +84,7 @@ namespace ShipmentTracker.Temporal
 		[Activity]
 		public async Task<bool> UpdateShipmentAsync(int shipmentId, Shipment shipment)
 		{
-			var db = await this.dbFactory.CreateDbContextAsync().ConfigureAwait(false);
+			var db = await this.dbFactory.CreateDbContextAsync(ShipmentActivities.CancelToken).ConfigureAwait(false);
 
 			await using (db.ConfigureAwait(false))
 			{
@@ -85,7 +96,7 @@ namespace ShipmentTracker.Temporal
 				var entity = await db.Shipments
 									 .WhereId(shipmentId)
 									 .AsTracking()
-									 .FirstOrDefaultAsync()
+									 .FirstOrDefaultAsync(ShipmentActivities.CancelToken)
 									 .ConfigureAwait(false);
 
 				if (entity is null)
@@ -97,10 +108,35 @@ namespace ShipmentTracker.Temporal
 				entity.Eta = eta;
 				entity.Arrived = shipment.Arrived;
 
-				var updated = await db.SaveChangesAsync().ConfigureAwait(false);
+				var updated = await db.SaveChangesAsync(ShipmentActivities.CancelToken).ConfigureAwait(false);
 
 				return updated == 1;
 			}
 		}
+
+		[Activity]
+		public Task SendPushNotificationsAsync(int shipmentId, Shipment shipment)
+		{
+			var notification = new PushNotification
+			{
+				Title = shipment.TrackingCode,
+				Body = ShipmentActivities.GetNotificationBody(in shipment),
+				Navigate = $"/shipments/{shipment.TrackingCode}/{shipment.Recipient.ZipCode}",
+				Topic = $"shipment-{shipmentId.Str()}",
+			};
+
+			return this.pushNotifications.SendNotificationsAsync(shipmentId, notification, ShipmentActivities.CancelToken);
+		}
+
+		// @todo Localized
+		private static string GetNotificationBody(in Shipment shipment) =>
+			(shipment.State) switch
+			{
+				ShipmentState.Received       => "Your shipment has been received by the delivery company.",
+				ShipmentState.Sorted         => "Your shipment has been sorted.",
+				ShipmentState.OutForDelivery => $"Out for delivery: {shipment.Eta.FormatTime()}",
+				ShipmentState.Delivered      => "Your shipment has been delivered!",
+				_                            => "The shipment's information has been updated.",
+			};
 	}
 }

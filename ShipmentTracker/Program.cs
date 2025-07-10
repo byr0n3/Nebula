@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ShipmentTracker;
 using ShipmentTracker.Extensions;
 using ShipmentTracker.Models.Database;
 using ShipmentTracker.Services;
@@ -43,6 +44,8 @@ services.AddSingleton<ShipmentsService>()
 services.Configure<VapidOptions>((options) => builder.Configuration.Bind("Vapid", options));
 services.AddHttpClient<VapidClient>("Vapid");
 
+services.AddSingleton<PushNotificationsService>();
+
 var temporalOptions = builder.Configuration.GetSection("Temporal").Get<ShipmentTemporalOptions>();
 
 if (temporalOptions is not null)
@@ -70,6 +73,12 @@ else
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+
+var api = app.MapGroup("/api");
+{
+	api.MapPost("push/subscribe", ApiEndpoints.PushSubscribeAsync);
+}
+
 app.MapRazorComponents<App>()
    .AddInteractiveServerRenderMode();
 

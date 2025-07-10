@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Vapid.NET.Models;
 
 namespace ShipmentTracker.Models.Database
 {
@@ -22,5 +23,13 @@ namespace ShipmentTracker.Models.Database
 		public System.DateTime Created { get; init; }
 
 		public User User { get; init; } = null!;
+
+		public static implicit operator PushSubscription(UserPushSubscription subscription) =>
+			new()
+			{
+				Endpoint = subscription.Endpoint,
+				P256dh = subscription.P256dh,
+				Auth = subscription.Auth,
+			};
 	}
 }

@@ -5,7 +5,7 @@ using Temporalio.Client;
 
 namespace ShipmentTracker.Temporal.Extensions
 {
-	public static class TemporalClientExtensions
+	internal static class TemporalClientExtensions
 	{
 		public const string ShipmentTaskQueue = "ShipmentTracker";
 

@@ -65,12 +65,12 @@ create table if not exists users_push_subscriptions
     id       serial      not null primary key,
     user_id  int4        not null references users,
 
-    endpoint text        not null,
+    endpoint text        not null unique,
     expires  timestamptz,
     p256dh   text        not null,
     auth     text        not null,
 
-    created  timestamptz not null
+    created  timestamptz not null default now()
 );
 
 -- endregion

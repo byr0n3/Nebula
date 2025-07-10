@@ -91,15 +91,27 @@ namespace ShipmentTracker.Web.Components.Shipments
 		}
 
 		// @todo Show toast/notification/feedback that workflow started
-		private Task StartWorkflowAsync() =>
-			this.Temporal.StartShipmentWorkflowAsync(new TrackShipmentArguments
+		private async Task StartWorkflowAsync()
+		{
+			try
 			{
-				Source = this.Shipment.Source,
-				Code = this.Shipment.TrackingCode,
-				ZipCode = this.Shipment.Recipient.ZipCode,
-				ShipmentId = this.userShipment.ShipmentId,
-				// @todo Based on account
-				Delay = System.TimeSpan.FromMinutes(1),
-			});
+				await this.Temporal.StartShipmentWorkflowAsync(new TrackShipmentArguments
+				{
+					Source = this.Shipment.Source,
+					Code = this.Shipment.TrackingCode,
+					ZipCode = this.Shipment.Recipient.ZipCode,
+					ShipmentId = this.userShipment.ShipmentId,
+					// @todo Based on account
+#if DEBUG
+					Delay = System.TimeSpan.FromSeconds(5),
+#else
+					Delay = System.TimeSpan.FromMinutes(1),
+#endif
+				});
+			}
+			catch (WorkflowAlreadyStartedException)
+			{
+			}
+		}
 	}
 }

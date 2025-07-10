@@ -28,33 +28,31 @@ namespace ShipmentTracker.Temporal
 		[WorkflowRun]
 		public async Task TrackAsync(TrackShipmentArguments arguments)
 		{
-			var shipment = await Workflow.ExecuteActivityAsync<ShipmentActivities, Shipment>(
-				(a) => a.GetShipmentAsync(arguments),
-				ShipmentWorkflow.activityOptions
-			);
+			Shipment shipment = default;
 
-			var updated = await Workflow.ExecuteActivityAsync<ShipmentActivities, bool>(
-				(a) => a.UpdateShipmentAsync(arguments.ShipmentId, shipment),
-				ShipmentWorkflow.activityOptions
-			);
-
-			// The shipment was updated, we should inform subscribers about this.
-			if (updated)
+			while (shipment.State != ShipmentState.Delivered)
 			{
-				// @todo Send push notification
-			}
+				shipment = await Workflow.ExecuteActivityAsync<ShipmentActivities, Shipment>(
+					(a) => a.GetShipmentAsync(arguments),
+					ShipmentWorkflow.activityOptions
+				);
 
-			// If the shipment has been successfully delivered, there's no need to keep updating the shipment.
-			if (shipment.State == ShipmentState.Delivered)
-			{
-				return;
-			}
+				var updated = await Workflow.ExecuteActivityAsync<ShipmentActivities, bool>(
+					(a) => a.UpdateShipmentAsync(arguments.ShipmentId, shipment),
+					ShipmentWorkflow.activityOptions
+				);
 
-			// Start another (delayed) workflow to update the shipment once more.
-			await Workflow.ExecuteActivityAsync<ShipmentActivities>(
-				(a) => a.StartWorkflowAsync(arguments),
-				ShipmentWorkflow.activityOptions
-			);
+				// The shipment was updated, we should inform subscribers about this.
+				if (updated)
+				{
+					await Workflow.ExecuteActivityAsync<ShipmentActivities>(
+						(a) => a.SendPushNotificationsAsync(arguments.ShipmentId, shipment),
+						ShipmentWorkflow.activityOptions
+					);
+				}
+
+				await Workflow.DelayAsync(arguments.Delay);
+			}
 		}
 	}
 }
