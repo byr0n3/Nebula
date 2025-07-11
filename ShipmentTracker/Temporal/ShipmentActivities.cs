@@ -134,7 +134,7 @@ namespace ShipmentTracker.Temporal
 			{
 				ShipmentState.Received       => "Your shipment has been received by the delivery company.",
 				ShipmentState.Sorted         => "Your shipment has been sorted.",
-				ShipmentState.OutForDelivery => $"Out for delivery: {shipment.Eta.FormatTime()}",
+				ShipmentState.OutForDelivery => $"Out for delivery: {shipment.Eta.Format("t")}",
 				ShipmentState.Delivered      => "Your shipment has been delivered!",
 				_                            => "The shipment's information has been updated.",
 			};

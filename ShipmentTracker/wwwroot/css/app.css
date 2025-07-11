@@ -1,3 +1,53 @@
+:root {
+	--bulma-primary-h: 265deg;
+	--bulma-primary-s: 53%;
+	--bulma-primary-l: 59%;
+	--bulma-primary-rgb: rgb(141, 95, 206);
+	--bulma-primary-invert-l: 29%;
+	--bulma-primary-light-l: 53%;
+	--bulma-primary-light-invert-l: 27%;
+	--bulma-primary-dark-l: 12%;
+	--bulma-primary-dark-invert-l: 18%;
+}
+
 h1:focus {
 	outline: none;
+}
+
+.icon.is-large {
+	font-size: var(--bulma-icon-dimensions-large);
+}
+
+.icon.is-medium {
+	font-size: var(--bulma-icon-dimensions-medium);
+}
+
+.icon {
+	font-size: var(--bulma-icon-dimensions);
+}
+
+.icon.is-small {
+	font-size: var(--bulma-icon-dimensions-small);
+}
+
+.stretched-link::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+}
+
+.container {
+	padding-block-end: var(--bulma-block-spacing);
+}
+
+.hero-body {
+	padding-block: var(--bulma-block-spacing) !important;
+	padding-inline: 0 !important;
+}
+
+@media (min-width: 769px) {
+	.container {
+		padding-block-end: 0;
+	}
 }

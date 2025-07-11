@@ -1,0 +1,19 @@
+.hero .title {
+	flex-direction: column;
+	align-items: start;
+	margin-bottom: 0.5em;
+}
+
+.action-buttons {
+	position: absolute;
+	inset-block-start: var(--bulma-block-spacing);
+	inset-inline-end: 0;
+}
+
+@media (min-width: 769px) {
+	.hero .title {
+		flex-direction: row;
+		align-items: center;
+		margin-bottom: 0.25em;
+	}
+}

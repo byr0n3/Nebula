@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using ShipmentTracker.Models;
@@ -8,7 +9,9 @@ namespace ShipmentTracker.Extensions
 	{
 		// @todo Use user's culture
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static string FormatTime(this Range<System.DateTime> @this) =>
-			$"{@this.Lower.ToString("t", CultureInfo.InvariantCulture)} – {@this.Upper.ToString("t", CultureInfo.InvariantCulture)}";
+		public static string Format(this Range<System.DateTime> @this,
+									[StringSyntax(StringSyntaxAttribute.DateTimeFormat)]
+									string? format = null) =>
+			$"{@this.Lower.ToString(format, CultureInfo.InvariantCulture)} – {@this.Upper.ToString(format, CultureInfo.InvariantCulture)}";
 	}
 }

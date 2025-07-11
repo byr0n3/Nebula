@@ -42,7 +42,7 @@ namespace ShipmentTracker.Models.Common
 		/// <summary>
 		/// The dimensions of the shipment, like size and weight.
 		/// </summary>
-		public required ShipmentDimensions Dimensions { get; init; }
+		public required ShipmentDetails Details { get; init; }
 
 		/// <summary>
 		/// Status updates of the delivery.
@@ -156,7 +156,7 @@ namespace ShipmentTracker.Models.Common
 	/// Defines the dimensions of the shipment, like it's size and weight.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-	public readonly struct ShipmentDimensions
+	public readonly struct ShipmentDetails
 	{
 		/// <summary>
 		/// The height of the package.
@@ -182,10 +182,26 @@ namespace ShipmentTracker.Models.Common
 		/// <remarks>This value is in grams/<c>g</c></remarks>
 		public required float Weight { get; init; }
 
+		/// <summary>
+		/// Formats the weight of the shipment to a human-readable string, in kilograms/<c>kg</c>.
+		/// </summary>
+		public string WeightKg =>
+			string.Create(null, $"{float.Round(this.Weight / 1000f, 2)} kg");
+
+		/// <summary>
+		/// Formats the dimensions of the shipment to a human-readable string, in centimeters/<c>cm</c>.
+		/// </summary>
+		/// <remarks>This only formats the width, height and length of the shipment (in that exact order).</remarks>
+		public string DimensionsCm =>
+			string.Create(
+				null,
+				$"{float.Round(this.Width / 10f, 1)} x {float.Round(this.Height / 10f, 1)} x {float.Round(this.Length / 10f, 1)} cm"
+			);
+
 		public override string ToString() =>
 			$"""
-			 {float.Round(this.Weight / 1000f, 1)} kg
-			 {float.Round(this.Width / 10f, 1)} x {float.Round(this.Height / 10f, 1)} x {float.Round(this.Length / 10f, 1)} cm
+			 Weight: {this.WeightKg}
+			 Dimensions: {this.DimensionsCm}
 			 """;
 	}
 
@@ -209,6 +225,9 @@ namespace ShipmentTracker.Models.Common
 		/// </summary>
 		/// <remarks>This message is (normally) localized in the language given to the request.</remarks>
 		public string? Description { get; init; }
+
+		public long Key =>
+			(long)this.State ^ this.Timestamp.Ticks;
 
 		public bool Equals(ShipmentEvent other) =>
 			(this.State == other.State) && this.Timestamp.Equals(other.Timestamp);

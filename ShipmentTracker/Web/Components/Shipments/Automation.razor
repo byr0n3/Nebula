@@ -2,9 +2,12 @@
 @using ShipmentTracker.Models.Common
 
 <button type="button"
+        class="button"
         title="@(userShipment.Subscribed ? "Unsubscribe from shipment" : "Subscribe to shipment")"
         @onclick="@(ToggleSubscriptionAsync)">
-	@(userShipment.Subscribed ? Icons.UserCheck : Icons.UserPlus)
+	<span class="icon is-small">
+		@(userShipment.Subscribed ? Icons.UserCheck : Icons.UserPlus)
+	</span>
 </button>
 
 @if (!workflowRunning && (Shipment.State != ShipmentState.Delivered))

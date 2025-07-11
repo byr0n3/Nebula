@@ -62,7 +62,11 @@ namespace ShipmentTracker.Sources.DHL
 				shipment = (data is not null) && (data.Length != 0) ? data[0] : default;
 			}
 
-			var events = shipment.Events.Select(ToShipmentEvent).ToArray();
+			var events = shipment.Events
+								 .Select(ToShipmentEvent)
+								 .OrderByDescending(static (e) => e.Timestamp)
+								 .ToArray();
+
 			var state = events.Where(static (e) => e.State != ShipmentEventType.InformationUpdate)
 							  .Select(static (e) => e.State.ToShipmentState())
 							  .Last();
@@ -95,7 +99,7 @@ namespace ShipmentTracker.Sources.DHL
 					Place = shipment.Origin.Address.City ?? string.Empty,
 					Country = CountryEnumData.FromValue(shipment.Origin.Address.CountryCode),
 				},
-				Dimensions = new ShipmentDimensions
+				Details = new ShipmentDetails
 				{
 					// Dimensions are given in CM, convert to MM.
 					Height = shipment.Height * 10,

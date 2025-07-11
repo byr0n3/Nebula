@@ -15,21 +15,38 @@
 }
 else
 {
-	<div>
-		@foreach (var item in items)
-		{
-			@(ItemTemplate(item))
-		}
+	<div class="fixed-grid has-1-cols has-2-cols-tablet has-3-cols-desktop">
+		<div class="grid is-gap-4">
+			@foreach (var item in items)
+			{
+				<div @key="@(item.Id.Str())" class="cell">
+					@(ItemTemplate(item))
+				</div>
+			}
+		</div>
 	</div>
 
 	<div>
-		<span>@(count.Str()) items</span>
+		<p>@(count.Str()) total items</p>
 
-		<div>
-			<a href="@(GetPageLink(1))">@(Icons.ChevronsLeft)</a>
-			<a href="@(GetPageLink(Page - 1))">@(Icons.ChevronLeft)</a>
-			<a href="@(GetPageLink(Page + 1))">@(Icons.ChevronRight)</a>
-			<a href="@(GetPageLink(LastPage))">@(Icons.ChevronsRight)</a>
-		</div>
+		@if (LastPage != 1)
+		{
+			<nav class="pagination" aria-label="Pagination">
+				<ul class="pagination-list">
+					<li>
+						<a href="@(GetPageLink(1))" class="pagination-link">@(Icons.ChevronsLeft)</a>
+					</li>
+					<li>
+						<a href="@(GetPageLink(Page - 1))" class="pagination-link">@(Icons.ChevronLeft)</a>
+					</li>
+					<li>
+						<a href="@(GetPageLink(Page + 1))" class="pagination-link">@(Icons.ChevronRight)</a>
+					</li>
+					<li>
+						<a href="@(GetPageLink(LastPage))" class="pagination-link">@(Icons.ChevronsRight)</a>
+					</li>
+				</ul>
+			</nav>
+		}
 	</div>
 }

@@ -44,7 +44,7 @@ namespace ShipmentTracker.Web.Pages.Auth
 
 			var path = new PathString(this.ReturnUrl);
 
-			this.Navigation.NavigateTo(path.HasValue ? path.ToUriComponent() : "/account", true);
+			this.Navigation.NavigateTo(path.HasValue ? path.ToUriComponent() : "/shipments", true);
 		}
 	}
 }

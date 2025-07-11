@@ -5,7 +5,6 @@ using System.Net.Http.Json;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
-using ShipmentTracker.Extensions;
 using ShipmentTracker.Models;
 using ShipmentTracker.Models.Common;
 using ShipmentTracker.Sources.PostNL.Extensions;
@@ -49,6 +48,16 @@ namespace ShipmentTracker.Sources.PostNL
 			var shipment = await this.GetShipmentAsync(request.Code, request.ZipCode, request.Country, request.Language, token)
 									 .ConfigureAwait(false);
 
+			var events = shipment.Observations
+								 .Select(static (o) => new ShipmentEvent
+								  {
+									  State = o.Code.ToShipmentEventType(),
+									  Timestamp = o.Date,
+									  Description = o.Description,
+								  })
+								 .OrderByDescending(static (e) => e.Timestamp)
+								 .ToArray();
+
 			return new Shipment
 			{
 				Id = shipment.Id,
@@ -76,19 +85,14 @@ namespace ShipmentTracker.Sources.PostNL
 					Place = shipment.Sender.Address.Town,
 					Country = CountryEnumData.FromValue(shipment.Sender.Address.CountryCode),
 				},
-				Dimensions = new ShipmentDimensions
+				Details = new ShipmentDetails
 				{
 					Height = shipment.Details.Dimensions.GetValueOrDefault().Height,
 					Width = shipment.Details.Dimensions.GetValueOrDefault().Width,
 					Length = shipment.Details.Dimensions.GetValueOrDefault().Depth,
 					Weight = shipment.Details.Dimensions.GetValueOrDefault().Weight,
 				},
-				Events = shipment.Observations.Select(static (o) => new ShipmentEvent
-				{
-					State = o.Code.ToShipmentEventType(),
-					Timestamp = o.Date,
-					Description = o.Description,
-				}).ToArray(),
+				Events = events,
 				Created = shipment.Created,
 				Updated = shipment.Updated,
 				Arrived = shipment.DeliveryDate ?? default,

@@ -10,11 +10,11 @@ using ShipmentTracker.Models.Database;
 using ShipmentTracker.Models.Requests;
 using ShipmentTracker.Services;
 
-namespace ShipmentTracker.Web.Components.Account
+namespace ShipmentTracker.Web.Pages.Account
 {
-	public sealed partial class EditInformation : ComponentBase
+	public sealed partial class View : ComponentBase
 	{
-		private const string formName = nameof(EditInformation);
+		private const string formName = "edit-account";
 
 		[CascadingParameter] public required HttpContext HttpContext { get; init; }
 
@@ -22,7 +22,7 @@ namespace ShipmentTracker.Web.Components.Account
 
 		[Inject] public required AuthenticationService<User> Authentication { get; init; }
 
-		[SupplyParameterFromForm(FormName = EditInformation.formName)]
+		[SupplyParameterFromForm(FormName = View.formName)]
 		private EditAccountModel Model { get; set; } = new();
 
 		protected override void OnInitialized()

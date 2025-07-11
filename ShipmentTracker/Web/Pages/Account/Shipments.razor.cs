@@ -17,7 +17,8 @@ namespace ShipmentTracker.Web.Pages.Account
 			var userId = this.HttpContext.User.GetClaimValue<int>(UserClaim.Id);
 
 			return db.GetUserShipments(userId)
-					 .OrderByDescending(static (s) => s.Created)
+					 .OrderBy(static (s) => s.State)
+					 .ThenByDescending(static (s) => s.Created)
 					 .Select(static (s) => new ShipmentDto
 					  {
 						  Id = s.Id,
@@ -26,8 +27,9 @@ namespace ShipmentTracker.Web.Pages.Account
 						  Source = s.Source,
 						  State = s.State,
 						  Eta = s.Eta,
-						  Arrived = s.Arrived,
+						  Arrived = s.Arrived ?? s.Updated,
 						  Sender = s.Sender,
+						  Created = s.Created,
 					  });
 		}
 	}

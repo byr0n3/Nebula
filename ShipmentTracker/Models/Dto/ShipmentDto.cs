@@ -1,9 +1,10 @@
 using NpgsqlTypes;
 using ShipmentTracker.Models.Common;
+using ShipmentTracker.Models.Database;
 
 namespace ShipmentTracker.Models.Dto
 {
-	public readonly struct ShipmentDto : System.IEquatable<ShipmentDto>
+	public readonly struct ShipmentDto : IEntity, System.IEquatable<ShipmentDto>
 	{
 		public required int Id { get; init; }
 
@@ -17,7 +18,9 @@ namespace ShipmentTracker.Models.Dto
 
 		public required NpgsqlRange<System.DateTime>? Eta { get; init; }
 
-		public required System.DateTime? Arrived { get; init; }
+		public required System.DateTime Arrived { get; init; }
+
+		public required System.DateTime Created { get; init; }
 
 		public required string? Sender { get; init; }
 

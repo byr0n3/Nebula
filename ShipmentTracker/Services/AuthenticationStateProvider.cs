@@ -28,11 +28,9 @@ namespace ShipmentTracker.Services
 		private void OnAuthenticationChanged(ClaimsPrincipal? user) =>
 			this.SetAuthenticationState(Task.FromResult(new AuthenticationState(user ?? AuthenticationStateProvider.defaultUser)));
 
-		protected override Task<bool> ValidateAuthenticationStateAsync(AuthenticationState state, CancellationToken token)
-		{
+		protected override Task<bool> ValidateAuthenticationStateAsync(AuthenticationState state, CancellationToken token) =>
 			// @todo Validate somehow
-			return Task.FromResult(false);
-		}
+			Task.FromResult(false);
 
 		protected override void Dispose(bool disposing)
 		{

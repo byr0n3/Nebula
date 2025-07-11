@@ -3,14 +3,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using ShipmentTracker.Models.Database;
 using ShipmentTracker.Services;
 
 namespace ShipmentTracker.Web.Components
 {
 	public sealed partial class Grid<TGridItem> : ComponentBase
+		where TGridItem : IEntity
 	{
-		public const string PageQueryKey = "page";
-		public const string PerPageQueryKey = "per_page";
+		private const string pageQueryKey = "page";
+		private const string perPageQueryKey = "per_page";
+		private const int defaultPerPage = 6;
 
 		[Inject] public required IDbContextFactory<ShipmentDbContext> DbFactory { get; init; }
 
@@ -22,11 +25,11 @@ namespace ShipmentTracker.Web.Components
 
 		[Parameter] public RenderFragment? EmptyTemplate { get; set; }
 
-		[SupplyParameterFromQuery(Name = Grid<TGridItem>.PageQueryKey)]
+		[SupplyParameterFromQuery(Name = Grid<TGridItem>.pageQueryKey)]
 		public required int Page { get; set; } = 1;
 
-		[SupplyParameterFromQuery(Name = Grid<TGridItem>.PerPageQueryKey)]
-		public required int PerPage { get; set; } = 9;
+		[SupplyParameterFromQuery(Name = Grid<TGridItem>.perPageQueryKey)]
+		public required int PerPage { get; set; } = Grid<TGridItem>.defaultPerPage;
 
 		private int LastPage =>
 			(int)float.Ceiling(this.count / (float)this.PerPage);
@@ -40,7 +43,7 @@ namespace ShipmentTracker.Web.Components
 
 			if (this.PerPage <= 0)
 			{
-				this.PerPage = 9;
+				this.PerPage = Grid<TGridItem>.defaultPerPage;
 			}
 
 			return this.LoadDataAsync();
@@ -66,6 +69,6 @@ namespace ShipmentTracker.Web.Components
 		}
 
 		private string GetPageLink(int page) =>
-			this.Navigation.GetUriWithQueryParameter(Grid<TGridItem>.PageQueryKey, page);
+			this.Navigation.GetUriWithQueryParameter(Grid<TGridItem>.pageQueryKey, (page > 1) && (page <= this.LastPage) ? page : null);
 	}
 }

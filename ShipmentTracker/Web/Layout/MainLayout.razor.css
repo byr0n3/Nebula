@@ -1,0 +1,13 @@
+.container.navbar {
+	background-color: transparent;
+}
+
+.navbar .navbar-item {
+	padding-inline: 0 !important;
+}
+
+@media screen and (max-width: 1216px) {
+	main.container {
+		padding-inline: var(--bulma-block-spacing);
+	}
+}

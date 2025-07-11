@@ -1,79 +1,114 @@
 @page "/register"
+@using Elegance.Icons
 @using Microsoft.AspNetCore.Components.Forms
 
 <PageTitle>Register</PageTitle>
 
-<h1>Register</h1>
+<section class="hero">
+	<div class="hero-body">
+		<h1 class="title">Register</h1>
+	</div>
+</section>
 
 <EditForm Model="@(Model)" OnValidSubmit="@(RegisterAsync)" FormName="@(Register.formName)">
-	<DataAnnotationsValidator/>
-
-	<a href="/login">
-		Already have an account?
-	</a>
+	<DataAnnotationsValidator />
 
 	@if (Model.Error)
 	{
-		<div role="alert" class="alert alert-danger">
+		<div role="alert" class="notification is-danger">
 			Something went wrong.
 		</div>
 	}
 
-	<div>
-		<label for="username">
+	<div class="field">
+		<label for="username" class="label">
 			Username
 		</label>
-		<InputText @bind-Value="@(Model.Username)"
-				   id="username"
-				   autocomplete="username"
-				   aria-required="true"
-				   aria-describedby="username-error"
-				   required
-				   autofocus/>
-		<ValidationMessage For="@(() => Model.Username)" id="username-error" class="text-danger"/>
+		<div class="control has-icons-left">
+			<InputText @bind-Value="@(Model.Username)"
+			           id="username"
+			           class="input"
+			           autocomplete="username"
+			           aria-required="true"
+			           aria-describedby="username-error"
+			           required
+			           autofocus />
+			<span class="icon is-small is-left">
+				@(Icons.User)
+			</span>
+		</div>
+		<ValidationMessage For="@(() => Model.Username)" id="username-error" class="help is-danger" />
 	</div>
 
-	<div>
-		<label for="email">
+	<div class="field">
+		<label for="email" class="label">
 			E-mail
 		</label>
-		<InputText @bind-Value="@(Model.Email)"
-				   id="email"
-				   type="email"
-				   autocomplete="email"
-				   aria-required="true"
-				   aria-describedby="email-error"
-				   required/>
-		<ValidationMessage For="@(() => Model.Email)" id="email-error" class="text-danger"/>
+		<div class="control has-icons-left">
+			<InputText @bind-Value="@(Model.Email)"
+			           id="email"
+			           class="input"
+			           type="email"
+			           autocomplete="email"
+			           aria-required="true"
+			           aria-describedby="email-error"
+			           required />
+			<span class="icon is-small is-left">
+				@(Icons.Email)
+			</span>
+		</div>
+		<ValidationMessage For="@(() => Model.Email)" id="email-error" class="help is-danger" />
 	</div>
 
-	<div>
-		<label for="password">
+	<div class="field">
+		<label for="password" class="label">
 			Password
 		</label>
-		<InputText @bind-Value="@(Model.Password)"
-				   type="password"
-				   id="password"
-				   autocomplete="new-password"
-				   aria-required="true"
-				   aria-describedby="password-error"
-				   required/>
-		<ValidationMessage For="@(() => Model.Password)" id="password-error" class="text-danger"/>
+		<div class="control has-icons-left">
+			<InputText @bind-Value="@(Model.Password)"
+			           id="password"
+			           class="input"
+			           type="password"
+			           autocomplete="new-password"
+			           aria-required="true"
+			           aria-describedby="password-error"
+			           required />
+			<span class="icon is-small is-left">
+				@(Icons.Password)
+			</span>
+		</div>
+		<ValidationMessage For="@(() => Model.Password)" id="password-error" class="help is-danger" />
 	</div>
 
-	<div>
-		<label for="password-confirmation">
+	<div class="field">
+		<label for="password-confirmation" class="label">
 			Password confirmation
 		</label>
-		<InputText @bind-Value="@(Model.PasswordConfirmation)"
-				   type="password"
-				   id="password-confirmation"
-				   autocomplete="new-password"
-				   aria-required="true"
-				   required/>
+		<div class="control has-icons-left">
+			<InputText @bind-Value="@(Model.PasswordConfirmation)"
+			           id="password-confirmation"
+			           class="input"
+			           type="password"
+			           autocomplete="new-password"
+			           aria-required="true"
+			           required />
+			<span class="icon is-small is-left">
+				@(Icons.Password)
+			</span>
+		</div>
 	</div>
 
-	<button type="submit" class="btn btn-primary">
-		Register
-	</button>
+	<div class="field is-grouped">
+		<div class="control">
+			<button type="submit" class="button is-primary">
+				Register
+			</button>
+		</div>
+
+		<div class="control">
+			<a href="/login">
+				Already have an account?
+			</a>
+		</div>
+	</div>
 </EditForm>

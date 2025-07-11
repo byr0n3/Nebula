@@ -1,7 +1,9 @@
+@using Elegance.Icons
 @using Microsoft.AspNetCore.Components.Forms
 
 <EditForm EditContext="@(context)" OnValidSubmit="@(LogoutAsync)" FormName="@(LogoutForm.formName)">
-	<button type="submit">
-		Logout
+	<button type="submit" class="button is-dark">
+		<span class="icon is-small">@(Icons.Logout)</span>
+		<span>Logout</span>
 	</button>
 </EditForm>

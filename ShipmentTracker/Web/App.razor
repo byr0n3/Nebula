@@ -1,28 +1,31 @@
-﻿@using ShipmentTracker.Web.Components
-@using Microsoft.AspNetCore.Components.Routing
+﻿@using Microsoft.AspNetCore.Components.Routing
+@using ShipmentTracker.Web.Components
 @using ShipmentTracker.Web.Layout
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	<base href="/"/>
-	<link rel="stylesheet" href="@(Assets["css/app.css"])"/>
-	<link rel="stylesheet" href="@(Assets["ShipmentTracker.styles.css"])"/>
-	<ImportMap/>
-	<HeadOutlet/>
-	<link href="@(Assets["app.webmanifest"])" rel="manifest"/>
-	<link rel="apple-touch-icon" sizes="512x512" href="@(Assets["icon-512.png"])"/>
-	<link rel="apple-touch-icon" sizes="192x192" href="@(Assets["icon-192.png"])"/>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<base href="/" />
+	<link rel="stylesheet" href="@(Assets["css/bulma.min.css"])" />
+	<link rel="stylesheet" href="@(Assets["css/app.css"])" />
+	<link rel="stylesheet" href="@(Assets["ShipmentTracker.styles.css"])" />
+	<ImportMap />
+	<HeadOutlet />
+	<link rel="icon" type="image/png" href="@(Assets["favicon-96x96.png"])" sizes="96x96" />
+	<link rel="icon" type="image/svg+xml" href="@(Assets["favicon.svg"])" />
+	<link rel="shortcut icon" href="@(Assets["favicon.ico"])" />
+	<link rel="apple-touch-icon" sizes="180x180" href="@(Assets["apple-touch-icon.png"])" />
+	<meta name="apple-mobile-web-app-title" content="Shipments" />
+	<link rel="manifest" href="@(Assets["site.webmanifest"])" />
 </head>
 
 <body>
 
 <Router AppAssembly="@(typeof(Program).Assembly)">
 	<Found Context="routeData">
-		<RouteView RouteData="@(routeData)" DefaultLayout="@(typeof(MainLayout))"/>
+		<RouteView RouteData="@(routeData)" DefaultLayout="@(typeof(MainLayout))" />
 	</Found>
 
 	<NotFound>
@@ -31,7 +34,7 @@
 	</NotFound>
 </Router>
 
-<ReconnectModal/>
+<ReconnectModal />
 <script src="@(Assets["_framework/blazor.web.js"])"></script>
 <script>navigator.serviceWorker.register('service-worker.js');</script>
 </body>

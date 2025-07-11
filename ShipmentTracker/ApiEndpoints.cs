@@ -1,9 +1,7 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
 using ShipmentTracker.Extensions;
 using ShipmentTracker.Models;
 using ShipmentTracker.Models.Database;
