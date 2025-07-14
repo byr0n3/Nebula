@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Threading.Tasks;
 using Elegance.AspNet.Authentication;
 using Microsoft.AspNetCore.Components;
@@ -44,6 +45,7 @@ namespace Nebula.Web.Pages.Auth
 					{
 						Email = model.Email,
 						Password = Hashing.Hash(model.Password),
+						Culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName,
 					});
 
 					var saved = await db.SaveChangesAsync();

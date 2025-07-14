@@ -14,21 +14,21 @@ namespace Nebula.Resources {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ShipmentStateLocalization {
+    public class PushNotifications {
         
         private static System.Resources.ResourceManager resourceMan;
         
         private static System.Globalization.CultureInfo resourceCulture;
         
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ShipmentStateLocalization() {
+        internal PushNotifications() {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         public static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("Nebula.Resources.ShipmentStateLocalization", typeof(ShipmentStateLocalization).Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("Nebula.Resources.PushNotifications", typeof(PushNotifications).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -42,12 +42,6 @@ namespace Nebula.Resources {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        public static string registered {
-            get {
-                return ResourceManager.GetString("registered", resourceCulture);
             }
         }
         
@@ -75,9 +69,9 @@ namespace Nebula.Resources {
             }
         }
         
-        public static string information_update {
+        public static string registered {
             get {
-                return ResourceManager.GetString("information_update", resourceCulture);
+                return ResourceManager.GetString("registered", resourceCulture);
             }
         }
     }

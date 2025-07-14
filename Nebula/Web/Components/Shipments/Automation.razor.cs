@@ -106,7 +106,7 @@ namespace Nebula.Web.Components.Shipments
 #if DEBUG
 					Delay = System.TimeSpan.FromSeconds(5),
 #else
-					Delay = System.TimeSpan.FromMinutes(1),
+					Delay = System.TimeSpan.FromMinutes(5),
 #endif
 				});
 

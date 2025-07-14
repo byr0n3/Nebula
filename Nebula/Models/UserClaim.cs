@@ -8,6 +8,7 @@ namespace Nebula.Models
 		[EnumValue("id")] Id,
 		[EnumValue("email")] Email,
 		[EnumValue("flags")] Flags,
+		[EnumValue("culture")] Culture,
 		[EnumValue("created")] Created,
 	}
 }

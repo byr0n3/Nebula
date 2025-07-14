@@ -151,7 +151,7 @@ else
 							var @class = i < (shipment.Events.Length - 1) ? "mb-5" : string.Empty;
 
 							<div @key="@(@event.Key.Str())" class="@(@class)">
-								<h4 class="title is-6 mb-1">@(ShipmentStateLocalizer[@event.State.ToString()])</h4>
+								<h4 class="title is-6 mb-1">@(ShipmentStateLocalizer[@event.State.Str()])</h4>
 								<small>@(@event.Timestamp.ToString("g"))</small>
 								@if (@event.Description is not null)
 								{

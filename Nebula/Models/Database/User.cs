@@ -17,6 +17,8 @@ namespace Nebula.Models.Database
 
 		[Column("flags")] public UserFlags Flags { get; init; }
 
+		[StringLength(8)] [Column("culture")] public required string Culture { get; init; }
+
 		[Column("created")]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public System.DateTime Created { get; init; }

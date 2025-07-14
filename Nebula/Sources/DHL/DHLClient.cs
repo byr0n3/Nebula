@@ -36,7 +36,7 @@ namespace Nebula.Sources.DHL
 			}
 		}
 
-		// @todo Validate code using Regex
+		// @todo Validate code using Regex?
 		public async ValueTask<bool> ValidateAsync(ShipmentRequest request, CancellationToken token = default)
 		{
 			var response = await this.GetShipmentAsync(request.Code, request.ZipCode, token).ConfigureAwait(false);
@@ -108,8 +108,6 @@ namespace Nebula.Sources.DHL
 					// `Weight` is given in KG, convert to G.
 					Weight = shipment.Weight * 1000,
 				},
-				// @todo Fix duplicate interventions (same type and remarks yet different timestamp)
-				// Don't check uniqueness on remarks, that makes no sense.
 				Events = events,
 				Created = shipment.Created,
 				Updated = shipment.Updated,
@@ -121,7 +119,6 @@ namespace Nebula.Sources.DHL
 
 			static ShipmentEvent ToShipmentEvent(DHLShipmentEvent @event)
 			{
-				// @todo Handle more?
 				var state = (@event.Status) switch
 				{
 					DHLShipmentEventStatus.Registered => ShipmentEventType.Registered,

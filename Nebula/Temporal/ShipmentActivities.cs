@@ -1,18 +1,23 @@
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Elegance.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using NpgsqlTypes;
 using Nebula.Extensions;
 using Nebula.Models.Common;
+using Nebula.Resources;
 using Nebula.Services;
 using Nebula.Sources;
 using Nebula.Temporal.Extensions;
 using Temporalio.Activities;
 using Temporalio.Client;
 using Temporalio.Exceptions;
+using Vapid.NET;
 using Vapid.NET.Models;
 
 namespace Nebula.Temporal
@@ -22,19 +27,22 @@ namespace Nebula.Temporal
 		private static CancellationToken CancelToken =>
 			ActivityExecutionContext.Current.CancellationToken;
 
+		private readonly VapidClient vapid;
 		private readonly ITemporalClient client;
 		private readonly IShipmentSource[] sources;
-		private readonly PushNotificationsService pushNotifications;
 		private readonly IDbContextFactory<ShipmentDbContext> dbFactory;
+		private readonly IStringLocalizer<PushNotifications> notificationLocalizer;
 
-		public ShipmentActivities(ITemporalClient client,
+		public ShipmentActivities(VapidClient vapid,
+								  ITemporalClient client,
 								  System.IServiceProvider services,
-								  PushNotificationsService pushNotifications,
-								  IDbContextFactory<ShipmentDbContext> dbFactory)
+								  IDbContextFactory<ShipmentDbContext> dbFactory,
+								  IStringLocalizer<PushNotifications> notificationLocalizer)
 		{
+			this.vapid = vapid;
 			this.client = client;
 			this.dbFactory = dbFactory;
-			this.pushNotifications = pushNotifications;
+			this.notificationLocalizer = notificationLocalizer;
 			this.sources = services.GetServices<IShipmentSource>().ToArray();
 		}
 
@@ -115,28 +123,82 @@ namespace Nebula.Temporal
 		}
 
 		[Activity]
-		public Task SendPushNotificationsAsync(int shipmentId, Shipment shipment)
+		public async Task SendPushNotificationsAsync(int shipmentId, Shipment shipment)
 		{
-			var notification = new PushNotification
-			{
-				Title = shipment.TrackingCode,
-				Body = ShipmentActivities.GetNotificationBody(in shipment),
-				Navigate = $"/shipments/{shipment.TrackingCode}/{shipment.Recipient.ZipCode}",
-				Topic = $"shipment-{shipmentId.Str()}",
-			};
+			var token = ShipmentActivities.CancelToken;
 
-			return this.pushNotifications.SendNotificationsAsync(shipmentId, notification, ShipmentActivities.CancelToken);
+			var db = await this.dbFactory.CreateDbContextAsync(token).ConfigureAwait(false);
+
+			await using (db.ConfigureAwait(false))
+			{
+				var subscriptions = db.UsersPushSubscriptions
+									  .Where((ups) => db.UsersShipments
+														.Any((us) => (us.ShipmentId == shipmentId) && (us.UserId == ups.UserId)))
+									  .Join(
+										   db.Users,
+										   static (ups) => ups.UserId,
+										   static (u) => u.Id,
+										   static (ups, u) => new
+										   {
+											   Subscription = ups,
+											   u.Culture,
+										   }
+									   )
+									  .AsAsyncEnumerable();
+
+				var tasks = new List<Task>();
+
+				await foreach (var subscription in subscriptions.WithCancellation(token).ConfigureAwait(false))
+				{
+					if (subscription.Subscription.Expires <= System.DateTime.UtcNow)
+					{
+						db.UsersPushSubscriptions.Remove(subscription.Subscription);
+						continue;
+					}
+
+					var notification = new PushNotification
+					{
+						Title = shipment.TrackingCode,
+						Body = this.GetNotificationBody(in shipment, subscription.Culture),
+						Navigate = $"/shipments/{shipment.TrackingCode}/{shipment.Recipient.ZipCode}",
+						Topic = $"shipment-{shipmentId.Str()}",
+					};
+
+					tasks.Add(this.vapid.SendAsync(subscription.Subscription, notification, token));
+				}
+
+				await db.SaveChangesAsync(token).ConfigureAwait(false);
+
+				await Task.WhenAll(tasks).ConfigureAwait(false);
+			}
 		}
 
-		// @todo Localized
-		private static string GetNotificationBody(in Shipment shipment) =>
-			(shipment.State) switch
+		private string GetNotificationBody(in Shipment shipment, string culture)
+		{
+			var msg = this.GetLocalizedString(shipment.State, culture);
+
+			return (shipment.State) switch
 			{
-				ShipmentState.Received       => "Your shipment has been received by the delivery service.",
-				ShipmentState.Sorted         => "Your shipment has been sorted.",
-				ShipmentState.OutForDelivery => $"Out for delivery: {shipment.Eta.Format("t")}",
-				ShipmentState.Delivered      => "Your shipment has been delivered!",
-				_                            => "The shipment's information has been updated.",
+				ShipmentState.OutForDelivery => string.Format(CultureInfo.CurrentCulture, msg, shipment.Eta),
+				_                            => msg,
 			};
+		}
+
+		// @todo Cache cultures?
+		private string GetLocalizedString(ShipmentState state, string culture)
+		{
+			var previousCulture = CultureInfo.CurrentCulture;
+			var previousUiCulture = CultureInfo.CurrentUICulture;
+
+			CultureInfo.CurrentCulture = new CultureInfo(culture);
+			CultureInfo.CurrentUICulture = new CultureInfo(culture);
+
+			var msg = this.notificationLocalizer[state.Str()];
+
+			CultureInfo.CurrentCulture = previousCulture;
+			CultureInfo.CurrentUICulture = previousUiCulture;
+
+			return msg;
+		}
 	}
 }

@@ -1,4 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
     <resheader name="resmimetype">
         <value>text/microsoft-resx</value>
     </resheader>
@@ -11,22 +18,19 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="registered" xml:space="preserve">
-        <value>Geregistreerd</value>
-    </data>
     <data name="received" xml:space="preserve">
-        <value>Ontvangen</value>
+        <value>Your shipment has been received by the delivery service.</value>
     </data>
     <data name="sorted" xml:space="preserve">
-        <value>Gesorteerd</value>
+        <value>Your shipment has been sorted.</value>
     </data>
     <data name="out_for_delivery" xml:space="preserve">
-        <value>Onderweg</value>
+        <value>Your shipment is underway! {0:t}</value>
     </data>
     <data name="delivered" xml:space="preserve">
-        <value>Bezorgd</value>
+        <value>Your shipment has been delivered!</value>
     </data>
-    <data name="information_update" xml:space="preserve">
-        <value>Info bijgewerkt</value>
+    <data name="registered" xml:space="preserve">
+        <value>Your shipment has been updated by the delivery service.</value>
     </data>
 </root>

@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
+using Nebula.Extensions;
 using Nebula.Models.Common;
 using Nebula.Resources;
 using Nebula.Services;
@@ -33,7 +34,7 @@ namespace Nebula.Web.Pages
 			this.loading ? "skeleton-block" : string.Empty;
 
 		private string Summary =>
-			this.shipment == default ? string.Empty : this.Localizer[$"summary.{this.shipment.State.ToString()}"];
+			this.shipment == default ? string.Empty : this.Localizer[$"summary.{this.shipment.State.Str()}"];
 
 		private bool Letter =>
 			this.shipment.Type is ShipmentType.Letter or ShipmentType.LetterboxPackage;

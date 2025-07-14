@@ -21,15 +21,13 @@ namespace Nebula.Web.Pages
 		{
 			Debug.Assert(this.Model.IsValid);
 
-			// @todo Sanitize ZIP (remove spaces)
-			this.Navigation.NavigateTo($"/shipments/{this.Model.Code}/{this.Model.ZipCode}", true);
+			this.Navigation.NavigateTo(Urls.GetTrackingUrl(this.Model.Code, this.Model.ZipCode), true);
 		}
 
 		private sealed class FindShipmentModel
 		{
 			[Required] public string? Code { get; set; }
 
-			// @todo Validate format
 			[Required] public string? ZipCode { get; set; }
 
 			public bool IsValid

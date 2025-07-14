@@ -24,19 +24,19 @@
     <data name="not-found.button" xml:space="preserve">
         <value>Back</value>
     </data>
-    <data name="summary.Registered" xml:space="preserve">
+    <data name="summary.registered" xml:space="preserve">
         <value>The shipment has been registered, but hasn't arrived at the delivery service yet.</value>
     </data>
-    <data name="summary.Received" xml:space="preserve">
+    <data name="summary.received" xml:space="preserve">
         <value>The shipment has been registered and received.</value>
     </data>
-    <data name="summary.Sorted" xml:space="preserve">
+    <data name="summary.sorted" xml:space="preserve">
         <value>The shipment has been sorted.</value>
     </data>
-    <data name="summary.OutForDelivery" xml:space="preserve">
+    <data name="summary.out_for_delivery" xml:space="preserve">
         <value>The shipment is out for delivery!</value>
     </data>
-    <data name="summary.Delivered" xml:space="preserve">
+    <data name="summary.delivered" xml:space="preserve">
         <value>The delivery service reported that the shipment has been delivered.</value>
     </data>
     <data name="expected" xml:space="preserve">

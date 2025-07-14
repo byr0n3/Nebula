@@ -18,6 +18,7 @@ namespace Nebula.Services
 			yield return UserClaimsProvider.Claim(UserClaim.Id, user.Id);
 			yield return UserClaimsProvider.Claim(UserClaim.Email, user.Email);
 			yield return UserClaimsProvider.Claim(UserClaim.Flags, ((int)user.Flags).Str());
+			yield return UserClaimsProvider.Claim(UserClaim.Culture, user.Culture);
 			yield return UserClaimsProvider.Claim(UserClaim.Created, user.Created.ToString("O", DateTimeFormatInfo.InvariantInfo));
 		}
 

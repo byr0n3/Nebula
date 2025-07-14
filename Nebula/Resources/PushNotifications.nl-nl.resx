@@ -11,22 +11,19 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="registered" xml:space="preserve">
-        <value>Geregistreerd</value>
-    </data>
-    <data name="received" xml:space="preserve">
-        <value>Ontvangen</value>
-    </data>
-    <data name="sorted" xml:space="preserve">
-        <value>Gesorteerd</value>
+    <data name="delivered" xml:space="preserve">
+        <value>Je zending is afgeleverd!</value>
     </data>
     <data name="out_for_delivery" xml:space="preserve">
-        <value>Onderweg</value>
+        <value>Je zending is onderweg! {0:t}</value>
     </data>
-    <data name="delivered" xml:space="preserve">
-        <value>Bezorgd</value>
+    <data name="received" xml:space="preserve">
+        <value>Je zending is ontvangen door de bezorgdienst.</value>
     </data>
-    <data name="information_update" xml:space="preserve">
-        <value>Info bijgewerkt</value>
+    <data name="registered" xml:space="preserve">
+        <value>De zending is bijgewerkt door de bezorgdienst.</value>
+    </data>
+    <data name="sorted" xml:space="preserve">
+        <value>De zending is aankomen bij een distributiecentrum in de buurt.</value>
     </data>
 </root>

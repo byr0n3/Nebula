@@ -57,33 +57,33 @@ namespace Nebula.Web.Pages {
             }
         }
         
-        public static string summary_Registered {
+        public static string summary_registered {
             get {
-                return ResourceManager.GetString("summary.Registered", resourceCulture);
+                return ResourceManager.GetString("summary.registered", resourceCulture);
             }
         }
         
-        public static string summary_Received {
+        public static string summary_received {
             get {
-                return ResourceManager.GetString("summary.Received", resourceCulture);
+                return ResourceManager.GetString("summary.received", resourceCulture);
             }
         }
         
-        public static string summary_Sorted {
+        public static string summary_sorted {
             get {
-                return ResourceManager.GetString("summary.Sorted", resourceCulture);
+                return ResourceManager.GetString("summary.sorted", resourceCulture);
             }
         }
         
-        public static string summary_OutForDelivery {
+        public static string summary_out_for_delivery {
             get {
-                return ResourceManager.GetString("summary.OutForDelivery", resourceCulture);
+                return ResourceManager.GetString("summary.out_for_delivery", resourceCulture);
             }
         }
         
-        public static string summary_Delivered {
+        public static string summary_delivered {
             get {
-                return ResourceManager.GetString("summary.Delivered", resourceCulture);
+                return ResourceManager.GetString("summary.delivered", resourceCulture);
             }
         }
         

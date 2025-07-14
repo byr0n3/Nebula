@@ -45,8 +45,6 @@ services.AddSingleton<ShipmentsService>()
 services.Configure<VapidOptions>((options) => builder.Configuration.Bind("Vapid", options));
 services.AddHttpClient<VapidClient>("Vapid");
 
-services.AddSingleton<PushNotificationsService>();
-
 var temporalOptions = builder.Configuration.GetSection("Temporal").Get<NebulaTemporalOptions>();
 
 if (temporalOptions is not null)
@@ -77,10 +75,13 @@ app.UseAntiforgery();
 
 app.MapStaticAssets();
 
+app.UseMiddleware<CultureMiddleware>();
+
 app.UseRequestLocalization(
 	new RequestLocalizationOptions
 	{
-		RequestCultureProviders = [
+		RequestCultureProviders =
+		[
 			new CookieRequestCultureProvider
 			{
 				CookieName = Cultures.CookieName,

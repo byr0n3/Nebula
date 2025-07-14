@@ -61,6 +61,7 @@ namespace Nebula.Web.Pages.Account
 									  .ExecuteUpdateAsync((calls) =>
 									   {
 										   calls.SetProperty(static (u) => u.Email, this.Model.Email)
+												.SetProperty(static (u) => u.Culture, this.Model.Culture)
 												.SetProperty(static (u) => u.Password, (u) => password ?? u.Password);
 									   });
 
@@ -73,6 +74,7 @@ namespace Nebula.Web.Pages.Account
 				Email = this.Model.Email,
 				Password = [],
 				Flags = this.HttpContext.User.GetClaimEnum<UserFlags>(UserClaim.Flags),
+				Culture = this.Model.Culture,
 				Created = this.HttpContext.User.GetClaimValue<System.DateTime>(UserClaim.Created),
 			}, true);
 

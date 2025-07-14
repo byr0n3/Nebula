@@ -18,6 +18,13 @@ namespace Nebula
 		public static CultureInfo Default =>
 			Cultures.Supported[0];
 
+		private static readonly CookieOptions cookieOptions = new()
+		{
+			SameSite = SameSiteMode.Lax,
+			MaxAge = System.TimeSpan.MaxValue,
+			Expires = System.DateTimeOffset.MaxValue,
+		};
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void AppendCultureCookie(HttpContext? context, string culture) =>
 			Cultures.AppendCultureCookie(context, new CultureInfo(culture));
@@ -26,7 +33,8 @@ namespace Nebula
 		public static void AppendCultureCookie(HttpContext? context, CultureInfo info) =>
 			context?.Response.Cookies.Append(
 				Cultures.CookieName,
-				CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(info, info))
+				CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(info, info)),
+				Cultures.cookieOptions
 			);
 	}
 }

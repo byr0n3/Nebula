@@ -1,6 +1,5 @@
 ﻿@using System.Globalization
 @using Microsoft.AspNetCore.Components.Routing
-@using Microsoft.AspNetCore.Http
 @using Nebula.Web.Components
 @using Nebula.Web.Layout
 
@@ -43,12 +42,3 @@
 </body>
 
 </html>
-
-@code {
-
-	[CascadingParameter] public HttpContext? HttpContext { get; init; }
-
-	protected override void OnInitialized() =>
-		Cultures.AppendCultureCookie(HttpContext, CultureInfo.CurrentCulture);
-
-}

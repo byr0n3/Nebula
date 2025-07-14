@@ -13,9 +13,6 @@ namespace Nebula.Sources.PostNL.Models
 
 		public PostNLShipmentContact Recipient { get; init; }
 
-		// @todo Is the same as `Recipient`? If so, we can remove this duplicate.
-		public PostNLShipmentContact DeliveryAddress { get; init; }
-
 		public PostNLShipmentContact Sender { get; init; }
 
 		[JsonPropertyName("effectiveDate")] public System.DateTime Created { get; init; }

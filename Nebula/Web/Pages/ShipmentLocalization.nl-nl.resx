@@ -17,19 +17,19 @@
     <data name="not-found.button" xml:space="preserve">
         <value>Terug</value>
     </data>
-    <data name="summary.Registered" xml:space="preserve">
+    <data name="summary.registered" xml:space="preserve">
         <value>Zending is aangemeld, maar nog niet ontvangen door de bezorg service.</value>
     </data>
-    <data name="summary.Received" xml:space="preserve">
+    <data name="summary.received" xml:space="preserve">
         <value>Zending is ontvangen door bezorg service.</value>
     </data>
-    <data name="summary.Sorted" xml:space="preserve">
+    <data name="summary.sorted" xml:space="preserve">
         <value>Zending is aankomen bij een distributiecentrum in de buurt.</value>
     </data>
-    <data name="summary.OutForDelivery" xml:space="preserve">
+    <data name="summary.out_for_delivery" xml:space="preserve">
         <value>De bezorger is onderweg met de zending!</value>
     </data>
-    <data name="summary.Delivered" xml:space="preserve">
+    <data name="summary.delivered" xml:space="preserve">
         <value>De zending is geleverd.</value>
     </data>
     <data name="expected" xml:space="preserve">

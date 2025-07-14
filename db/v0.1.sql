@@ -27,6 +27,7 @@ create table if not exists users
     password bytea        not null,
 
     flags    int4         not null default 0 check (flags >= 0),
+    culture  varchar(8)   not null default 'en-US',
 
     created  timestamptz  not null default now()
 );

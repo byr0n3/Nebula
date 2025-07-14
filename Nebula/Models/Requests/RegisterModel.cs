@@ -38,7 +38,6 @@ namespace Nebula.Models.Requests
 			get => (this.Email is not null) && (this.Password is not null) && (this.PasswordConfirmation is not null);
 		}
 
-		// @todo Localization
 		public IEnumerable<ValidationResult> Validate(ValidationContext context)
 		{
 			Debug.Assert(this.Valid);
