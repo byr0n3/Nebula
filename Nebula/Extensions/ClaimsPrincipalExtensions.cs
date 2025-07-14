@@ -3,11 +3,16 @@ using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using Elegance.AspNet.Authentication.Extensions;
 using Nebula.Models;
+using Nebula.Models.Database;
 
 namespace Nebula.Extensions
 {
 	internal static class ClaimsPrincipalExtensions
 	{
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool HasUserFlag(this ClaimsPrincipal @this, UserFlags flags) =>
+			((UserFlags)@this.GetClaimValue<int>(UserClaim.Flags) & flags) != UserFlags.None;
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool TryGetClaimValue(this ClaimsPrincipal @this, UserClaim claimType, [NotNullWhen(true)] out string? result) =>
 			@this.TryGetClaimValue(UserClaimEnumData.GetValue(claimType)!, out result);

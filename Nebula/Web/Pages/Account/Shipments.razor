@@ -1,34 +1,44 @@
 @page "/shipments"
+@using Elegance.Icons
 @using Nebula.Models.Common
 @using Nebula.Web.Components
 @using Microsoft.AspNetCore.Components.Routing
 
-<PageTitle>Shipments</PageTitle>
+<PageTitle>@(Localizer["title"])</PageTitle>
 
 <section class="hero">
 	<div class="hero-body">
-		<h1 class="title">Shipments</h1>
+		<h1 class="title">@(Localizer["title"])</h1>
 	</div>
 </section>
 
 <Grid GetQuery="@(GetQuery)">
+	<EmptyTemplate>
+		<h2>@(Localizer["empty.title"])</h2>
+		<a href="/" class="button mt-4">
+			<span class="icon is-small">
+				@(Icons.Search)
+			</span>
+			<span>@(Localizer["empty.button"])</span>
+		</a>
+	</EmptyTemplate>
+
 	<ItemTemplate Context="shipment">
 		<div class="is-position-relative">
 			<span class="icon is-medium">
 				@(ShipmentSourceIcon.Component(shipment.Source))
 			</span>
 
-			<h2 class="title is-5">@(shipment.Sender ?? "Unknown")</h2>
+			<h2 class="title is-5">@(shipment.Sender ?? Localizer["sender.default"])</h2>
 
 			@if (shipment.State == ShipmentState.Delivered)
 			{
-				<p>Received on: @(shipment.Arrived.ToString("f"))</p>
+				<p>@(string.Format(Localizer["arrived"], shipment.Arrived))</p>
 			}
 			else
 			{
-				@* @todo Localize properly *@
-				<p>Current status: @(shipment.State.ToString())</p>
-				<p>Added on: @(shipment.Created.ToString("D"))</p>
+				<p>@(ShipmentStateLocalizer[shipment.State.ToString()])</p>
+				<p>@(string.Format(Localizer["created"], shipment.Created))</p>
 			}
 
 			<NavLink href="@(Urls.GetTrackingUrl(in shipment))" class="stretched-link">

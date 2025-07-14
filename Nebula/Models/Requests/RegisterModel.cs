@@ -2,35 +2,40 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Elegance.AspNet.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
+using Nebula.Resources;
 using Nebula.Services;
 
 namespace Nebula.Models.Requests
 {
 	internal sealed class RegisterModel : IValidatableObject
 	{
-		[Required] public string? Username { get; set; }
+		[Required(ErrorMessageResourceType = typeof(ErrorMessages), ErrorMessageResourceName = "required")]
+		[EmailAddress(ErrorMessageResourceType = typeof(ErrorMessages), ErrorMessageResourceName = "email")]
+		public string? Email { get; set; }
 
-		[Required] [EmailAddress] public string? Email { get; set; }
+		[Required(ErrorMessageResourceType = typeof(ErrorMessages), ErrorMessageResourceName = "required")]
+		public string? Password { get; set; }
 
-		[Required] public string? Password { get; set; }
-
-		[Required] public string? PasswordConfirmation { get; set; }
+		[Required(ErrorMessageResourceType = typeof(ErrorMessages), ErrorMessageResourceName = "required")]
+		[Compare(nameof(RegisterModel.Password),
+				 ErrorMessageResourceType = typeof(ErrorMessages),
+				 ErrorMessageResourceName = "password_confirmation")]
+		public string? PasswordConfirmation { get; set; }
 
 		public bool Error { get; set; }
 
 		public bool Valid
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			[MemberNotNullWhen(true,
-							   nameof(this.Username), nameof(this.Email),
-							   nameof(this.Password), nameof(this.PasswordConfirmation))]
-			get => (this.Username is not null) && (this.Email is not null) &&
-				   (this.Password is not null) && (this.PasswordConfirmation is not null);
+			[MemberNotNullWhen(true, nameof(this.Email), nameof(this.Password), nameof(this.PasswordConfirmation))]
+			get => (this.Email is not null) && (this.Password is not null) && (this.PasswordConfirmation is not null);
 		}
 
 		// @todo Localization
@@ -38,18 +43,12 @@ namespace Nebula.Models.Requests
 		{
 			Debug.Assert(this.Valid);
 
-			if (!string.Equals(this.Password, this.PasswordConfirmation, System.StringComparison.Ordinal))
-			{
-				yield return new ValidationResult(
-					"Password and confirmation must match.",
-					[nameof(this.Password)]
-				);
-			}
+			var localizer = context.GetRequiredService<IStringLocalizer<ErrorMessages>>();
 
 			if (!PasswordStrength.ValidateStrength(this.Password))
 			{
 				yield return new ValidationResult(
-					$"Password must be at least {PasswordStrength.MinLength} characters long.",
+					string.Format(CultureInfo.InvariantCulture, localizer["weak-password"], PasswordStrength.MinLength),
 					[nameof(this.Password)]
 				);
 			}
@@ -59,17 +58,11 @@ namespace Nebula.Models.Requests
 
 			using (db)
 			{
-				var usernameTaken = db.Users.Any((u) => u.Username == this.Username);
 				var emailTaken = db.Users.Any((u) => u.Email == this.Email);
-
-				if (usernameTaken)
-				{
-					yield return new ValidationResult("Username is taken.", [nameof(this.Username)]);
-				}
 
 				if (emailTaken)
 				{
-					yield return new ValidationResult("Email is taken.", [nameof(this.Email)]);
+					yield return new ValidationResult(localizer["email-taken"], [nameof(this.Email)]);
 				}
 			}
 		}

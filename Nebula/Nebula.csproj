@@ -26,4 +26,53 @@
 		<PackageReference Include="Temporalio.Extensions.Hosting" Version="1.7.0"/>
 	</ItemGroup>
 
+	<!-- Compiling & embedding localization files -->
+	<ItemGroup>
+		<EmbeddedResource
+				Update="**/*.resx"
+				Generator="PublicResXFileCodeGenerator"
+				LastGenOutput="%(Filename).Designer.cs"
+		/>
+
+		<EmbeddedResource Update="**/*.*.resx">
+			<DependentUpon>$([System.IO.Path]::GetFileNameWithoutExtension('%(Filename)')).resx</DependentUpon>
+		</EmbeddedResource>
+
+		<Compile Update="**/*.Designer.cs" DesignTime="True" AutoGen="True">
+			<DependentUpon>%(Filename).resx</DependentUpon>
+		</Compile>
+
+		<EmbeddedResource Update="Web\Components\Shipments\AutomationLocalization.resx">
+			<DependentUpon>Automation.razor</DependentUpon>
+		</EmbeddedResource>
+
+		<EmbeddedResource Update="Web\Layout\MainLayoutLocalization.resx">
+			<DependentUpon>MainLayout.razor</DependentUpon>
+		</EmbeddedResource>
+
+		<EmbeddedResource Update="Web\Pages\ShipmentLocalization.resx">
+			<DependentUpon>Shipment.razor</DependentUpon>
+		</EmbeddedResource>
+
+		<EmbeddedResource Update="Web\Pages\Account\AccountLocalization.resx">
+			<DependentUpon>View.razor</DependentUpon>
+		</EmbeddedResource>
+
+		<EmbeddedResource Update="Web\Pages\Auth\LoginLocalization.resx">
+			<DependentUpon>Login.razor</DependentUpon>
+		</EmbeddedResource>
+
+		<EmbeddedResource Update="Web\Pages\Auth\RegisterLocalization.resx">
+			<DependentUpon>Register.razor</DependentUpon>
+		</EmbeddedResource>
+
+		<EmbeddedResource Update="Web\Pages\HomeLocalization.resx">
+			<DependentUpon>Home.razor</DependentUpon>
+		</EmbeddedResource>
+
+		<EmbeddedResource Update="Web\Pages\Account\ShipmentsLocalization.resx">
+			<DependentUpon>Shipments.razor</DependentUpon>
+		</EmbeddedResource>
+	</ItemGroup>
+
 </Project>

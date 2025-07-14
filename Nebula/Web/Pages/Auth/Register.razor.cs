@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Elegance.AspNet.Authentication;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Nebula.Models.Database;
 using Nebula.Models.Requests;
@@ -13,6 +14,8 @@ namespace Nebula.Web.Pages.Auth
 	public sealed partial class Register : ComponentBase
 	{
 		private const string formName = "register";
+
+		[Inject] public required IStringLocalizer<RegisterLocalization> Localizer { get; init; }
 
 		[Inject] public required IDbContextFactory<ShipmentDbContext> DbFactory { get; init; }
 
@@ -39,7 +42,6 @@ namespace Nebula.Web.Pages.Auth
 
 					db.Users.Add(new User
 					{
-						Username = model.Username,
 						Email = model.Email,
 						Password = Hashing.Hash(model.Password),
 					});

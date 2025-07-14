@@ -2,11 +2,11 @@
 @using Elegance.Icons
 @using Microsoft.AspNetCore.Components.Forms
 
-<PageTitle>Register</PageTitle>
+<PageTitle>@(Localizer["title"])</PageTitle>
 
 <section class="hero">
 	<div class="hero-body">
-		<h1 class="title">Register</h1>
+		<h1 class="title">@(Localizer["title"])</h1>
 	</div>
 </section>
 
@@ -16,33 +16,13 @@
 	@if (Model.Error)
 	{
 		<div role="alert" class="notification is-danger">
-			Something went wrong.
+			@(Localizer["error"])
 		</div>
 	}
 
 	<div class="field">
-		<label for="username" class="label">
-			Username
-		</label>
-		<div class="control has-icons-left">
-			<InputText @bind-Value="@(Model.Username)"
-			           id="username"
-			           class="input"
-			           autocomplete="username"
-			           aria-required="true"
-			           aria-describedby="username-error"
-			           required
-			           autofocus />
-			<span class="icon is-small is-left">
-				@(Icons.User)
-			</span>
-		</div>
-		<ValidationMessage For="@(() => Model.Username)" id="username-error" class="help is-danger" />
-	</div>
-
-	<div class="field">
 		<label for="email" class="label">
-			E-mail
+			@(Localizer["fields.email"])
 		</label>
 		<div class="control has-icons-left">
 			<InputText @bind-Value="@(Model.Email)"
@@ -62,7 +42,7 @@
 
 	<div class="field">
 		<label for="password" class="label">
-			Password
+			@(Localizer["fields.password"])
 		</label>
 		<div class="control has-icons-left">
 			<InputText @bind-Value="@(Model.Password)"
@@ -82,7 +62,7 @@
 
 	<div class="field">
 		<label for="password-confirmation" class="label">
-			Password confirmation
+			@(Localizer["fields.password-confirmation"])
 		</label>
 		<div class="control has-icons-left">
 			<InputText @bind-Value="@(Model.PasswordConfirmation)"
@@ -91,23 +71,27 @@
 			           type="password"
 			           autocomplete="new-password"
 			           aria-required="true"
+			           aria-describedby="password-confirmation-error"
 			           required />
 			<span class="icon is-small is-left">
 				@(Icons.Password)
 			</span>
 		</div>
+		<ValidationMessage For="@(() => Model.PasswordConfirmation)"
+		                   id="password-confirmation-error"
+		                   class="help is-danger" />
 	</div>
 
 	<div class="field is-grouped">
 		<div class="control">
 			<button type="submit" class="button is-primary">
-				Register
+				@(Localizer["title"])
 			</button>
 		</div>
 
 		<div class="control">
 			<a href="/login">
-				Already have an account?
+				@(Localizer["sign-in"])
 			</a>
 		</div>
 	</div>

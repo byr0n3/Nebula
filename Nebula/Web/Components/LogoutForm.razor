@@ -4,6 +4,6 @@
 <EditForm EditContext="@(context)" OnValidSubmit="@(LogoutAsync)" FormName="@(LogoutForm.formName)">
 	<button type="submit" class="button is-dark">
 		<span class="icon is-small">@(Icons.Logout)</span>
-		<span>Logout</span>
+		<span>@(Label)</span>
 	</button>
 </EditForm>

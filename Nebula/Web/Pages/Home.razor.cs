@@ -2,12 +2,15 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace Nebula.Web.Pages
 {
 	public sealed partial class Home : ComponentBase
 	{
 		private const string formName = "find-shipment";
+
+		[Inject] public required IStringLocalizer<HomeLocalization> Localizer { get; init; }
 
 		[Inject] public required NavigationManager Navigation { get; init; }
 
@@ -18,6 +21,7 @@ namespace Nebula.Web.Pages
 		{
 			Debug.Assert(this.Model.IsValid);
 
+			// @todo Sanitize ZIP (remove spaces)
 			this.Navigation.NavigateTo($"/shipments/{this.Model.Code}/{this.Model.ZipCode}", true);
 		}
 

@@ -1,9 +1,11 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Threading.Tasks;
 using Elegance.AspNet.Authentication;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Nebula.Extensions;
 using Nebula.Models;
 using Nebula.Models.Database;
@@ -18,6 +20,8 @@ namespace Nebula.Web.Pages.Account
 
 		[CascadingParameter] public required HttpContext HttpContext { get; init; }
 
+		[Inject] public required IStringLocalizer<AccountLocalization> Localizer { get; init; }
+
 		[Inject] public required IDbContextFactory<ShipmentDbContext> DbContext { get; init; }
 
 		[Inject] public required AuthenticationService<User> Authentication { get; init; }
@@ -31,8 +35,8 @@ namespace Nebula.Web.Pages.Account
 			{
 				this.Model = new EditAccountModel
 				{
-					Username = this.HttpContext.User.GetClaimValue(UserClaim.Username),
 					Email = this.HttpContext.User.GetClaimValue(UserClaim.Email),
+					Culture = CultureInfo.CurrentCulture.Name,
 				};
 			}
 		}
@@ -56,8 +60,7 @@ namespace Nebula.Web.Pages.Account
 									  .WhereId(userId)
 									  .ExecuteUpdateAsync((calls) =>
 									   {
-										   calls.SetProperty(static (u) => u.Username, this.Model.Username)
-												.SetProperty(static (u) => u.Email, this.Model.Email)
+										   calls.SetProperty(static (u) => u.Email, this.Model.Email)
 												.SetProperty(static (u) => u.Password, (u) => password ?? u.Password);
 									   });
 
@@ -67,12 +70,16 @@ namespace Nebula.Web.Pages.Account
 			await this.Authentication.LoginAsync(this.HttpContext, new User
 			{
 				Id = userId,
-				Username = this.Model.Username,
 				Email = this.Model.Email,
 				Password = [],
 				Flags = this.HttpContext.User.GetClaimEnum<UserFlags>(UserClaim.Flags),
 				Created = this.HttpContext.User.GetClaimValue<System.DateTime>(UserClaim.Created),
 			}, true);
+
+			Cultures.AppendCultureCookie(this.HttpContext, this.Model.Culture);
+
+			// Rerenders the page properly to apply the newly selected culture.
+			this.HttpContext.Response.Redirect(this.HttpContext.Request.Path);
 		}
 	}
 }

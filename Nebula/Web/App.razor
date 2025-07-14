@@ -1,6 +1,9 @@
-﻿@using Microsoft.AspNetCore.Components.Routing
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Http
 @using Nebula.Web.Components
 @using Nebula.Web.Layout
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,7 +20,7 @@
 	<link rel="icon" type="image/svg+xml" href="@(Assets["favicon.svg"])" />
 	<link rel="shortcut icon" href="@(Assets["favicon.ico"])" />
 	<link rel="apple-touch-icon" sizes="180x180" href="@(Assets["apple-touch-icon.png"])" />
-	<meta name="apple-mobile-web-app-title" content="Shipments" />
+	<meta name="apple-mobile-web-app-title" content="Nebula" />
 	<link rel="manifest" href="@(Assets["site.webmanifest"])" />
 </head>
 
@@ -40,3 +43,12 @@
 </body>
 
 </html>
+
+@code {
+
+	[CascadingParameter] public HttpContext? HttpContext { get; init; }
+
+	protected override void OnInitialized() =>
+		Cultures.AppendCultureCookie(HttpContext, CultureInfo.CurrentCulture);
+
+}

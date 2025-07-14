@@ -23,7 +23,6 @@ create table if not exists users
 (
     id       serial       not null primary key,
 
-    username varchar(128) not null unique,
     email    varchar(128) not null unique,
     password bytea        not null,
 

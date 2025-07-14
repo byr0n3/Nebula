@@ -59,7 +59,7 @@ namespace Nebula.Web.Components
 
 				this.count = await query.CountAsync();
 
-				this.Page = int.Min(this.Page, this.LastPage);
+				this.Page = int.Min(this.Page, int.Max(this.LastPage, 1));
 
 				query = query.Skip((this.Page - 1) * this.PerPage)
 							 .Take(this.PerPage);

@@ -69,7 +69,7 @@ namespace Nebula.Sources.DHL
 
 			var state = events.Where(static (e) => e.State != ShipmentEventType.InformationUpdate)
 							  .Select(static (e) => e.State.ToShipmentState())
-							  .Last();
+							  .First();
 
 			return new Shipment
 			{

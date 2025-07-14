@@ -10,10 +10,6 @@ namespace Nebula.Models.Database
 	{
 		[Column("id")] public int Id { get; init; }
 
-		[StringLength(128)]
-		[Column("username")]
-		public required string Username { get; init; }
-
 		[StringLength(128)] [Column("email")] public required string Email { get; init; }
 
 		[Column("password", TypeName = "bytea")]
@@ -35,5 +31,6 @@ namespace Nebula.Models.Database
 	{
 		None = 0,
 		Active = 1 << 0,
+		Superuser = 1 << 1,
 	}
 }

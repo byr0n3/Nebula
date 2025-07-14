@@ -132,7 +132,7 @@ namespace Nebula.Temporal
 		private static string GetNotificationBody(in Shipment shipment) =>
 			(shipment.State) switch
 			{
-				ShipmentState.Received       => "Your shipment has been received by the delivery company.",
+				ShipmentState.Received       => "Your shipment has been received by the delivery service.",
 				ShipmentState.Sorted         => "Your shipment has been sorted.",
 				ShipmentState.OutForDelivery => $"Out for delivery: {shipment.Eta.Format("t")}",
 				ShipmentState.Delivered      => "Your shipment has been delivered!",

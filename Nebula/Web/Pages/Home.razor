@@ -6,16 +6,16 @@
 
 <section class="hero">
 	<div class="hero-body">
-		<h1 class="title">Find your shipment</h1>
+		<h1 class="title">@(Localizer["title"])</h1>
 	</div>
 </section>
 
 <EditForm Model="@(Model)" OnValidSubmit="@(FindShipment)" FormName="@(Home.formName)">
-	<div class="field is-horizontal">
-		<div class="field-body is-align-items-center">
-			<div class="field">
+	<div class="fixed-grid has-1-cols has-5-cols-tablet">
+		<div class="grid is-gap-1">
+			<div class="cell is-col-span-2-tablet field">
 				<label for="code" class="label">
-					Code
+					@(Localizer["fields.code.label"])
 				</label>
 				<div class="control has-icons-left">
 					<InputText @bind-Value="@(Model.Code)" id="code" class="input" required autofocus />
@@ -24,12 +24,14 @@
 					</span>
 				</div>
 				<p class="help">
-					This is, for example, a barcode or a tracking code.
+					@(Localizer["fields.code.help"])
 				</p>
 			</div>
 
-			<div class="field">
-				<label for="zip" class="label">Zip-code</label>
+			<div class="cell is-col-span-2-tablet field">
+				<label for="zip" class="label">
+					@(Localizer["fields.zip.label"])
+				</label>
 				<div class="control has-icons-left">
 					<InputText @bind-Value="@(Model.ZipCode)" id="zip" class="input" maxlength="7" required />
 					<span class="icon is-small is-left">
@@ -37,17 +39,16 @@
 					</span>
 				</div>
 				<p class="help">
-					Most delivery services require a zip-code to display all information.
+					@(Localizer["fields.zip.help"])
 				</p>
 			</div>
 
-			<div class="field">
-				@* Offset is needed to align with inputs, as this field doesn't have a label or help text. *@
-				<button type="submit" class="button is-primary" style="margin-block-start: 0.625em;">
+			<div class="cell field">
+				<button type="submit" class="button is-primary search-btn">
 					<span class="icon is-small">
 						@(Icons.Search)
 					</span>
-					<span>Search</span>
+					<span>@(Localizer["submit"])</span>
 				</button>
 			</div>
 		</div>

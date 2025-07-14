@@ -10,7 +10,7 @@
 	<nav class="container navbar">
 		<div class="navbar-brand mr-2">
 			<a class="navbar-item" href="/">
-				<span class="icon is-large" aria-label="Nebula logo">
+				<span class="icon is-large" aria-label="@(Localizer["logo.aria"])">
 					@(Logo.Component)
 				</span>
 			</a>
@@ -23,7 +23,7 @@
 						<span class="icon is-small">
 							@(Icons.Search)
 						</span>
-						<span>Find</span>
+						<span>@(Localizer["items.search"])</span>
 					</NavLink>
 				</div>
 			</div>
@@ -36,7 +36,7 @@
 								<span class="icon is-small">
 									@(Icons.Packages)
 								</span>
-								<span>Shipments</span>
+								<span>@(Localizer["items.shipments"])</span>
 							</NavLink>
 						</div>
 
@@ -45,12 +45,12 @@
 								<span class="icon is-small">
 									@(Icons.User)
 								</span>
-								<span>Account</span>
+								<span>@(Localizer["items.account"])</span>
 							</NavLink>
 						</div>
 
 						<div class="navbar-item">
-							<LogoutForm />
+							<LogoutForm Label="@(Localizer["items.sign-out"])" />
 						</div>
 					</Authorized>
 
@@ -60,7 +60,7 @@
 								<span class="icon is-small">
 									@(Icons.Login)
 								</span>
-								<span>Login</span>
+								<span>@(Localizer["items.sign-in"])</span>
 							</NavLink>
 						</div>
 
@@ -69,7 +69,7 @@
 								<span class="icon is-small">
 									@(Icons.UserPlus)
 								</span>
-								<span>Register</span>
+								<span>@(Localizer["items.sign-up"])</span>
 							</NavLink>
 						</div>
 					</NotAuthorized>
@@ -82,3 +82,11 @@
 <main class="container is-widescreen is-max-widescreen">
 	@(Body)
 </main>
+
+<footer class="footer">
+	<div class="content has-text-centered">
+		<p>
+			<span class="icon is-small">@(Logo.Component)</span> Nebula &copy; by Byrone
+		</p>
+	</div>
+</footer>

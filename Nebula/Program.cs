@@ -1,5 +1,6 @@
 using Elegance.AspNet.Authentication.Extensions;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,7 +21,7 @@ services.AddRazorComponents()
 		.AddInteractiveServerComponents();
 
 services.AddDatabase(
-	builder.Configuration.GetConnectionString("Shipment") ?? throw new System.Exception("No database connection string"),
+	builder.Configuration.GetConnectionString("Nebula") ?? throw new System.Exception("No database connection string"),
 	builder.Environment.IsDevelopment()
 );
 
@@ -28,7 +29,7 @@ services.AddScoped<AuthenticationService>();
 services.AddScoped<Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider, AuthenticationStateProvider>();
 services.AddAuth<User, UserClaimsProvider>(static (options) =>
 {
-	options.Cookie.Name = "Shipment.Cookies";
+	options.Cookie.Name = "Nebula.Cookies";
 
 	options.ExpireTimeSpan = System.TimeSpan.FromMinutes(60);
 	options.SlidingExpiration = true;
@@ -46,7 +47,7 @@ services.AddHttpClient<VapidClient>("Vapid");
 
 services.AddSingleton<PushNotificationsService>();
 
-var temporalOptions = builder.Configuration.GetSection("Temporal").Get<ShipmentTemporalOptions>();
+var temporalOptions = builder.Configuration.GetSection("Temporal").Get<NebulaTemporalOptions>();
 
 if (temporalOptions is not null)
 {
@@ -58,6 +59,8 @@ else if (!builder.Environment.IsDevelopment())
 }
 
 services.AddHttpContextAccessor();
+
+services.AddLocalization();
 
 var app = builder.Build();
 
@@ -73,6 +76,21 @@ else
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+
+app.UseRequestLocalization(
+	new RequestLocalizationOptions
+	{
+		RequestCultureProviders = [
+			new CookieRequestCultureProvider
+			{
+				CookieName = Cultures.CookieName,
+			},
+		],
+		DefaultRequestCulture = new RequestCulture(Cultures.Default),
+		SupportedCultures = Cultures.Supported,
+		SupportedUICultures = Cultures.Supported,
+	}
+);
 
 var api = app.MapGroup("/api");
 {

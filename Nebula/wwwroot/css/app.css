@@ -10,6 +10,12 @@
 	--bulma-primary-dark-invert-l: 18%;
 }
 
+body {
+	min-height: 100svh;
+	display: flex;
+	flex-direction: column;
+}
+
 h1:focus {
 	outline: none;
 }
@@ -35,10 +41,6 @@ h1:focus {
 	position: absolute;
 	inset: 0;
 	z-index: 1;
-}
-
-.container {
-	padding-block-end: var(--bulma-block-spacing);
 }
 
 .hero-body {

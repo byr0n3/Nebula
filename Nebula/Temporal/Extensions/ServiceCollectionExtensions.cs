@@ -10,7 +10,7 @@ namespace Nebula.Temporal.Extensions
 		/// </summary>
 		/// <param name="services">Service collection to add the services to.</param>
 		/// <param name="options">Configuration options for the Temporal systems.</param>
-		public static void AddWorkflow(this IServiceCollection services, ShipmentTemporalOptions options)
+		public static void AddWorkflow(this IServiceCollection services, NebulaTemporalOptions options)
 		{
 			services.AddHostedTemporalWorker(options.Host, options.Namespace, TemporalClientExtensions.ShipmentTaskQueue)
 					.AddSingletonActivities<ShipmentActivities>()

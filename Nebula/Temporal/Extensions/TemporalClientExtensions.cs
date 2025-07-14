@@ -17,7 +17,8 @@ namespace Nebula.Temporal.Extensions
 		/// <returns>Task that is completed when the workflow has started.</returns>
 		/// <remarks>The workflow <b>has not</b> finished executing once this task returns, it's only registered and started.</remarks>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Task StartShipmentWorkflowAsync(this ITemporalClient client, TrackShipmentArguments arguments) =>
+		public static Task<WorkflowHandle<ShipmentWorkflow>> StartShipmentWorkflowAsync(this ITemporalClient client,
+																						TrackShipmentArguments arguments) =>
 			client.StartWorkflowAsync<ShipmentWorkflow>(
 				(wf) => wf.TrackAsync(arguments),
 				new WorkflowOptions

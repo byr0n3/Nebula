@@ -13,6 +13,8 @@ namespace Nebula.Web.Components
 
 		[Inject] public required NavigationManager Navigation { get; init; }
 
+		[Parameter] [EditorRequired] public required string Label { get; set; }
+
 		private readonly EditContext context = new(0);
 
 		private async Task LogoutAsync()

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Nebula.Models.Database;
 using Nebula.Models.Requests;
 using Nebula.Services;
@@ -12,6 +13,8 @@ namespace Nebula.Web.Pages.Auth
 	public sealed partial class Login : ComponentBase
 	{
 		private const string formName = "login";
+
+		[Inject] public required IStringLocalizer<LoginLocalization> Localizer { get; init; }
 
 		[Inject] public required IDbContextFactory<ShipmentDbContext> DbFactory { get; init; }
 

@@ -6,6 +6,12 @@
 	padding-inline: 0 !important;
 }
 
+footer {
+	--bulma-footer-padding: var(--bulma-block-spacing) calc(var(--bulma-block-spacing) * 2);
+
+	margin-block-start: var(--bulma-block-spacing);
+}
+
 @media screen and (max-width: 1216px) {
 	main.container {
 		padding-inline: var(--bulma-block-spacing);

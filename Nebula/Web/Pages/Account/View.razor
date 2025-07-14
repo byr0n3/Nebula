@@ -1,12 +1,13 @@
 @page "/account"
 @using Nebula.Web.Components.Account
 @using Microsoft.AspNetCore.Components.Forms
+@using Nebula.Web.Components
 
-<PageTitle>Account</PageTitle>
+<PageTitle>@(Localizer["title"])</PageTitle>
 
 <section class="hero">
 	<div class="hero-body">
-		<h1 class="title">Account</h1>
+		<h1 class="title">@(Localizer["title"])</h1>
 	</div>
 </section>
 
@@ -16,25 +17,8 @@
 	<DataAnnotationsValidator />
 
 	<div class="field">
-		<label for="username" class="label">
-			Username
-		</label>
-		<div class="control">
-			<InputText @bind-Value="@(Model.Username)"
-			           id="username"
-			           class="input"
-			           autocomplete="username"
-			           aria-required="true"
-			           aria-describedby="username-error"
-			           required
-			           autofocus />
-		</div>
-		<ValidationMessage For="@(() => Model.Username)" id="username-error" class="help is-danger" />
-	</div>
-
-	<div class="field">
 		<label for="email" class="label">
-			E-mail
+			@(Localizer["fields.email"])
 		</label>
 		<div class="control">
 			<InputText @bind-Value="@(Model.Email)"
@@ -51,7 +35,7 @@
 
 	<div class="field">
 		<label for="password" class="label">
-			Password
+			@(Localizer["fields.password"])
 		</label>
 		<div class="control">
 			<InputText @bind-Value="@(Model.Password)"
@@ -66,7 +50,7 @@
 
 	<div class="field">
 		<label for="password-confirmation" class="label">
-			Password confirmation
+			@(Localizer["fields.password-confirmation"])
 		</label>
 		<div class="control">
 			<InputText @bind-Value="@(Model.PasswordConfirmation)"
@@ -81,8 +65,23 @@
 		                   class="help is-danger" />
 	</div>
 
+	<div class="field">
+		<label for="culture" class="label">
+			@(Localizer["fields.culture"])
+		</label>
+		<div class="control">
+			<InputCulture @bind-Value="@(Model.Culture)"
+			              id="culture"
+			              class="input"
+			              aria-describedby="culture-error" />
+			<ValidationMessage For="@(() => Model.Culture)"
+			                   id="culture-error"
+			                   class="help is-danger" />
+		</div>
+	</div>
+
 	<button type="submit" class="button is-primary">
-		Update
+		@(Localizer["submit"])
 	</button>
 </EditForm>
 

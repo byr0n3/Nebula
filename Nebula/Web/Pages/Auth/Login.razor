@@ -2,11 +2,11 @@
 @using Elegance.Icons
 @using Microsoft.AspNetCore.Components.Forms
 
-<PageTitle>Login</PageTitle>
+<PageTitle>@(Localizer["title"])</PageTitle>
 
 <section class="hero">
 	<div class="hero-body">
-		<h1 class="title">Login</h1>
+		<h1 class="title">@(Localizer["title"])</h1>
 	</div>
 </section>
 
@@ -14,26 +14,28 @@
 	<DataAnnotationsValidator />
 
 	<div class="field">
-		<label for="user" class="label">
-			Username/E-mail
+		<label for="email" class="label">
+			@(Localizer["fields.email"])
 		</label>
 		<div class="control has-icons-left">
-			<InputText @bind-Value="@(Model.User)"
-			           id="user"
+			<InputText @bind-Value="@(Model.Email)"
+			           id="email"
 			           class="input"
 			           autocomplete="username"
-			           aria-required="true"
+					   aria-required="true"
+					   aria-describedby="email-error"
 			           required
 			           autofocus />
 			<span class="icon is-small is-left">
-				@(Icons.User)
+				@(Icons.Email)
 			</span>
 		</div>
+		<ValidationMessage For="@(() => Model.Email)" id="email-error" class="help is-danger" />
 	</div>
 
 	<div class="field">
 		<label for="password" class="label">
-			Password
+			@(Localizer["fields.password"])
 		</label>
 		<div class="control has-icons-left">
 			<InputText @bind-Value="@(Model.Password)"
@@ -41,35 +43,35 @@
 			           class="input"
 			           type="password"
 			           autocomplete="current-password"
-			           aria-required="true"
+					   aria-required="true"
+					   aria-describedby="password-error"
 			           required />
 			<span class="icon is-small is-left">
 				@(Icons.Password)
 			</span>
 		</div>
+		<ValidationMessage For="@(() => Model.Password)" id="password-error" class="help is-danger" />
 	</div>
 
 	<div class="field">
 		<div class="control">
 			<label class="checkbox">
 				<InputCheckbox @bind-Value="@(Model.Persistent)" />
-				Stay logged in?
+				@(Localizer["fields.persistent"])
 			</label>
 		</div>
 	</div>
 
-	<ValidationMessage For="@(() => Model.User)" class="has-text-danger mb-2" />
-
 	<div class="field is-grouped">
 		<div class="control">
 			<button type="submit" class="button is-primary">
-				Login
+				@(Localizer["title"])
 			</button>
 		</div>
 
 		<div class="control">
 			<a href="/register">
-				Don't have an account yet?
+				@(Localizer["sign-up"])
 			</a>
 		</div>
 	</div>

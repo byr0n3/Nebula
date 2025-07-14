@@ -2,30 +2,39 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using Elegance.AspNet.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Nebula.Extensions;
+using Nebula.Resources;
 using Nebula.Services;
 
 namespace Nebula.Models.Requests
 {
 	internal sealed class EditAccountModel : IValidatableObject
 	{
-		[Required] public string? Username { get; set; }
-
-		[Required] public string? Email { get; set; }
+		[Required(ErrorMessageResourceType = typeof(ErrorMessages), ErrorMessageResourceName = "required")]
+		[EmailAddress(ErrorMessageResourceType = typeof(ErrorMessages), ErrorMessageResourceName = "email")]
+		public string? Email { get; set; }
 
 		public string? Password { get; set; }
 
+		[Compare(nameof(RegisterModel.Password),
+				 ErrorMessageResourceType = typeof(ErrorMessages),
+				 ErrorMessageResourceName = "password_confirmation")]
 		public string? PasswordConfirmation { get; set; }
+
+		[Required(ErrorMessageResourceType = typeof(ErrorMessages), ErrorMessageResourceName = "required")]
+		public string? Culture { get; set; }
 
 		public bool IsValid
 		{
-			[MemberNotNullWhen(true, nameof(this.Username), nameof(this.Email))]
-			get => !string.IsNullOrEmpty(this.Username) && !string.IsNullOrEmpty(this.Email);
+			[MemberNotNullWhen(true, nameof(this.Email), nameof(this.Culture))]
+			get => !string.IsNullOrEmpty(this.Email) && !string.IsNullOrEmpty(this.Culture);
 		}
 
 		public bool HasPassword
@@ -39,9 +48,22 @@ namespace Nebula.Models.Requests
 		{
 			Debug.Assert(this.IsValid);
 
-			foreach (var result in this.ValidatePassword())
+			var localizer = context.GetRequiredService<IStringLocalizer<ErrorMessages>>();
+
+			if (!string.IsNullOrEmpty(this.Password))
 			{
-				yield return result;
+				if (!PasswordStrength.ValidateStrength(this.Password))
+				{
+					yield return new ValidationResult(
+						string.Format(CultureInfo.InvariantCulture, localizer["weak-password"], PasswordStrength.MinLength),
+						[nameof(this.Password)]
+					);
+				}
+			}
+
+			if ((this.Culture is not null) && !Cultures.Supported.Contains(new CultureInfo(this.Culture)))
+			{
+				yield return new ValidationResult(localizer["culture"], [nameof(this.Culture)]);
 			}
 
 			var httpContext = context.GetRequiredService<IHttpContextAccessor>().HttpContext;
@@ -55,37 +77,11 @@ namespace Nebula.Models.Requests
 
 			using (db)
 			{
-				var usernameTaken = db.Users.Any((u) => (u.Id != userId) && (u.Username == this.Username));
 				var emailTaken = db.Users.Any((u) => (u.Id != userId) && (u.Email == this.Email));
-
-				if (usernameTaken)
-				{
-					yield return new ValidationResult("Username already taken", [nameof(this.Username)]);
-				}
 
 				if (emailTaken)
 				{
-					yield return new ValidationResult("E-mail already taken", [nameof(this.Email)]);
-				}
-			}
-		}
-
-		// @todo Localization
-		private IEnumerable<ValidationResult> ValidatePassword()
-		{
-			if (!string.IsNullOrEmpty(this.Password))
-			{
-				if (!PasswordStrength.ValidateStrength(this.Password))
-				{
-					yield return new ValidationResult(
-						$"Password must be at least {PasswordStrength.MinLength} characters long.",
-						[nameof(this.Password)]
-					);
-				}
-
-				if (string.IsNullOrEmpty(this.PasswordConfirmation))
-				{
-					yield return new ValidationResult("Required", [nameof(this.PasswordConfirmation)]);
+					yield return new ValidationResult(localizer["email-taken"], [nameof(this.Email)]);
 				}
 			}
 		}
