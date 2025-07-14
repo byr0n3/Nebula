@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Routing
 @using Nebula.Web.Components
+@using Microsoft.AspNetCore.Components.Forms
 @inherits LayoutComponentBase
 
 @{ System.Diagnostics.Debug.Assert(Body is not null); }
@@ -50,7 +51,7 @@
 						</div>
 
 						<div class="navbar-item">
-							<LogoutForm Label="@(Localizer["items.sign-out"])" />
+							@(SignOutButton(Localizer["items.sign-out"]))
 						</div>
 					</Authorized>
 
@@ -79,6 +80,60 @@
 	</nav>
 </header>
 
+<nav class="tab-bar has-background-dark is-display-none-desktop">
+	<ul>
+		<li>
+			<NavLink href="/" Match="@(NavLinkMatch.All)" class="button is-dark" ActiveClass="is-active">
+				<span class="icon">
+					@(Icons.Search)
+				</span>
+			</NavLink>
+		</li>
+
+		<AuthorizeView>
+			<Authorized>
+				<li>
+					<NavLink href="/shipments" class="button is-dark" ActiveClass="is-active">
+						<span class="icon">
+							@(Icons.Packages)
+						</span>
+					</NavLink>
+				</li>
+
+				<li>
+					<NavLink href="/account" class="button is-dark" ActiveClass="is-active">
+						<span class="icon">
+							@(Icons.User)
+						</span>
+					</NavLink>
+				</li>
+
+				<li>
+					@(SignOutButton(null))
+				</li>
+			</Authorized>
+
+			<NotAuthorized>
+				<li>
+					<NavLink href="/login" class="button is-dark" ActiveClass="is-active">
+						<span class="icon">
+							@(Icons.Login)
+						</span>
+					</NavLink>
+				</li>
+
+				<li>
+					<NavLink href="/register" class="button is-dark" ActiveClass="is-active">
+						<span class="icon">
+							@(Icons.UserPlus)
+						</span>
+					</NavLink>
+				</li>
+			</NotAuthorized>
+		</AuthorizeView>
+	</ul>
+</nav>
+
 <main class="container is-widescreen is-max-widescreen">
 	@(Body)
 </main>
@@ -90,3 +145,24 @@
 		</p>
 	</div>
 </footer>
+
+<EditForm EditContext="@(context)"
+          OnValidSubmit="@(SignOutAsync)"
+          FormName="@(MainLayout.signOutFormName)"
+          id="@(MainLayout.signOutFormName)">
+</EditForm>
+
+@code {
+
+	private RenderFragment SignOutButton(string? label) =>
+		@<button type="submit" form="@(MainLayout.signOutFormName)" class="button is-dark">
+			<span class="icon @(label is not null ? "is-small" : string.Empty)">
+				@(Icons.Logout)
+			</span>
+			@if (label is not null)
+			{
+				<span>@(label)</span>
+			}
+		</button>;
+
+}

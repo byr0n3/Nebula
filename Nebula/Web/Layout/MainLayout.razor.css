@@ -12,6 +12,27 @@ footer {
 	margin-block-start: var(--bulma-block-spacing);
 }
 
+.tab-bar {
+	z-index: 10;
+	position: fixed;
+	inset-inline: 0;
+	inset-block-end: 0;
+}
+
+.tab-bar ul {
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: start;
+}
+
+.tab-bar ul li {
+	flex: 1 1 100%;
+}
+
+.tab-bar ul li ::deep .button {
+	width: 100% !important;
+}
+
 @media screen and (max-width: 1216px) {
 	main.container {
 		padding-inline: var(--bulma-block-spacing);
