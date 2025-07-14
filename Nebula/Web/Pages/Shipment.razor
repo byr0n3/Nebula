@@ -1,0 +1,160 @@
+@page "/shipments/{code:required}/{zipCode:required}"
+@using Elegance.Extensions
+@using Elegance.Icons
+@using Microsoft.AspNetCore.Components.Routing
+@using Nebula.Extensions
+@using Nebula.Models.Common
+@using Nebula.Web.Components
+@using Nebula.Web.Components.Shipments
+@rendermode RenderModes.Interactive
+
+@if (loading)
+{
+	<p>Loading…</p>
+}
+else
+{
+	@if (shipment == default)
+	{
+		<div class="notification is-danger">
+			<h1>404 – Not Found</h1>
+			<a href="/" class="button is-dark">Back to home</a>
+		</div>
+	}
+	else
+	{
+		<section class="hero">
+			<div class="hero-body is-position-relative">
+				<div class="title is-flex is-gap-1">
+					<span class="icon is-large">
+						@(ShipmentSourceIcon.Component(shipment.Source))
+					</span>
+
+					<h1>@(shipment.TrackingCode)</h1>
+				</div>
+				<div class="subtitle">
+					<p>@(Summary)</p>
+
+					@if ((shipment.State != ShipmentState.Delivered) && (shipment.Eta != default))
+					{
+						<p class="mt-2">
+							Expected: @(shipment.Eta.Format("g"))
+						</p>
+					}
+				</div>
+
+				<div class="action-buttons">
+					<Automation Shipment="@(shipment)" />
+
+					<a href="@(Urls.GetOriginalTrackingUrl(Code, ZipCode, shipment.Source))"
+					   target="_blank"
+					   rel="noreferrer"
+					   class="button"
+					   title="Open shipment at @(shipment.Source.ToString())">
+						<span class="icon is-small">
+							@(Icons.ExternalLink)
+						</span>
+					</a>
+				</div>
+			</div>
+		</section>
+
+		@if (shipment.RelatedTrackingCodes is not null)
+		{
+			<div class="mb-5">
+				<h3 class="title is-5">Related shipments</h3>
+
+				@foreach (var trackingCode in shipment.RelatedTrackingCodes)
+				{
+					var href = Urls.GetTrackingUrl(trackingCode, ZipCode, shipment.Source);
+
+					<NavLink @key="(trackingCode)" href="@(href)" class="is-block">
+						@trackingCode
+					</NavLink>
+				}
+			</div>
+		}
+
+		@if (shipment.Delay >= TimeSpan.FromMinutes(15))
+		{
+			<p class="mb-5">
+				It seems that your shipment hasn't been delivered yet.
+				Check the shipment delivery's track and trace page for details.
+
+				@* @todo Link to track & trace page (based on source). *@
+			</p>
+		}
+
+		@if (shipment.Type == ShipmentType.LetterboxPackage)
+		{
+			<p class="mb-5">
+				This package can be delivered through your letterbox!
+			</p>
+		}
+
+		<div class="fixed-grid has-1-cols has-2-cols-tablet">
+			<div class="grid is-gap-3">
+				<div class="cell">
+					<h2 class="title is-4">Recipient</h2>
+					<div>
+						@if (shipment.Recipient.Name is not null)
+						{
+							<p>@(shipment.Recipient.Name)</p>
+						}
+
+						<p>@(shipment.Recipient.Street) @(shipment.Recipient.HouseNumber) @(shipment.Recipient.HouseNumberSuffix ?? string.Empty)</p>
+						<p>@(shipment.Recipient.ZipCode) @(shipment.Recipient.Place)</p>
+					</div>
+				</div>
+
+				<div class="cell">
+					<h2 class="title is-4">Sender</h2>
+					<div>
+						@if (shipment.Sender.Name is not null)
+						{
+							<p>@(shipment.Sender.Name)</p>
+						}
+
+						<p>@(shipment.Sender.Street) @(shipment.Sender.HouseNumber) @(shipment.Sender.HouseNumberSuffix ?? string.Empty)</p>
+						<p>@(shipment.Sender.ZipCode) @(shipment.Sender.Place)</p>
+					</div>
+				</div>
+
+				<div class="cell">
+					<h2 class="title is-4">Details</h2>
+
+					<p class="mb-1">Weight: @(shipment.Details.WeightKg)</p>
+					<p>Dimensions: @(shipment.Details.DimensionsCm)</p>
+				</div>
+
+				@if ((shipment.Events is not null) && (shipment.Events.Length != 0))
+				{
+					<div class="cell">
+						<h2 class="title is-4">Updates</h2>
+
+						<div>
+							@for (var i = 0; i < shipment.Events.Length; i++)
+							{
+								var @event = shipment.Events[i];
+								var @class = i < (shipment.Events.Length - 1) ? "mb-5" : string.Empty;
+
+								<div @key="@(@event.Key.Str())" class="@(@class)">
+									@* @todo Proper localization *@
+									<h4 class="title is-6 mb-1">@(@event.State.ToString())</h4>
+									<small>@(@event.Timestamp.ToString("g"))</small>
+									@if (@event.Description is not null)
+									{
+										<p>@(@event.Description)</p>
+									}
+								</div>
+							}
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+
+		<p>Started tracking on: @(shipment.Created.ToString("g"))</p>
+		<p>Last update: @(shipment.Updated.ToString("g"))</p>
+	}
+}

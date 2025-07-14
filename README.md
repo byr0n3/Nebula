@@ -1,6 +1,6 @@
-# Shipment Tracker
+# Nebula Shipments
 
-To-be-named shipment/parcel tracking app, able to track parcels and packages from multiple delivery companies.
+A shipment/parcel tracking app, able to track parcels and packages from multiple delivery companies.
 
 ## Integration
 

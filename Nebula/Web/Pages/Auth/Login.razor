@@ -1,0 +1,76 @@
+@page "/login"
+@using Elegance.Icons
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>Login</PageTitle>
+
+<section class="hero">
+	<div class="hero-body">
+		<h1 class="title">Login</h1>
+	</div>
+</section>
+
+<EditForm Model="@(Model)" OnValidSubmit="@(LoginAsync)" FormName="@(Login.formName)">
+	<DataAnnotationsValidator />
+
+	<div class="field">
+		<label for="user" class="label">
+			Username/E-mail
+		</label>
+		<div class="control has-icons-left">
+			<InputText @bind-Value="@(Model.User)"
+			           id="user"
+			           class="input"
+			           autocomplete="username"
+			           aria-required="true"
+			           required
+			           autofocus />
+			<span class="icon is-small is-left">
+				@(Icons.User)
+			</span>
+		</div>
+	</div>
+
+	<div class="field">
+		<label for="password" class="label">
+			Password
+		</label>
+		<div class="control has-icons-left">
+			<InputText @bind-Value="@(Model.Password)"
+			           id="password"
+			           class="input"
+			           type="password"
+			           autocomplete="current-password"
+			           aria-required="true"
+			           required />
+			<span class="icon is-small is-left">
+				@(Icons.Password)
+			</span>
+		</div>
+	</div>
+
+	<div class="field">
+		<div class="control">
+			<label class="checkbox">
+				<InputCheckbox @bind-Value="@(Model.Persistent)" />
+				Stay logged in?
+			</label>
+		</div>
+	</div>
+
+	<ValidationMessage For="@(() => Model.User)" class="has-text-danger mb-2" />
+
+	<div class="field is-grouped">
+		<div class="control">
+			<button type="submit" class="button is-primary">
+				Login
+			</button>
+		</div>
+
+		<div class="control">
+			<a href="/register">
+				Don't have an account yet?
+			</a>
+		</div>
+	</div>
+</EditForm>

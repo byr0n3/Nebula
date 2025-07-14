@@ -1,0 +1,88 @@
+@page "/account"
+@using Nebula.Web.Components.Account
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>Account</PageTitle>
+
+<section class="hero">
+	<div class="hero-body">
+		<h1 class="title">Account</h1>
+	</div>
+</section>
+
+<PushNotifications />
+
+<EditForm Model="@(Model)" OnValidSubmit="@(UpdateAsync)" FormName="@View.formName">
+	<DataAnnotationsValidator />
+
+	<div class="field">
+		<label for="username" class="label">
+			Username
+		</label>
+		<div class="control">
+			<InputText @bind-Value="@(Model.Username)"
+			           id="username"
+			           class="input"
+			           autocomplete="username"
+			           aria-required="true"
+			           aria-describedby="username-error"
+			           required
+			           autofocus />
+		</div>
+		<ValidationMessage For="@(() => Model.Username)" id="username-error" class="help is-danger" />
+	</div>
+
+	<div class="field">
+		<label for="email" class="label">
+			E-mail
+		</label>
+		<div class="control">
+			<InputText @bind-Value="@(Model.Email)"
+			           id="email"
+			           type="email"
+			           class="input"
+			           autocomplete="email"
+			           aria-required="true"
+			           aria-describedby="email-error"
+			           required />
+		</div>
+		<ValidationMessage For="@(() => Model.Email)" id="email-error" class="help is-danger" />
+	</div>
+
+	<div class="field">
+		<label for="password" class="label">
+			Password
+		</label>
+		<div class="control">
+			<InputText @bind-Value="@(Model.Password)"
+			           type="password"
+			           id="password"
+			           class="input"
+			           autocomplete="new-password"
+			           aria-describedby="password-error" />
+		</div>
+		<ValidationMessage For="@(() => Model.Password)" id="password-error" class="help is-danger" />
+	</div>
+
+	<div class="field">
+		<label for="password-confirmation" class="label">
+			Password confirmation
+		</label>
+		<div class="control">
+			<InputText @bind-Value="@(Model.PasswordConfirmation)"
+			           type="password"
+			           id="password-confirmation"
+			           class="input"
+			           autocomplete="new-password"
+			           aria-describedby="password-confirmation-error" />
+		</div>
+		<ValidationMessage For="@(() => Model.PasswordConfirmation)"
+		                   id="password-confirmation-error"
+		                   class="help is-danger" />
+	</div>
+
+	<button type="submit" class="button is-primary">
+		Update
+	</button>
+</EditForm>
+
