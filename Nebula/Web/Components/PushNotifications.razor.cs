@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
 using Vapid.NET;
 
-namespace Nebula.Web.Components.Account
+namespace Nebula.Web.Components
 {
 	public sealed partial class PushNotifications : ComponentBase
 	{

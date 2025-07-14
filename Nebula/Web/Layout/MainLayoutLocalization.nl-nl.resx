@@ -32,4 +32,7 @@
     <data name="items.sign-up" xml:space="preserve">
         <value>Registeren</value>
     </data>
+    <data name="items.notifications" xml:space="preserve">
+        <value>Push notificaties</value>
+    </data>
 </root>

@@ -33,6 +33,15 @@
 				<AuthorizeView>
 					<Authorized>
 						<div class="navbar-item">
+							<button type="button" class="button is-dark" data-push-notifications hidden>
+								<span class="icon is-small">
+									@(Icons.Bell)
+								</span>
+								<span>@(Localizer["items.notifications"])</span>
+							</button>
+						</div>
+
+						<div class="navbar-item">
 							<NavLink href="/shipments" class="button is-dark" ActiveClass="is-active">
 								<span class="icon is-small">
 									@(Icons.Packages)
@@ -151,6 +160,14 @@
           FormName="@(MainLayout.signOutFormName)"
           id="@(MainLayout.signOutFormName)">
 </EditForm>
+
+<button type="button" class="button fab is-display-none-tablet is-dark is-rounded" data-push-notifications hidden>
+	<span class="icon">
+		@(Icons.Bell)
+	</span>
+</button>
+
+<PushNotifications />
 
 @code {
 

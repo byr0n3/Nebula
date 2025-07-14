@@ -13,6 +13,8 @@ footer {
 }
 
 .tab-bar {
+	height: var(--tab-bar-height);
+
 	z-index: 10;
 	position: fixed;
 	inset-inline: 0;
@@ -31,6 +33,13 @@ footer {
 
 .tab-bar ul li ::deep .button {
 	width: 100% !important;
+}
+
+.fab {
+	z-index: 10;
+	position: fixed;
+	inset-inline-end: calc(var(--bulma-block-spacing) / 2);
+	inset-block-end: calc(var(--tab-bar-height) + (var(--bulma-block-spacing) / 2));
 }
 
 @media screen and (max-width: 1216px) {

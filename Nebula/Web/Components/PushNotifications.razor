@@ -1,0 +1,8 @@
+@using Microsoft.AspNetCore.Components.Authorization
+
+<AuthorizeView>
+	<Authorized>
+		<script>const VAPID_PUBLIC_KEY = "@(Vapid.Value.PublicKey ?? string.Empty)";</script>
+		<script src="@(Assets["Web/Components/PushNotifications.razor.js"])"></script>
+	</Authorized>
+</AuthorizeView>

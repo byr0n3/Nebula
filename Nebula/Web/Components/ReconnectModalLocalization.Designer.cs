@@ -7,28 +7,28 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Nebula.Web.Layout {
+namespace Nebula.Web.Components {
     using System;
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class MainLayoutLocalization {
+    public class ReconnectModalLocalization {
         
         private static System.Resources.ResourceManager resourceMan;
         
         private static System.Globalization.CultureInfo resourceCulture;
         
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal MainLayoutLocalization() {
+        internal ReconnectModalLocalization() {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         public static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("Nebula.Web.Layout.MainLayoutLocalization", typeof(MainLayoutLocalization).Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("Nebula.Web.Components.ReconnectModalLocalization", typeof(ReconnectModalLocalization).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -45,51 +45,27 @@ namespace Nebula.Web.Layout {
             }
         }
         
-        public static string logo_aria {
+        public static string rejoining {
             get {
-                return ResourceManager.GetString("logo.aria", resourceCulture);
+                return ResourceManager.GetString("rejoining", resourceCulture);
             }
         }
         
-        public static string items_search {
+        public static string failed {
             get {
-                return ResourceManager.GetString("items.search", resourceCulture);
+                return ResourceManager.GetString("failed", resourceCulture);
             }
         }
         
-        public static string items_shipments {
+        public static string button {
             get {
-                return ResourceManager.GetString("items.shipments", resourceCulture);
+                return ResourceManager.GetString("button", resourceCulture);
             }
         }
         
-        public static string items_account {
+        public static string timer {
             get {
-                return ResourceManager.GetString("items.account", resourceCulture);
-            }
-        }
-        
-        public static string items_sign_out {
-            get {
-                return ResourceManager.GetString("items.sign-out", resourceCulture);
-            }
-        }
-        
-        public static string items_sign_in {
-            get {
-                return ResourceManager.GetString("items.sign-in", resourceCulture);
-            }
-        }
-        
-        public static string items_sign_up {
-            get {
-                return ResourceManager.GetString("items.sign-up", resourceCulture);
-            }
-        }
-        
-        public static string items_notifications {
-            get {
-                return ResourceManager.GetString("items.notifications", resourceCulture);
+                return ResourceManager.GetString("timer", resourceCulture);
             }
         }
     }

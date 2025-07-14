@@ -46,6 +46,10 @@
 			<DependentUpon>Automation.razor</DependentUpon>
 		</EmbeddedResource>
 
+		<EmbeddedResource Update="Web\Components\ReconnectModalLocalization.resx">
+			<DependentUpon>ReconnectModal.razor</DependentUpon>
+		</EmbeddedResource>
+
 		<EmbeddedResource Update="Web\Layout\MainLayoutLocalization.resx">
 			<DependentUpon>MainLayout.razor</DependentUpon>
 		</EmbeddedResource>

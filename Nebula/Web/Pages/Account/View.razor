@@ -1,5 +1,4 @@
 @page "/account"
-@using Nebula.Web.Components.Account
 @using Microsoft.AspNetCore.Components.Forms
 @using Nebula.Web.Components
 
@@ -10,8 +9,6 @@
 		<h1 class="title">@(Localizer["title"])</h1>
 	</div>
 </section>
-
-<PushNotifications />
 
 <EditForm Model="@(Model)" OnValidSubmit="@(UpdateAsync)" FormName="@View.formName">
 	<DataAnnotationsValidator />

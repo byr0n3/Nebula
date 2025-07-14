@@ -1,22 +1,21 @@
 ﻿<script type="module" src="@(Assets["Web/Components/ReconnectModal.razor.js"])"></script>
 
-<dialog id="components-reconnect-modal" data-nosnippet>
-	<div class="components-reconnect-container">
-		<div class="components-rejoining-animation" aria-hidden="true">
-			<div></div>
-			<div></div>
-		</div>
-		<p class="components-reconnect-first-attempt-visible">
-			Rejoining the server...
-		</p>
-		<p class="components-reconnect-repeated-attempt-visible">
-			Rejoin failed... trying again in <span id="components-seconds-to-next-attempt"></span> seconds.
-		</p>
-		<p class="components-reconnect-failed-visible">
-			Failed to rejoin.<br />Please retry or reload the page.
-		</p>
-		<button id="components-reconnect-button" class="components-reconnect-failed-visible">
-			Retry
-		</button>
+<dialog id="components-reconnect-modal" class="modal is-rounded" data-nosnippet>
+	<div class="components-rejoining-animation" aria-hidden="true">
+		<div></div>
+		<div></div>
 	</div>
+	<p class="components-reconnect-first-attempt-visible">
+		@(Localizer["rejoining"])
+	</p>
+	<p class="components-reconnect-repeated-attempt-visible">
+		@(Localizer["timer"])
+		<span id="components-seconds-to-next-attempt"></span>
+	</p>
+	<p class="components-reconnect-failed-visible">
+		@(Localizer["failed"])
+	</p>
+	<button id="components-reconnect-button" class="components-reconnect-failed-visible button is-dark">
+		@(Localizer["button"])
+	</button>
 </dialog>
