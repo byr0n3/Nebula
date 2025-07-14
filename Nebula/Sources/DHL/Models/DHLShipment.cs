@@ -39,7 +39,7 @@ namespace Nebula.Sources.DHL.Models
 
 		[JsonPropertyName("plannedDeliveryTimeframe")]
 		[JsonConverter(typeof(JsonDateTimeRangeStringConverter))]
-		public Range<System.DateTime> EstimatedDeliveryTime { get; init; }
+		public Range EstimatedDeliveryTime { get; init; }
 
 		public bool Equals(DHLShipment other) =>
 			string.Equals(this.Id, other.Id, System.StringComparison.Ordinal);

@@ -41,7 +41,7 @@ else
 				@if ((shipment.State != ShipmentState.Delivered) && (shipment.Eta != default))
 				{
 					<p class="mt-2">
-						@(string.Format(Localizer["expected"], shipment.Eta.Format("g")))
+						@(string.Format(Localizer["expected"], shipment.Eta))
 					</p>
 				}
 			</div>

@@ -70,7 +70,7 @@ namespace Nebula.Models.Common
 		/// The estimated date-time period that the shipment should arrive at.
 		/// </summary>
 		/// <remarks>If <see cref="State"/> is <see cref="ShipmentState.Delivered"/>, this value should be <see langword="default"/>.</remarks>
-		public required Range<System.DateTime> Eta { get; init; }
+		public required Range Eta { get; init; }
 
 		/// <summary>
 		/// The amount of time the delivery is delayed.

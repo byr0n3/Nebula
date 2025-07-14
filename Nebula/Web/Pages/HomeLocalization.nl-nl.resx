@@ -28,7 +28,7 @@
 		<value>Postcode</value>
 	</data>
 	<data name="fields.zip.help" xml:space="preserve">
-		<value>Meeste pakketbezorgers vereisen een postcode om alle gegevens over je zending te tonen.</value>
+		<value>Meeste bezorgdiensten vereisen een postcode om alle gegevens over je zending te tonen.</value>
 	</data>
 	<data name="submit" xml:space="preserve">
 		<value>Zoeken</value>

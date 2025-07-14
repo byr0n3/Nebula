@@ -40,7 +40,7 @@
         <value>The delivery service reported that the shipment has been delivered.</value>
     </data>
     <data name="expected" xml:space="preserve">
-        <value>Expected time of delivery: {0}</value>
+        <value>Expected time of delivery: {0:g}</value>
     </data>
     <data name="title" xml:space="preserve">
         <value>Shipment</value>

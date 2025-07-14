@@ -5,9 +5,9 @@ using Nebula.Models;
 
 namespace Nebula.Sources.DHL.Json
 {
-	internal sealed class JsonDateTimeRangeStringConverter : JsonConverter<Range<System.DateTime>>
+	internal sealed class JsonDateTimeRangeStringConverter : JsonConverter<Range>
 	{
-		public override Range<System.DateTime> Read(ref Utf8JsonReader reader, System.Type _, JsonSerializerOptions __)
+		public override Range Read(ref Utf8JsonReader reader, System.Type _, JsonSerializerOptions __)
 		{
 			const char separator = '/';
 
@@ -24,10 +24,10 @@ namespace Nebula.Sources.DHL.Json
 			var lower = JsonDateTimeUtcConverter.Parse(buffer.Slice(0, separatorIdx));
 			var upper = JsonDateTimeUtcConverter.Parse(buffer.Slice(separatorIdx + 1));
 
-			return new Range<System.DateTime>(lower, upper);
+			return new Range(lower, upper);
 		}
 
-		public override void Write(Utf8JsonWriter writer, Range<System.DateTime> value, JsonSerializerOptions options) =>
+		public override void Write(Utf8JsonWriter writer, Range value, JsonSerializerOptions options) =>
 			throw new System.NotSupportedException();
 	}
 }

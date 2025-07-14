@@ -33,7 +33,7 @@
         <value>De zending is geleverd.</value>
     </data>
     <data name="expected" xml:space="preserve">
-        <value>Verwachte levertijd: {0}</value>
+        <value>Verwachte levertijd: {0:g}</value>
     </data>
     <data name="title" xml:space="preserve">
         <value>Zending</value>
