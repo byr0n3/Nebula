@@ -2,8 +2,10 @@ services:
   nebula:
     image: "ghcr.io/byr0n3/nebula:latest"
     depends_on:
-      - nebula_database
-      - temporal
+      nebula_database:
+        condition: service_started
+      temporal:
+        condition: service_healthy
     environment:
       - ConnectionStrings__Nebula=Host=/var/run/postgresql;Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USERNAME};Password=${POSTGRES_PASSWORD};Command Timeout=60
       - Temporal__Host=temporal:7233
@@ -64,25 +66,19 @@ services:
       - POSTGRES_SEEDS=temporal_postgresql
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CLI_ADDRESS=temporal:7233
+      - BIND_ON_IP=0.0.0.0
+      - TEMPORAL_BROADCAST_ADDRESS=127.0.0.1
+    healthcheck:
+      test: [ 'CMD-SHELL', 'tctl --address 127.0.0.1:7233 workflow list' ]
+      interval: 1s
+      timeout: 5s
+      start_period: 2s
     networks:
       - temporal-network
     links:
       - temporal_postgresql
     ports:
       - "7233:7233"
-
-  temporal_ui:
-    image: temporalio/ui:${TEMPORAL_UI_VERSION}
-    depends_on:
-      - temporal
-    environment:
-      - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CORS_ORIGINS=http://10.0.1.26:8233
-      - TEMPORAL_CSRF_COOKIE_INSECURE=true
-    networks:
-      - temporal-network
-    ports:
-      - "8233:8080"
 
 networks:
   temporal-network:

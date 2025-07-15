@@ -9,8 +9,7 @@
 	--bulma-primary-dark-l: 12%;
 	--bulma-primary-dark-invert-l: 18%;
 
-	/* 1.5rem * 1.5em + btn padding */
-	--tab-bar-height: 3.25em;
+	--tab-bar-height: 4.5rem;
 }
 
 body {

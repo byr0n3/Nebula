@@ -10,6 +10,7 @@ footer {
 	--bulma-footer-padding: var(--bulma-block-spacing) calc(var(--bulma-block-spacing) * 2);
 
 	margin-block-start: var(--bulma-block-spacing);
+	padding-block-end: calc(var(--bulma-block-spacing) + var(--tab-bar-height));
 }
 
 .tab-bar {
@@ -19,6 +20,9 @@ footer {
 	position: fixed;
 	inset-inline: 0;
 	inset-block-end: 0;
+
+	padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
+	padding-block-end: env(safe-area-inset-bottom, 0px);
 }
 
 .tab-bar ul {
@@ -43,6 +47,10 @@ footer {
 }
 
 @media screen and (max-width: 1216px) {
+	footer {
+		padding-block-end: var(--bulma-block-spacing);
+	}
+
 	main.container {
 		padding-inline: var(--bulma-block-spacing);
 	}
