@@ -1,0 +1,95 @@
+services:
+  nebula:
+    # image: "ghcr.io/byr0n3/nebula:latest"
+    image: "nebula:latest"
+    depends_on:
+      - nebula_database
+      - temporal
+    environment:
+      - ConnectionStrings__Nebula=Host=/var/run/postgresql;Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USERNAME};Password=${POSTGRES_PASSWORD};Command Timeout=60
+      - Temporal__Host=temporal:7233
+      - Temporal__Namespace=${TEMPORAL_NAMESPACE}
+      - Vapid__Subject=${VAPID_SUBJECT}
+      - Vapid__PublicKey=${VAPID_PUBLIC_KEY}
+      - Vapid__PrivateKey=${VAPID_PRIVATE_KEY}
+    restart: unless-stopped
+    volumes:
+      - nebula-db-socket:/var/run/postgresql
+    networks:
+      - temporal-network
+    ports:
+      - "${HOST:-127.0.0.1}:${PORT:-5000}:8080"
+
+  nebula_database:
+    image: "postgres:16.9-alpine3.22"
+    environment:
+      - POSTGRES_PORT=${POSTGRES_PORT:-65432}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    restart: unless-stopped
+    # Set shared memory limit   
+    shm_size: 128mb
+    command: -p ${POSTGRES_PORT:-65432}
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USERNAME}" ]
+    volumes:
+      - nebula-db-socket:/var/run/postgresql
+      - ./pgdata/nebula:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d
+#    ports:
+#      - "${HOST:-127.0.0.1}:${POSTGRES_PORT:-65432}:${POSTGRES_PORT:-65432}"
+  
+  temporal_postgresql:
+    image: "postgres:16.9-alpine3.22"
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+    # Set shared memory limit
+    shm_size: 128mb
+    volumes:
+      - ./pgdata/temporal:/var/lib/postgresql/data
+    networks:
+      - temporal-network
+    ports:
+      - "5433:5432"
+
+  temporal:
+    image: temporalio/auto-setup:${TEMPORAL_VERSION}
+    depends_on:
+      - temporal_postgresql
+    environment:
+      - DB=postgres12
+      - DB_HOST=temporal_postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=temporal_postgresql
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+    networks:
+      - temporal-network
+    links:
+      - temporal_postgresql
+    ports:
+      - "7233:7233"
+
+  temporal_ui:
+    image: temporalio/ui:${TEMPORAL_UI_VERSION}
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://10.0.1.26:8233
+      - TEMPORAL_CSRF_COOKIE_INSECURE=true
+    networks:
+      - temporal-network
+    ports:
+      - "8233:8080"
+
+networks:
+  temporal-network:
+    name: temporal-network
+
+volumes:
+  nebula-db-socket:

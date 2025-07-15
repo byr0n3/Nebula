@@ -45,6 +45,7 @@ namespace Nebula.Web.Pages.Auth
 					{
 						Email = model.Email,
 						Password = Hashing.Hash(model.Password),
+						Flags = UserFlags.Active,
 						Culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName,
 					});
 

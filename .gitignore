@@ -6,3 +6,8 @@ riderModule.iml
 .DS_Store
 *.DotSettings.user
 Nebula/stubs
+.env
+.env.*
+!.env.example
+# Local files for Docker containers
+pgdata/

@@ -15,7 +15,7 @@ namespace Nebula.Models.Database
 		[Column("password", TypeName = "bytea")]
 		public required byte[] Password { get; init; }
 
-		[Column("flags")] public UserFlags Flags { get; init; }
+		[Column("flags")] public required UserFlags Flags { get; init; }
 
 		[StringLength(8)] [Column("culture")] public required string Culture { get; init; }
 
