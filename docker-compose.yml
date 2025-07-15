@@ -1,7 +1,6 @@
 services:
   nebula:
-    # image: "ghcr.io/byr0n3/nebula:latest"
-    image: "nebula:latest"
+    image: "ghcr.io/byr0n3/nebula:latest"
     depends_on:
       - nebula_database
       - temporal
@@ -37,8 +36,6 @@ services:
       - nebula-db-socket:/var/run/postgresql
       - ./pgdata/nebula:/var/lib/postgresql/data
       - ./db:/docker-entrypoint-initdb.d
-#    ports:
-#      - "${HOST:-127.0.0.1}:${POSTGRES_PORT:-65432}:${POSTGRES_PORT:-65432}"
   
   temporal_postgresql:
     image: "postgres:16.9-alpine3.22"
