@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -36,7 +37,6 @@ namespace Nebula.Sources.DHL
 			}
 		}
 
-		// @todo Validate code using Regex?
 		public async ValueTask<bool> ValidateAsync(ShipmentRequest request, CancellationToken token = default)
 		{
 			var response = await this.GetShipmentAsync(request.Code, request.ZipCode, token).ConfigureAwait(false);
@@ -47,6 +47,7 @@ namespace Nebula.Sources.DHL
 			}
 		}
 
+		[SuppressMessage("Design", "MA0051")]
 		public async ValueTask<Shipment> GetShipmentAsync(ShipmentRequest request, CancellationToken token = default)
 		{
 			DHLShipment shipment;
@@ -62,8 +63,12 @@ namespace Nebula.Sources.DHL
 				shipment = (data is not null) && (data.Length != 0) ? data[0] : default;
 			}
 
+			// For some odd reason, DHL sometimes returns duplicate events;
+			// with slightly different second/millisecond values.
+			// This is my scuffed way of trying to circumvent this.
 			var events = shipment.Events
 								 .Select(ToShipmentEvent)
+								 .DistinctBy(static (e) => new { e.State, Timestamp = NormalizeTimestamp(e.Timestamp) })
 								 .OrderByDescending(static (e) => e.Timestamp)
 								 .ToArray();
 
@@ -113,9 +118,13 @@ namespace Nebula.Sources.DHL
 				Updated = shipment.Updated,
 				Arrived = shipment.DeliveryDate,
 				Eta = shipment.EstimatedDeliveryTime,
-				// @todo Is this a thing?
-				Delay = default,
+				Delay = (shipment.EstimatedDeliveryTime.Upper > System.DateTime.UtcNow)
+					? System.DateTime.UtcNow - shipment.EstimatedDeliveryTime.Upper
+					: default,
 			};
+
+			static System.DateTime NormalizeTimestamp(System.DateTime value) =>
+				new(value.Year, value.Month, value.Day, value.Hour, value.Minute, 0, 0);
 
 			static ShipmentEvent ToShipmentEvent(DHLShipmentEvent @event)
 			{

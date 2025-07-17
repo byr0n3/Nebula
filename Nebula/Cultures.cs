@@ -26,14 +26,14 @@ namespace Nebula
 		};
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void AppendCultureCookie(HttpContext? context, string culture) =>
-			Cultures.AppendCultureCookie(context, new CultureInfo(culture));
+		public static void AppendCultureCookie(HttpContext? context, string culture, string uiCulture) =>
+			Cultures.AppendCultureCookie(context, new CultureInfo(culture), new CultureInfo(uiCulture));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void AppendCultureCookie(HttpContext? context, CultureInfo info) =>
+		public static void AppendCultureCookie(HttpContext? context, CultureInfo culture, CultureInfo uiCulture) =>
 			context?.Response.Cookies.Append(
 				Cultures.CookieName,
-				CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(info, info)),
+				CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture, uiCulture)),
 				Cultures.cookieOptions
 			);
 	}

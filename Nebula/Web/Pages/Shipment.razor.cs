@@ -18,6 +18,8 @@ namespace Nebula.Web.Pages
 
 		[Inject] public required IStringLocalizer<ShipmentStateLocalization> ShipmentStateLocalizer { get; init; }
 
+		[Inject] public required AuthenticationService Authentication { get; init; }
+
 		[Inject] public required ShipmentsService Shipments { get; init; }
 
 		[Parameter] public required string Code { get; init; }
@@ -28,6 +30,7 @@ namespace Nebula.Web.Pages
 		private string? Source { get; init; }
 
 		private ShipmentModel shipment;
+		private System.TimeZoneInfo timeZone = TimeZones.Default;
 		private bool loading = true;
 
 		private string LoadingBlockClass =>
@@ -44,6 +47,8 @@ namespace Nebula.Web.Pages
 
 		private async Task LoadAsync()
 		{
+			this.timeZone = this.Authentication.User?.GetTimeZoneInfo() ?? TimeZones.Default;
+
 			this.loading = true;
 
 			this.shipment = await this.Shipments.GetShipmentAsync(new ShipmentRequest

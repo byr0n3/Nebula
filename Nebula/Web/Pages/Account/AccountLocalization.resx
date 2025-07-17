@@ -31,9 +31,24 @@
         <value>Password confirmation</value>
     </data>
     <data name="fields.culture" xml:space="preserve">
-        <value>Language</value>
+        <value>Locale</value>
     </data>
     <data name="submit" xml:space="preserve">
         <value>Save</value>
+    </data>
+    <data name="fields.timeZone" xml:space="preserve">
+        <value>Timezone</value>
+    </data>
+    <data name="fields.timeZone.help" xml:space="preserve">
+        <value>This option helps to display dates and times correctly.</value>
+    </data>
+    <data name="fields.ui-culture" xml:space="preserve">
+        <value>Language</value>
+    </data>
+    <data name="fields.culture.help" xml:space="preserve">
+        <value>This option ensures that the correct format is used when displaying data.</value>
+    </data>
+    <data name="fields.ui-culture.help" xml:space="preserve">
+        <value>This option indicates what langauge is used when showing the app.</value>
     </data>
 </root>

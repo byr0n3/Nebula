@@ -141,7 +141,12 @@ namespace Nebula.Temporal
 										   static (ups, u) => new
 										   {
 											   Subscription = ups,
-											   u.Culture,
+											   Culture = new UserCulture
+											   {
+												   Culture = u.Culture,
+												   UiCulture = u.UiCulture,
+												   TimeZone = u.TimeZone,
+											   },
 										   }
 									   )
 									  .AsAsyncEnumerable();
@@ -173,32 +178,34 @@ namespace Nebula.Temporal
 			}
 		}
 
-		private string GetNotificationBody(in Shipment shipment, string culture)
+		private string GetNotificationBody(in Shipment shipment, UserCulture culture)
 		{
-			var msg = this.GetLocalizedString(shipment.State, culture);
+			CultureInfo.CurrentCulture = new CultureInfo(culture.Culture);
+			CultureInfo.CurrentUICulture = new CultureInfo(culture.UiCulture);
 
-			return (shipment.State) switch
+			var msg = this.notificationLocalizer[shipment.State.Str()].Value;
+
+			var timeZone = System.TimeZoneInfo.FindSystemTimeZoneById(culture.TimeZone);
+
+			if ((shipment.Eta != default) && (shipment.State != ShipmentState.Delivered))
 			{
-				ShipmentState.OutForDelivery => string.Format(CultureInfo.CurrentCulture, msg, shipment.Eta),
-				_                            => msg,
-			};
-		}
+				var eta = shipment.Eta.ToTimeZone(timeZone);
 
-		// @todo Cache cultures?
-		private string GetLocalizedString(ShipmentState state, string culture)
-		{
-			var previousCulture = CultureInfo.CurrentCulture;
-			var previousUiCulture = CultureInfo.CurrentUICulture;
-
-			CultureInfo.CurrentCulture = new CultureInfo(culture);
-			CultureInfo.CurrentUICulture = new CultureInfo(culture);
-
-			var msg = this.notificationLocalizer[state.Str()];
-
-			CultureInfo.CurrentCulture = previousCulture;
-			CultureInfo.CurrentUICulture = previousUiCulture;
+				msg = shipment.State == ShipmentState.OutForDelivery
+					? string.Create(null, $"{msg} {eta:t}")
+					: string.Create(null, $"{msg} {eta:g}");
+			}
 
 			return msg;
+		}
+
+		private readonly struct UserCulture
+		{
+			public required string Culture { get; init; }
+
+			public required string UiCulture { get; init; }
+
+			public required string TimeZone { get; init; }
 		}
 	}
 }

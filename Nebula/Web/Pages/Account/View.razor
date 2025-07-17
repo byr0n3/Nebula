@@ -70,11 +70,44 @@
 			<InputCulture @bind-Value="@(Model.Culture)"
 			              id="culture"
 			              class="input"
-			              aria-describedby="culture-error" />
-			<ValidationMessage For="@(() => Model.Culture)"
-			                   id="culture-error"
-			                   class="help is-danger" />
+			              aria-describedby="culture-help" />
 		</div>
+		<p id="culture-help" class="help">@(Localizer["fields.culture.help"])</p>
+		<ValidationMessage For="@(() => Model.Culture)"
+		                   id="culture-error"
+		                   class="help is-danger" />
+	</div>
+
+	<div class="field">
+		<label for="ui-culture" class="label">
+			@(Localizer["fields.ui-culture"])
+		</label>
+		<div class="control">
+			<InputCulture @bind-Value="@(Model.UiCulture)"
+			              id="ui-culture"
+			              class="input"
+			              aria-describedby="ui-culture-help" />
+		</div>
+		<p id="ui-culture-help" class="help">@(Localizer["fields.ui-culture.help"])</p>
+		<ValidationMessage For="@(() => Model.UiCulture)"
+		                   id="ui-culture-error"
+		                   class="help is-danger" />
+	</div>
+
+	<div class="field">
+		<label for="timeZone" class="label">
+			@(Localizer["fields.timeZone"])
+		</label>
+		<div class="control">
+			<InputTimeZone @bind-Value="@(Model.TimeZone)"
+			               id="timeZone"
+			               class="input"
+			               aria-describedby="timeZone-help" />
+		</div>
+		<p id="timeZone-help" class="help">@(Localizer["fields.timeZone.help"])</p>
+		<ValidationMessage For="@(() => Model.TimeZone)"
+		                   id="timeZone-error"
+		                   class="help is-danger" />
 	</div>
 
 	<button type="submit" class="button is-primary">

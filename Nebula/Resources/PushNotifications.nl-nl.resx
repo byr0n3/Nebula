@@ -15,7 +15,7 @@
         <value>Je zending is afgeleverd!</value>
     </data>
     <data name="out_for_delivery" xml:space="preserve">
-        <value>Je zending is onderweg! {0:t}</value>
+        <value>Je zending is onderweg!</value>
     </data>
     <data name="received" xml:space="preserve">
         <value>Je zending is ontvangen door de bezorgdienst.</value>

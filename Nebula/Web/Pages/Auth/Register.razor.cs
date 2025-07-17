@@ -47,6 +47,8 @@ namespace Nebula.Web.Pages.Auth
 						Password = Hashing.Hash(model.Password),
 						Flags = UserFlags.Active,
 						Culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName,
+						UiCulture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName,
+						TimeZone = TimeZones.Default.Id,
 					});
 
 					var saved = await db.SaveChangesAsync();

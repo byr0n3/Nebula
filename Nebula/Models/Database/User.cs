@@ -17,7 +17,23 @@ namespace Nebula.Models.Database
 
 		[Column("flags")] public required UserFlags Flags { get; init; }
 
-		[StringLength(8)] [Column("culture")] public required string Culture { get; init; }
+		/// <summary>
+		/// The locale/culture to use when formatting values.
+		/// </summary>
+		[StringLength(8)]
+		[Column("culture")]
+		public required string Culture { get; init; }
+
+		/// <summary>
+		/// The display language to show UI elements with.
+		/// </summary>
+		[StringLength(8)]
+		[Column("ui_culture")]
+		public required string UiCulture { get; init; }
+
+		[StringLength(32)]
+		[Column("timezone")]
+		public required string TimeZone { get; init; }
 
 		[Column("created")]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]

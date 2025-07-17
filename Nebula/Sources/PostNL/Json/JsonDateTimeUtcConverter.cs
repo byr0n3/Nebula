@@ -1,6 +1,6 @@
-using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Nebula.Utilities;
 
 namespace Nebula.Sources.PostNL.Json
 {
@@ -14,8 +14,7 @@ namespace Nebula.Sources.PostNL.Json
 
 			buffer = buffer.Slice(0, read);
 
-			// @todo Use `TryParseExact` (theres at least 2 different formats)
-			return System.DateTime.Parse(buffer, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AdjustToUniversal);
+			return DateTimeParsing.GetDateTimeUtc(buffer);
 		}
 
 		public override void Write(Utf8JsonWriter writer, System.DateTime value, JsonSerializerOptions options) =>

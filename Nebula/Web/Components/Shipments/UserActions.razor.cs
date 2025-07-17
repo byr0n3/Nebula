@@ -18,9 +18,9 @@ using Shipment = Nebula.Models.Common.Shipment;
 
 namespace Nebula.Web.Components.Shipments
 {
-	public sealed partial class Automation : ComponentBase
+	public sealed partial class UserActions : ComponentBase
 	{
-		[Inject] public required IStringLocalizer<AutomationLocalization> Localizer { get; init; }
+		[Inject] public required IStringLocalizer<UserActionsLocalization> Localizer { get; init; }
 
 		[Inject] public required AuthenticationService Authentication { get; init; }
 
@@ -32,9 +32,6 @@ namespace Nebula.Web.Components.Shipments
 
 		private UserShipmentDto userShipment;
 		private bool workflowRunning;
-
-		private bool CanManuallyStartWorkflow =>
-			this.Authentication.User?.HasUserFlag(UserFlags.Superuser) == true;
 
 		protected override Task OnInitializedAsync() =>
 			this.LoadAsync();

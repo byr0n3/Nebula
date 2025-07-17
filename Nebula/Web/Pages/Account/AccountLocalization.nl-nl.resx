@@ -24,9 +24,24 @@
         <value>Wachtwoord bevestiging</value>
     </data>
     <data name="fields.culture" xml:space="preserve">
-        <value>Taal</value>
+        <value>Land</value>
     </data>
     <data name="submit" xml:space="preserve">
         <value>Opslaan</value>
+    </data>
+    <data name="fields.timeZone" xml:space="preserve">
+        <value>Tijdzone</value>
+    </data>
+    <data name="fields.timeZone.help" xml:space="preserve">
+        <value>Deze optie helpt met het correct tonen van datums en tijden.</value>
+    </data>
+    <data name="fields.ui-culture" xml:space="preserve">
+        <value>Taal</value>
+    </data>
+    <data name="fields.culture.help" xml:space="preserve">
+        <value>Deze optie zorgt ervoor dat het juiste formaat wordt gebruikt bij het tonen van data.</value>
+    </data>
+    <data name="fields.ui-culture.help" xml:space="preserve">
+        <value>Met deze optie kies je je voorkeurstaal.</value>
     </data>
 </root>

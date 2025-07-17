@@ -1,0 +1,16 @@
+@using Microsoft.AspNetCore.Components.Forms
+
+<InputSelect Value="@(Value)"
+             ValueChanged="@(ValueChanged)"
+             ValueExpression="@(ValueExpression)"
+             @attributes="@(AdditionalAttributes)">
+	@foreach (var timeZone in TimeZones.Supported)
+	{
+		var key = timeZone.Id;
+		var selected = string.Equals(Value, key, System.StringComparison.Ordinal);
+
+		<option @key="@(key)" value="@(key)" selected="@(selected)">
+			@(timeZone.DisplayName)
+		</option>
+	}
+</InputSelect>

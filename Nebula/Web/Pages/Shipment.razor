@@ -41,7 +41,7 @@ else
 				@if ((shipment.State != ShipmentState.Delivered) && (shipment.Eta != default))
 				{
 					<p class="mt-2">
-						@(string.Format(Localizer["expected"], shipment.Eta))
+						@(string.Format(Localizer["expected"], shipment.Eta.ToTimeZone(timeZone)))
 					</p>
 				}
 			</div>
@@ -49,7 +49,7 @@ else
 			@if (shipment != default)
 			{
 				<div class="action-buttons">
-					<Automation Shipment="@(shipment)" />
+					<UserActions Shipment="@(shipment)" />
 
 					<a href="@(Urls.GetOriginalTrackingUrl(Code, ZipCode, shipment.Source))"
 					   target="_blank"
@@ -152,7 +152,7 @@ else
 
 							<div @key="@(@event.Key.Str())" class="@(@class)">
 								<h4 class="title is-6 mb-1">@(ShipmentStateLocalizer[@event.State.Str()])</h4>
-								<small>@(@event.Timestamp.ToString("g"))</small>
+								<small>@(@event.Timestamp.ToTimeZone(timeZone).ToString("g"))</small>
 								@if (@event.Description is not null)
 								{
 									<p>@(@event.Description)</p>
@@ -170,7 +170,7 @@ else
 	</div>
 
 	<div class="@(LoadingBlockClass)">
-		<p>@(string.Format(Localizer["created"], shipment.Created))</p>
-		<p>@(string.Format(Localizer["updated"], shipment.Updated))</p>
+		<p>@(string.Format(Localizer["created"], shipment.Created.ToTimeZone(timeZone)))</p>
+		<p>@(string.Format(Localizer["updated"], shipment.Updated.ToTimeZone(timeZone)))</p>
 	</div>
 }

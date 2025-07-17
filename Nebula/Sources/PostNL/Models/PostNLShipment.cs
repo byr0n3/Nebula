@@ -37,8 +37,6 @@ namespace Nebula.Sources.PostNL.Models
 
 		[JsonPropertyName("statusPhase")] public required PostNLShipmentStatusPhase Status { get; init; }
 
-		public required PostNLShipmentInternationalStatus InternationalStatus { get; init; }
-
 		public required PostNLShipmentObservation[] Observations { get; init; }
 
 		[JsonPropertyName("relatedCollos")] public PostNLRelatedShipment[]? Related { get; init; }
@@ -112,9 +110,6 @@ namespace Nebula.Sources.PostNL.Models
 
 	public readonly struct PostNLShipmentEstimatedTimeOfArrival
 	{
-		// @todo Enum
-		public required string Type { get; init; }
-
 		public required System.DateTime Start { get; init; }
 
 		public required System.DateTime End { get; init; }
@@ -170,18 +165,6 @@ namespace Nebula.Sources.PostNL.Models
 		/// </summary>
 		/// <remarks>This message will be localized in the language given to the URL using the search parameters.</remarks>
 		public required string Message { get; init; }
-
-		// @todo `route`?
-	}
-
-	public readonly struct PostNLShipmentInternationalStatus
-	{
-		public required bool IsForeignShipment { get; init; }
-
-		// @todo Enum
-		public required string Phase { get; init; }
-
-		// @todo `delay`?
 	}
 
 	public readonly struct PostNLShipmentObservation

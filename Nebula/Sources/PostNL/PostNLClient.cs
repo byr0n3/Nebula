@@ -33,7 +33,6 @@ namespace Nebula.Sources.PostNL
 			}
 		}
 
-		// @todo Validate code using Regex
 		public async ValueTask<bool> ValidateAsync(ShipmentRequest request, CancellationToken token = default)
 		{
 			// The PostNL public API sucks and returns an empty object when the shipment hasn't been found, instead of a 404 status code.

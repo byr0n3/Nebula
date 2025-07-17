@@ -56,3 +56,19 @@ async function subscribe(subscription) {
 }
 
 void initialize();
+
+let prevHref = document.location.href;
+
+// Observer to 'track navigation changes' in a very scuffed way,
+// as I can't figure out a way to track enhanced navigation changes in JS only,
+// I refuse to run the entire app in Interactive-Server-Side rendering.
+// Not having this causes the push notification button(s) to disappear after navigating to a different URL.
+const observer = new MutationObserver(function () {
+	if (prevHref !== document.location.href) {
+		prevHref = document.location.href;
+
+		void initialize();
+	}
+});
+
+observer.observe(document.body, {childList: true, subtree: true});

@@ -42,8 +42,8 @@
 			<DependentUpon>%(Filename).resx</DependentUpon>
 		</Compile>
 
-		<EmbeddedResource Update="Web\Components\Shipments\AutomationLocalization.resx">
-			<DependentUpon>Automation.razor</DependentUpon>
+		<EmbeddedResource Update="Web\Components\Shipments\UserActionsLocalization.resx">
+			<DependentUpon>UserActions.razor</DependentUpon>
 		</EmbeddedResource>
 
 		<EmbeddedResource Update="Web\Components\ReconnectModalLocalization.resx">

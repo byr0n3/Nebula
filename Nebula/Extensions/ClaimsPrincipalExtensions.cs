@@ -35,5 +35,11 @@ namespace Nebula.Extensions
 		public static T GetClaimEnum<T>(this ClaimsPrincipal @this, UserClaim claimType)
 			where T : System.Enum =>
 			Unsafe.BitCast<int, T>(@this.GetClaimValue<int>(UserClaimEnumData.GetValue(claimType)!));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static System.TimeZoneInfo GetTimeZoneInfo(this ClaimsPrincipal @this) =>
+			@this.TryGetClaimValue(UserClaim.TimeZone, out var value)
+				? System.TimeZoneInfo.FindSystemTimeZoneById(value)
+				: TimeZones.Default;
 	}
 }

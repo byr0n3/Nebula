@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.env.example = .env.example
 
 		db/v0.1.sql = db/v0.1.sql
+		db/v0.2.sql = db/v0.2.sql
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nebula", "Nebula\Nebula.csproj", "{D96ED18E-4E03-4D4F-AF3A-7C9601D2B9B7}"

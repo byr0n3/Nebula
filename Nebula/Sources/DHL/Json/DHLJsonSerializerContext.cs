@@ -5,11 +5,7 @@ namespace Nebula.Sources.DHL.Json
 {
 	[JsonSourceGenerationOptions(GenerationMode = JsonSourceGenerationMode.Metadata,
 								 PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
-								 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
-								 Converters =
-								 [
-									 typeof(JsonDateTimeUtcConverter),
-								 ])]
+								 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault)]
 	[JsonSerializable(typeof(DHLShipment[]))]
 	internal sealed partial class DHLJsonSerializerContext : JsonSerializerContext;
 }

@@ -38,7 +38,7 @@ namespace Nebula.Sources.DHL.Models
 		[JsonPropertyName("volumetricWeight")] public float Weight { get; init; }
 
 		[JsonPropertyName("plannedDeliveryTimeframe")]
-		[JsonConverter(typeof(JsonDateTimeRangeStringConverter))]
+		[JsonConverter(typeof(JsonDhlEstimatedDeliveryTimeConverter))]
 		public Range EstimatedDeliveryTime { get; init; }
 
 		public bool Equals(DHLShipment other) =>

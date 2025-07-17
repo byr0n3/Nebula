@@ -80,5 +80,35 @@ namespace Nebula.Web.Pages.Account {
                 return ResourceManager.GetString("submit", resourceCulture);
             }
         }
+        
+        public static string fields_timeZone {
+            get {
+                return ResourceManager.GetString("fields.timeZone", resourceCulture);
+            }
+        }
+        
+        public static string fields_timeZone_help {
+            get {
+                return ResourceManager.GetString("fields.timeZone.help", resourceCulture);
+            }
+        }
+        
+        public static string fields_ui_culture {
+            get {
+                return ResourceManager.GetString("fields.ui-culture", resourceCulture);
+            }
+        }
+        
+        public static string fields_culture_help {
+            get {
+                return ResourceManager.GetString("fields.culture.help", resourceCulture);
+            }
+        }
+        
+        public static string fields_ui_culture_help {
+            get {
+                return ResourceManager.GetString("fields.ui-culture.help", resourceCulture);
+            }
+        }
     }
 }

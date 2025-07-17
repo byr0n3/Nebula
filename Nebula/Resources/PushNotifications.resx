@@ -25,7 +25,7 @@
         <value>Your shipment has been sorted.</value>
     </data>
     <data name="out_for_delivery" xml:space="preserve">
-        <value>Your shipment is underway! {0:t}</value>
+        <value>Your shipment is underway!</value>
     </data>
     <data name="delivered" xml:space="preserve">
         <value>Your shipment has been delivered!</value>

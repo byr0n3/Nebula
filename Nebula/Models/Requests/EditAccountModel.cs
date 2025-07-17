@@ -31,10 +31,19 @@ namespace Nebula.Models.Requests
 		[Required(ErrorMessageResourceType = typeof(ErrorMessages), ErrorMessageResourceName = "required")]
 		public string? Culture { get; set; }
 
+		[Required(ErrorMessageResourceType = typeof(ErrorMessages), ErrorMessageResourceName = "required")]
+		public string? UiCulture { get; set; }
+
+		[Required(ErrorMessageResourceType = typeof(ErrorMessages), ErrorMessageResourceName = "required")]
+		public string? TimeZone { get; set; }
+
 		public bool IsValid
 		{
-			[MemberNotNullWhen(true, nameof(this.Email), nameof(this.Culture))]
-			get => !string.IsNullOrEmpty(this.Email) && !string.IsNullOrEmpty(this.Culture);
+			[MemberNotNullWhen(true, nameof(this.Email), nameof(this.Culture), nameof(this.UiCulture), nameof(this.TimeZone))]
+			get => !string.IsNullOrEmpty(this.Email) &&
+				   !string.IsNullOrEmpty(this.Culture) &&
+				   !string.IsNullOrEmpty(this.UiCulture) &&
+				   !string.IsNullOrEmpty(this.TimeZone);
 		}
 
 		public bool HasPassword

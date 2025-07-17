@@ -2,10 +2,11 @@ using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Nebula.Models;
+using Nebula.Utilities;
 
 namespace Nebula.Sources.DHL.Json
 {
-	internal sealed class JsonDateTimeRangeStringConverter : JsonConverter<Range>
+	internal sealed class JsonDhlEstimatedDeliveryTimeConverter : JsonConverter<Range>
 	{
 		public override Range Read(ref Utf8JsonReader reader, System.Type _, JsonSerializerOptions __)
 		{
@@ -21,8 +22,8 @@ namespace Nebula.Sources.DHL.Json
 
 			Debug.Assert(separatorIdx != -1, "Invalid range value");
 
-			var lower = JsonDateTimeUtcConverter.Parse(buffer.Slice(0, separatorIdx));
-			var upper = JsonDateTimeUtcConverter.Parse(buffer.Slice(separatorIdx + 1));
+			var lower = DateTimeParsing.GetDateTimeUtc(buffer.Slice(0, separatorIdx));
+			var upper = DateTimeParsing.GetDateTimeUtc(buffer.Slice(separatorIdx + 1));
 
 			return new Range(lower, upper);
 		}

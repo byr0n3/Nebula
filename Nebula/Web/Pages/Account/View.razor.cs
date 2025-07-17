@@ -37,6 +37,8 @@ namespace Nebula.Web.Pages.Account
 				{
 					Email = this.HttpContext.User.GetClaimValue(UserClaim.Email),
 					Culture = CultureInfo.CurrentCulture.Name,
+					UiCulture = CultureInfo.CurrentUICulture.Name,
+					TimeZone = this.HttpContext.User.GetClaimValue(UserClaim.TimeZone),
 				};
 			}
 		}
@@ -62,6 +64,8 @@ namespace Nebula.Web.Pages.Account
 									   {
 										   calls.SetProperty(static (u) => u.Email, this.Model.Email)
 												.SetProperty(static (u) => u.Culture, this.Model.Culture)
+												.SetProperty(static (u) => u.UiCulture, this.Model.UiCulture)
+												.SetProperty(static (u) => u.TimeZone, this.Model.TimeZone)
 												.SetProperty(static (u) => u.Password, (u) => password ?? u.Password);
 									   });
 
@@ -75,10 +79,12 @@ namespace Nebula.Web.Pages.Account
 				Password = [],
 				Flags = this.HttpContext.User.GetClaimEnum<UserFlags>(UserClaim.Flags),
 				Culture = this.Model.Culture,
+				UiCulture = this.Model.UiCulture,
+				TimeZone = this.Model.TimeZone,
 				Created = this.HttpContext.User.GetClaimValue<System.DateTime>(UserClaim.Created),
 			}, true);
 
-			Cultures.AppendCultureCookie(this.HttpContext, this.Model.Culture);
+			Cultures.AppendCultureCookie(this.HttpContext, this.Model.Culture, this.Model.UiCulture);
 
 			// Rerenders the page properly to apply the newly selected culture.
 			this.HttpContext.Response.Redirect(this.HttpContext.Request.Path);

@@ -15,13 +15,18 @@ namespace Nebula
 
 		public Task InvokeAsync(HttpContext context)
 		{
-			if (context.User.TryGetClaimValue(UserClaim.Culture, out var culture))
+			if (context.User.TryGetClaimValue(UserClaim.Culture, out var language))
 			{
-				CultureInfo.CurrentCulture = new CultureInfo(culture);
-				CultureInfo.CurrentUICulture = new CultureInfo(culture);
+				CultureInfo.CurrentCulture = new CultureInfo(language);
+				CultureInfo.CurrentUICulture = new CultureInfo(language);
 			}
 
-			Cultures.AppendCultureCookie(context, CultureInfo.CurrentCulture);
+			if (context.User.TryGetClaimValue(UserClaim.UiCulture, out var locale))
+			{
+				CultureInfo.CurrentUICulture = new CultureInfo(locale);
+			}
+
+			Cultures.AppendCultureCookie(context, CultureInfo.CurrentCulture, CultureInfo.CurrentUICulture);
 
 			return this.next.Invoke(context);
 		}
