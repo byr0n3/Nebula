@@ -19,15 +19,12 @@ namespace Nebula.Sources.DHL.Models
 		[EnumValue("PARCEL_ARRIVED_AT_LOCAL_DEPOT")]
 		Sorted,
 
+		[EnumValue("ARRIVED_AT_DELIVERY_FACILITY")]
+		Sorted2,
+
 		[EnumValue("OUT_FOR_DELIVERY")] OutForDelivery,
 
 		[EnumValue("DELIVERED")] Delivered,
-
-		[EnumValue("INTERVENTION_RECEIVER_REQUESTS_DELIVERY_AT_SAFEPLACE")]
-		DeliveryLocationUpdated,
-
-		[EnumValue("INTERVENTION_RECEIVER_REQUESTS_DELIVERY_AT_PARCELSHOP")]
-		DeliveryToParcelShop,
 
 		[EnumValue("INTERVENTION_RECEIVER_REQUESTS_DELIVERY_AT_ANOTHER_TIME/DATE")]
 		DeliveryTimeUpdated,

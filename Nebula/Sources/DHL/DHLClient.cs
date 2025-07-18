@@ -130,10 +130,10 @@ namespace Nebula.Sources.DHL
 			{
 				var state = (@event.Status) switch
 				{
-					DHLShipmentEventStatus.Registered => ShipmentEventType.Registered,
-					DHLShipmentEventStatus.Received   => ShipmentEventType.Received,
-					DHLShipmentEventStatus.Sorted     => ShipmentEventType.Sorted,
-					_                                 => @event.Category.ToShipmentEventType(),
+					DHLShipmentEventStatus.Registered                               => ShipmentEventType.Registered,
+					DHLShipmentEventStatus.Received                                 => ShipmentEventType.Received,
+					DHLShipmentEventStatus.Sorted or DHLShipmentEventStatus.Sorted2 => ShipmentEventType.Sorted,
+					_                                                               => @event.Category.ToShipmentEventType(),
 				};
 
 				return new ShipmentEvent
